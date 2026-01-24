@@ -1,0 +1,45 @@
+#if D
+native {
+import std.conv;
+}
+#elif CPP
+native {
+#include <cstdlib>
+#include <iostream>    
+}
+#endif
+static class StringUtils 
+{
+	public static int parseInt (string input) 
+	{
+		int i = 0;
+#if PY
+		native {
+		i=int(input);
+		}
+#elif D
+	native {
+		i=to!int(input);
+	}
+#elif CPP
+            native {
+                std::string s = {input.begin(), input.end()};
+		i=std::atoi(s.c_str());
+	}
+#endif 
+		return(i);
+	}
+}
+class Main2 
+{
+	public static void Main (string[] args) 
+	{
+		int x = 3 ;
+		bool b = true;
+		byte y = 12; // can't be printed
+		float f = 1.234;	
+		int z = 0 ;
+		z = StringUtils.parseInt("12345");
+		Console.WriteLine($" x={x} b=?? y={y} f={f} z={z}");
+	}
+}
