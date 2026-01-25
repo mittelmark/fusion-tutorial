@@ -193,6 +193,20 @@ There is a more extensive tutorial as a WIP project which you can view here
 
 [![Fusion Tutorial](https://img.shields.io/badge/Fusion-Tutorial-blue)](http://htmlpreview.github.io/?https://github.com/mittelmark/fusion-tutorial/blob/master/tutorial/tutorial.html)
 
+## See Also
+
+Here are two other programming languages which transpile to several different programming languages
+
+- [Haxe](https://haxe.org/) - C++ and Java like language transpiles to C++, C-sharp, JVM, PHP, Lua, Python, Neko
+- [Temper](https://temperlang.dev/) - C++ and Java like language - transpiles to C-sharp, Java, Javascript/Typescript, Python, Lua
+- [Wax](https://github.com/LingDong-/wax) - Lisp like language - transpiles to C, Java, Typecript, Python, C-sharp, Swift, Lua 
+
+The main advantage of Fusion seems the easy to learn language, clear and
+small implementation, install size less than 1Mb and the targeting of C in an object oriented style usable with Swig.
+
+The main disadvantage seems to be the smaller core library, but small install
+size this is just is the prize to pay.
+
 ## Summary
 
 The Fusion programming language allows you to implement libraries and
