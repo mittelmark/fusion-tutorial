@@ -15,7 +15,7 @@ or, indirectly, using the C or C++ generated code and swig.
 
 ## Example
 
-Here the classical Hello World exanple:
+Here the classical "Hello World" example:
 
 ```csharp
 public class Hello
@@ -54,7 +54,7 @@ class Hello:
 ```
 
 The Fusion language is not meant to be used to write applications directly.
-You can do this as well if you will see later. However, it is focused on
+You can do this as well if you will. For an example on how to this, see later. However, it is focused on
 writing libraries which can be then used within the mentioned languages. To
 test the example code above you can create a little file which contains code
 to use the generated Python file with following content.
@@ -108,43 +108,42 @@ gcc hello.c run-hello.c -o hello
 ## Tcl example
 
 Using the Swig tools we can as well take the generated C or C++ code and wrap
-this into a Tcl library by creating a Swig interface file which looks like
+this into a Tcl, R, Perl, Ruby or many other language libraries by creating a Swig interface file which looks like
 this:
 
 
 ```
 %{
 #include "hello.h"
-    
 %}
 %include "hello.h"
 ```
 
-The pipeline to create and test the Tcl hello shared library on a Debian
-system then looks like this:
-
+The pipeline to create and test the code using a shared library on a Debian
+system then looks like this for a example for the Tcl programming language:
 
 ```bash
-fut -o tcl/hello.c Hello.fu
-swig -tcl8 -module hello hello.i                ## create the interface
+fut -o tcl/hello.c Hello.fu                     ## gnerate hello.c and hello.h
+swig -tcl8 -module hello hello.i                ## create the interface C code
 gcc -fPIC -c hello.c                            ## compile the FU generated code
 gcc -fPIC -c hello_wrap.c -I/usr/include/tcl8.6 ## compile the SWIG generated code
 gcc -shared hello.o hello_wrap.o -o hello.so    ## combine both to a Tcl library
-echo "load ./hello.so; puts [Hello_GetMessage];" | tclsh     ## execute the code
+echo "load ./hello.so; puts [Hello_GetMessage];" | tclsh    ## execute the code using Tcl
 ```
 
-## Other language examples
+## Other Language Examples
 
 The file [samples/hello/Makefile](samples/hello/Makefile) contains as well
 examples to translate and compile the `Hello.fu` file show above to C++, C-
 sharp, D, Java, Javascript and Swift programs.
 
-
 ## Standalone applications
 
 Even if the main target of the Fusion language is writing libraries you can
-write for testing purposes as well simple standalone applications. Our "Hello
-World!" example show above would look then like this:
+write for testing purposes as well simple standalone applications to test
+directly your code. This then does not require to create a second file to run
+the library code as shown above. Our "Hello World!" example show above would
+look then like this:
 
 ```csharp
 // file Main.fu
