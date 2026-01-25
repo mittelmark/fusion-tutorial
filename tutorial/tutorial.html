@@ -1,0 +1,261 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="title" content="Tutorial of the Fusion Programming Language (WIP)">
+<meta name="author" content="Detlef Groth, University of Potsdam">
+    
+<title>Tutorial of the Fusion Programming Language (WIP)</title>
+    
+    
+
+
+<style>
+@import url("data:text/css;base64,QGltcG9ydCB1cmwoJ2h0dHBzOi8vZm9udHMuYnVubnkubmV0L2Nzcz9mYW1pbHk9QW5kaWthJmRpc3BsYXk9c3dhcCcpOyAKQGltcG9ydCB1cmwoJ2h0dHBzOi8vZm9udHMuYnVubnkubmV0L2Nzcz9mYW1pbHk9VWJ1bnR1K01vbm8mZGlzcGxheT1zd2FwJyk7IC8qICcgKi8KCmJvZHkgewogIHBhZGRpbmc6IDMwcHg7CiAgbWF4LXdpZHRoOiAxMDAwcHg7CiAgZm9udC1mYW1pbHk6IEFuZGlrYSwgc2Fucy1zZXJpZjsKICBtYXJnaW46IDAgYXV0bzsKfQoKaDEudGl0bGUsIHAuYXV0aG9yLCBwLmRhdGUsIGgyLmF1dGhvciwgaDIuZGF0ZSB7CiAgICB0ZXh0LWFsaWduOiBjZW50ZXI7Cn0KYSB7IHRleHQtZGVjb3JhdGlvbjogbm9uZSA7IH0KcHJlIHsKICAgIHBhZGRpbmc6IDEwcHggOwogICAgYm9yZGVyLXRvcDogMnB4IHNvbGlkICNDQ0NDQ0M7CiAgICBib3JkZXItYm90dG9tOiAycHggc29saWQgI0NDQ0NDQzsgCiAgICBmb250LWZhbWlseTogIlVidW50dSBNb25vIiwgbW9ub3NwYWNlOwp9CnByZTpoYXMoY29kZSkgewogICAgYmFja2dyb3VuZDogI2VmZWZlZjsKfQpwcmU6aGFzKGNvZGUudGNsY29kZSkgewogICAgYmFja2dyb3VuZDogY29ybnNpbGs7ICAgCn0KCnByZTpoYXMoY29kZS5vdXQpIHsKICAgIGJhY2tncm91bmQ6IGNvcm5zaWxrOyAgIAp9CgpwcmUucHkgewogICAgYmFja2dyb3VuZDogI2VlZmZmZjsgICAKfQoKcHJlOmhhcyhjb2RlLnRjbG91dCkgeyAgICAKICAgIGJhY2tncm91bmQ6ICNDQ0VFRkY7Cn0KcHJlOmhhcyhjb2RlLnRjbGVycikgeyAgICAKICAgIGJhY2tncm91bmQ6ICNGRkNDQ0M7Cn0KcHJlOmhhcyhjb2RlLmVycm9yKSB7ICAgIAogICAgYmFja2dyb3VuZDogI0ZGQ0NDQzsKfQoKdGFibGUgeyAgICAKICBib3JkZXItY29sbGFwc2U6IGNvbGxhcHNlOwogIGJvcmRlci1ib3R0b206IDJweCBzb2xpZDsKICBib3JkZXItc3BhY2luZzogNXB4OwogIG1pbi13aWR0aDogNTAwcHg7Cn0KdGFibGUgdGhlYWQgdHIgdGggeyAKICBiYWNrZ3JvdW5kLWNvbG9yOiAjZmRlOWQ5OwogIHRleHQtYWxpZ246IGxlZnQ7IAogIHBhZGRpbmc6IDVweDsKICBib3JkZXItdG9wOiAycHggc29saWQ7CiAgYm9yZGVyLWJvdHRvbTogMnB4IHNvbGlkOwp9CnRhYmxlIHRyIHRkIHsgCiAgYmFja2dyb3VuZC1jb2xvcjogI2Y2ZjZmNjsKICB0ZXh0LWFsaWduOiBsZWZ0OyAKICBwYWRkaW5nOiA1cHg7Cn0KCi8qIGh0dHBzOi8vY29kZXBlbi5pby9IYXJyaXgvcGVuL3BaWlp4ZyAqLwoKa2JkIHsKICBtYXJnaW46IDA7CiAgcGFkZGluZzogMDsKICBib3JkZXI6IDA7CiAgb3V0bGluZTogMDsKICBjb2xvcjogZ3JleTIwOwogIGZvbnQtc2l6ZTogMTAwJTsKICBmb250LWZhbWlseTogbW9ub3NwYWNlLCBzYW5zLXNlcmlmOwogIHZlcnRpY2FsLWFsaWduOiBiYXNlbGluZTsKICBiYWNrZ3JvdW5kOiB0cmFuc3BhcmVudDsKICBib3JkZXItY29sb3I6ICNlNmU2ZTYgI2JlYmViZSAjYmViZWJlICNlNmU2ZTY7CiAgYm9yZGVyLXN0eWxlOiBzb2xpZDsKICBib3JkZXItd2lkdGg6IDFweCAzcHggNHB4OwogIHBhZGRpbmc6IDAgNXB4OwogIGJhY2tncm91bmQtY29sb3I6ICNkMmQyZDI7CiAgYmFja2dyb3VuZC1jb2xvcjogcmdiYSgyMTAsIDIxMCwgMjEwLCAwLjkpOwogIC13ZWJraXQtYm9yZGVyLXJhZGl1czogNHB4OwogIC1tb3otYm9yZGVyLXJhZGl1czogNHB4OwogIGJvcmRlci1yYWRpdXM6IDRweDsKfQoKa2JkLm1lbnUgewogIC1tb3otYm9yZGVyLXJhZGl1czogM3B4OwogIC1tb3otYm94LXNoYWRvdzogMCAxcHggMCByZ2JhKDAsIDAsIDAsIDAuMiksIDAgMCAwIDJweCAjZmZmIGluc2V0OwogIC13ZWJraXQtYm9yZGVyLXJhZGl1czogM3B4OwogIC13ZWJraXQtYm94LXNoYWRvdzogMCAxcHggMCByZ2JhKDAsIDAsIDAsIDAuMiksIDAgMCAwIDJweCAjZmZmIGluc2V0OwogIGJhY2tncm91bmQtY29sb3I6ICNmN2Y3Zjc7CiAgYm9yZGVyOiAxcHggc29saWQgI2NjYzsKICBib3JkZXItcmFkaXVzOiAzcHg7CiAgYm94LXNoYWRvdzogMCAxcHggMCByZ2JhKDAsIDAsIDAsIDAuMiksIDAgMCAwIDJweCAjZmZmIGluc2V0OwogIGNvbG9yOiAjMzMzOwogIGRpc3BsYXk6IGlubGluZS1ibG9jazsKICBmb250LWZhbWlseTogbW9ub3NwYWNlLCBzYW5zLXNlcmlmOwogIGZvbnQtc2l6ZTogMTAwJTsKICBsaW5lLWhlaWdodDogMS40OwogIG1hcmdpbjogMCAwLjFlbTsKICBwYWRkaW5nOiAwLjFlbSAwLjZlbTsKICB0ZXh0LXNoYWRvdzogMCAxcHggMCAjZmZmOwp9Cgp1IHsKICB0ZXh0LWRlY29yYXRpb246IG5vbmU7CiAgZm9udC13ZWlnaHQ6IGJvbGQ7CiAgYm9yZGVyLWJvdHRvbToxcHggc29saWQgYmxhY2s7Cn0Kc3Bhbi5ncmV5NzAgewogIGJhY2tncm91bmQtY29sb3I6ICNhYWE7CiAgcGFkZGluZzogNHB4Owp9Ci8qIEFsZXJ0czogKi8KCi5zaWRlLXdhcm5pbmcsIC5zaWRlLWNhdXRpb24sIC5zaWRlLWluZm8sIC5zaWRlLXF1ZXN0aW9uLCAuc2lkZS1lcnJvciwgLnNpZGUtbm90ZSwgLnNpZGUtdGlwLCAuc2lkZS1pbXBvcnRhbnQsIC5zaWRlLWhpbnQgIHsKICBjb2xvcjogdmFyKC0tdXNlZC1jb2xvcik7CiAgbWFyZ2luLWJvdHRvbTogMzJweDsKICBtYXJnaW4tdG9wOiAxNnB4OwogIHBhZGRpbmc6IDE2cHg7CiAgcGFkZGluZy1sZWZ0OiA0OHB4OwogIGJvcmRlci1yYWRpdXM6IDVweCAwIDAgNXB4OwogIHBvc2l0aW9uOiByZWxhdGl2ZTsgIAp9Ci5zaWRlLWVycm9yLCAuc2lkZS1jYXV0aW9uIHsKICBib3JkZXItbGVmdDogc29saWQgN3B4ICNhYTMzMjI7CiAgYm9yZGVyLXRvcDogc29saWQgMXB4ICNmZmYwZjA7IAogIGJvcmRlci1yaWdodDogc29saWQgMXB4ICNmZmYwZjA7IAogIGJvcmRlci1ib3R0b206IHNvbGlkIDFweCAjZmZmMGYwOyAKICBiYWNrZ3JvdW5kLWNvbG9yOiAjZmZmMGYwOwogIAp9Cgouc2lkZS1pbXBvcnRhbnQsIC5zaWRlLWhpbnQgewogIGJvcmRlci1sZWZ0OiBzb2xpZCA3cHggI2FhMzNhYTsKICBib3JkZXItdG9wOiBzb2xpZCAxcHggI2ZmZjBmZjsgCiAgYm9yZGVyLXJpZ2h0OiBzb2xpZCAxcHggI2ZmZjBmZjsgCiAgYm9yZGVyLWJvdHRvbTogc29saWQgMXB4ICNmZmYwZmY7IAogIGJhY2tncm91bmQtY29sb3I6ICNmZmYwZmY7Cn0KCi5zaWRlLW5vdGUsIC5zaWRlLXRpcCB7CiAgYm9yZGVyLWxlZnQ6IHNvbGlkIDdweCAjMjIzMzk5OwogIGJvcmRlci10b3A6IHNvbGlkIDFweCAjZjBmN2ZmOyAKICBib3JkZXItcmlnaHQ6IHNvbGlkIDFweCAjZjBmN2ZmOyAKICBib3JkZXItYm90dG9tOiBzb2xpZCAxcHggI2YwZjdmZjsgCiAgYmFja2dyb3VuZC1jb2xvcjogI2YwZjdmZjsKICAKfQoKLnNpZGUtaW5mbyB7CiAgYm9yZGVyLWxlZnQ6IHNvbGlkIDdweCAjMzM5OTIyOwogIGJvcmRlci10b3A6IHNvbGlkIDFweCAjZjdmZmYwOyAKICBib3JkZXItcmlnaHQ6IHNvbGlkIDFweCAjZjdmZmYwOyAKICBib3JkZXItYm90dG9tOiBzb2xpZCAxcHggI2Y3ZmZmMDsgCiAgYmFja2dyb3VuZC1jb2xvcjogI2Y3ZmZmMDsKICAKfQouc2lkZS1xdWVzdGlvbiB7CiAgYm9yZGVyLWxlZnQ6IHNvbGlkIDdweCAjOTk5OTIyOwogIGJvcmRlci10b3A6IHNvbGlkIDFweCAjZmZmZmYwOyAKICBib3JkZXItcmlnaHQ6IHNvbGlkIDFweCAjZmZmZmYwOyAKICBib3JkZXItYm90dG9tOiBzb2xpZCAxcHggI2ZmZmZmMDsgCiAgYmFja2dyb3VuZC1jb2xvcjogI2ZmZmZmMDsKfQouc2lkZS13YXJuaW5nIHsKICBib3JkZXItbGVmdDogc29saWQgN3B4ICNmZjk5MzM7CiAgYm9yZGVyLXRvcDogc29saWQgMXB4ICNmZmY3ZjA7IAogIGJvcmRlci1yaWdodDogc29saWQgMXB4ICNmZmY3ZjA7IAogIGJvcmRlci1ib3R0b206IHNvbGlkIDFweCAjZmZmN2YwOyAKICBiYWNrZ3JvdW5kLWNvbG9yOiAjZmZmN2YwOwp9Cgouc2lkZS1pbmZvOjpiZWZvcmUsIC5zaWRlLXdhcm5pbmc6OmJlZm9yZSwgLnNpZGUtY2F1dGlvbjo6YmVmb3JlLCAuc2lkZS1xdWVzdGlvbjo6YmVmb3JlLCAuc2lkZS1lcnJvcjo6YmVmb3JlLCAuc2lkZS1ub3RlOjpiZWZvcmUsIC5zaWRlLXRpcDo6YmVmb3JlLCAuc2lkZS1pbXBvcnRhbnQ6OmJlZm9yZSwgLnNpZGUtaGludDo6YmVmb3JlICB7CiAgYWxpZ24taXRlbXM6IGNlbnRlcjsKICBib3JkZXItcmFkaXVzOiA1MCU7CiAgZGlzcGxheTogZmxleDsKICBmb250LWZhbWlseTogIlVidW50dSBNb25vIiwgbW9ub3NwYWNlOwogIGZvbnQtc2l6ZTogMTZweDsKICBmb250LXdlaWdodDogNzAwOwogIGhlaWdodDogMjRweDsKICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjsKICBsZWZ0OiAxMnB4OwogIGxpbmUtaGVpZ2h0OiAxOwogIHBvc2l0aW9uOiBhYnNvbHV0ZTsKICB0b3A6IDE1cHg7CiAgd2lkdGg6IDI0cHg7Cn0KCi5zaWRlLW5vdGU6OmJlZm9yZSwgLnNpZGUtdGlwOjpiZWZvcmUgewogIGJhY2tncm91bmQtY29sb3I6ICMyMjMzOTk7CiAgY29sb3I6ICNmZmY7CiAgY29udGVudDogIk4iOwogIAp9Cgouc2lkZS1oaW50OjpiZWZvcmUgewogIGJhY2tncm91bmQtY29sb3I6ICM5OTIyOTk7CiAgY29sb3I6ICNmZmY7CiAgY29udGVudDogIiEiOwogIAp9Cgouc2lkZS1pbXBvcnRhbnQ6OmJlZm9yZSB7CiAgYmFja2dyb3VuZC1jb2xvcjogIzk5MzM5OTsKICBjb2xvcjogI2ZmZjsKICBjb250ZW50OiAiISI7Cn0KCi5zaWRlLXRpcDo6YmVmb3JlIHsKICBiYWNrZ3JvdW5kLWNvbG9yOiAjMjIzMzk5OyAKICBjb250ZW50OiAiXDI2MUIiOwogIGZvbnQtc2l6ZTogMTEwJTsKICAKfQoKLnNpZGUtaW5mbzo6YmVmb3JlIHsKICBiYWNrZ3JvdW5kLWNvbG9yOiAjMzM5OTIyOwogIGNvbG9yOiAjZmZmOwogIGNvbnRlbnQ6ICJpIjsKICAKfQouc2lkZS1lcnJvcjo6YmVmb3JlIHsKICBiYWNrZ3JvdW5kLWNvbG9yOiAjZmZmMGYwOwogIGNvbG9yOiAjZmZmOwogIGNvbnRlbnQ6ICJcMjZENCI7CiAgZm9udC1zaXplOiAxMjAlOwp9Ci5zaWRlLWNhdXRpb246OmJlZm9yZSB7CiAgYmFja2dyb3VuZC1jb2xvcjogI2FhMzMyMjsKICBjb2xvcjogI2ZmZjsKICBjb250ZW50OiAiISI7Cn0KCi5zaWRlLXF1ZXN0aW9uOjpiZWZvcmUgewogIGJhY2tncm91bmQtY29sb3I6ICM5OTk5MjI7CiAgY29sb3I6ICNmZmY7CiAgY29udGVudDogIj8iOwogIAp9Cgouc2lkZS13YXJuaW5nOjpiZWZvcmUgewogIGJhY2tncm91bmQtY29sb3I6ICNkZDY2MjI7CiAgY29sb3I6ICNmZmY7CiAgY29udGVudDogIiEiOwogIAp9Ci8qIGZpeCBmb3IgQXNjaWlEb2MgdGFibGVzIHdpdGggcGFyYWdyYXBocyAqLwpwLnRhYmxlYmxvY2sgeyBwYWRkaW5nOiAwcHg7IG1hcmdpbjogMHB4O30K");
+</style>
+
+
+<style>
+</style>
+    
+</head>
+<body>
+    
+
+
+
+    <div class="document-header">
+<h1 class="title">Tutorial of the Fusion Programming Language (WIP)</h1>
+<h2 class="author">Detlef Groth, University of Potsdam</h2>
+<h2 class="date">2026-01-25</h2>
+    </div>
+
+<div class='toc'>
+
+<h3>Table of Contents</h3>
+
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#installation">Installation</a></li>
+<li><a href="#helloworldexample">Hello World Example</a></li>
+<li><a href="#fusionscriptinterpreter">Fusion Script Interpreter</a></li>
+<li><a href="#datatypes">Data Types</a></li>
+<li><a href="#typeconversions">Type Conversions</a></li>
+<li><a href="#parsingintegers">Parsing Integers</a>
+</li></ul>
+
+<p></div></p>
+
+<p><a name="introduction"> </a></p><h2>Introduction</h2>
+
+<p><a href="https://fusion-lang.org/">Fusion</a> is a programming language which works as a transpiler, a tool which
+translates code in the Fusion programming language into code of the
+programming languages C, C++, C#, D, Java, Javascript, Python, Swift, Typescript and OpenCL.</p>
+
+<p><center>
+<img src="https://kroki.io/graphviz/svg/eNptUMFOAyEQvfcrJvWiKbrqHS_bejBGjfbW9MAu0zIphRXY1o3pv8sC0R4kZCbMvPfmDZK2TnQK5vA9gXjSa6XFYPvAw9F2xJy1gdeLl-XifZ0wxkpc-TBo5BvSGiUbU2u1ddwLvbeGeSU65I39YkeSQfG7m9vMdcLsPHb8HqoKPIZYkNR7BmTibRX6DPubCSMSfRCNJq8gKIRLMgfy1Gi8ghZNQJc8JWZVodwiFH8JmCdntbhag5o_9p5-bbbkWo3nS-yGRve4LoKF-o9m2QE_e5IULZoWQWid3HjYOLsv3DMHcP1Q_nosMZjWs9l0TBcxzhk8iYPI0beOusDehqCiV_g40iYwWA4dlg68dmjq56iT9E5Z9Xx_bzXJ9SQ3JqcfG_ia7w==" alt="Diagram"/></p>
+
+<p><a href="https://niolesk.top/#https://kroki.io/graphviz/svg/eNptUMFOAyEQvfcrJvWiKbrqHS_bejBGjfbW9MAu0zIphRXY1o3pv8sC0R4kZCbMvPfmDZK2TnQK5vA9gXjSa6XFYPvAw9F2xJy1gdeLl-XifZ0wxkpc-TBo5BvSGiUbU2u1ddwLvbeGeSU65I39YkeSQfG7m9vMdcLsPHb8HqoKPIZYkNR7BmTibRX6DPubCSMSfRCNJq8gKIRLMgfy1Gi8ghZNQJc8JWZVodwiFH8JmCdntbhag5o_9p5-bbbkWo3nS-yGRve4LoKF-o9m2QE_e5IULZoWQWid3HjYOLsv3DMHcP1Q_nosMZjWs9l0TBcxzhk8iYPI0beOusDehqCiV_g40iYwWA4dlg68dmjq56iT9E5Z9Xx_bzXJ9SQ3JqcfG_ia7w==">Edit this diagram</a>
+</center></p>
+
+<p>For background on the difference between compilers and transpilers have a
+look at this <a href="https://www.geeksforgeeks.org/compiler-design/difference-between-transpiler-and-compiler/">Geeks For Geeks Article</a>.</p>
+
+<p><a name="installation"> </a></p><h2>Installation</h2>
+
+<p>The transpiler for Fusion code is the <a href="https://github.com/fusionlanguage/fut">fut command line application</a>.
+There are binaries available for Intel/AMD systems for Linux, MacOS and Windows systems. You should download the latest version for your platform from the <a href="https://github.com/fusionlanguage/fut/releases/">release page</a>.
+Here an example for a Debian like system using the
+<a href="https://www.linuxbash.sh/post/using-dpkg-to-manually-install-deb-packages">dpkg</a>
+command line application:</p>
+
+<pre class='code'><code>VERSION=fut-3.2.13
+wget https://github.com/fusionlanguage/fut/releases/download/${V}/${V}-1_amd64.deb
+sudo dpkg -i ${V}-1_amd64.deb</code></pre>
+
+<p>For MacOS you would use the Brew package manager:</p>
+
+<pre class='code'><code>brew install fusionlanguage/fut/fut</code></pre>
+
+<p><a name="helloworldexample"> </a></p><h2>Hello World Example</h2>
+
+<p>As usually we start with the standard &quot;Hello World!&quot; example.</p>
+
+<p>Fusion is not meant to write real programs, but libraries which can be then
+used in the aforementioned programming languages. Still Fusion supports the
+creation of simple command line applications, so here is our example and the expected output:</p>
+
+<pre class='code'><code class='code'>public static class Main {
+    public static void Main () {
+        Console.WriteLine(&quot;Hello World!&quot;);
+    }   
+}</code></pre>
+
+<pre class='code'><code class='out'>Hello World!</code></pre>
+
+<p>The fusion source code can be translated into the target programming language.
+Here an example for translating it into Python code and then executing it:</p>
+
+<pre class='code'><code>fut Main.fu -o out/main.py
+python3 out/main.py</code></pre>
+
+<p>The Python output looks like this:</p>
+
+<pre class="py"># Generated automatically with "fut". Do not edit.
+
+class Main:
+
+    @staticmethod
+    def main() -> None:
+        print("Hello World!")
+
+if __name__ == '__main__':
+    Main.main()</pre> 
+
+<p>To compile to other targets you just have to change the file extension. Here an example to create D code:</p>
+
+<pre class='code'><code>fut Main.fu -o out/main.d
+dmd out/main.d -of=out/main
+./out/main 
+Hello World!</code></pre>
+
+<p>The D language output looks like this:</p>
+
+<pre class="py">// Generated automatically with "fut". Do not edit.
+import std.stdio;
+
+class Main
+{
+
+    static void main()
+    {
+        writeln("Hello World!");
+    }
+}
+
+void main() => Main.main();</pre> 
+
+<p><a name="fusionscriptinterpreter"> </a></p><h2>Fusion Script Interpreter</h2>
+
+<p>In this tutorial we will use Python to directly execute the generated code
+and embed the output into the document. For this we will use a little Bash
+Script which generates Python code and then at the same time. Execute the generated script.</p>
+
+<p>The script looks like this:</p>
+
+<pre class='code'><code class='code'>#!/bin/sh
+########################################################
+##
+## Copyright (C) 2026 Detlef Groth
+##
+## Synopsis:    fuscript &lt;FU-File&gt; [ARGS ...]
+## Authors:     Detlef Groth, University of Potsdam, Germany
+##
+########################################################
+
+if [ -z $1 ]; then
+    echo &quot;Usage: $0 FU-FILE [ARGUMENTS ...]&quot;
+else
+    BN=`basename $1 .fu`
+    fut $1 -o ${BN}.py 
+    shift
+    python3 ${BN}.py &quot;$@&quot;
+fi</code></pre>
+
+<p><a name="datatypes"> </a></p><h2>Data Types</h2>
+
+<p>The main basic data types in Fusion are boolean, int, float and double. For
+int types as well exists byte, short, ushort and unint. Below you see how you
+can create strings with embedded variable names. That does not work for
+boolean values, so we create a help method BoolToInt which converts the
+boolean value to an integer.</p>
+
+<pre class='code'><code class='code'>static class Main2 {
+    public static int BoolToInt (bool b) {
+        if (b) { return(1); }
+        return(0);
+    }
+    public static void Main (string[] args) {
+        int x = 3 ;
+        bool b = true;  // bools can't be printed
+        bool c = false;
+        byte y = 12; 
+        float f = 1.234;        
+        Console.WriteLine($&quot; x={x} b={BoolToInt(b)} c={BoolToInt(c)} y={y} f={f}&quot;);
+    }   
+}</code></pre>
+
+<pre class='code'><code class='out'>x=3 b=1 c=0 y=12 f=1.234</code></pre>
+
+<p>As we did not prefix this class declaration with the public keyword that class will have an underscore in Python.</p>
+
+<p>Here the output for the Python script :</p>
+
+<pre class="py"># Generated automatically with "fut". Do not edit.
+import sys
+
+class _Main2:
+
+    @staticmethod
+    def bool_to_int(b: bool) -> int:
+        if b:
+            return 1
+        return 0
+
+    @staticmethod
+    def main(args: list[str]) -> None:
+        x: int = 3
+        b: bool = True
+        c: bool = False
+        y: int = 12
+        f: float = 1.234
+        print(f" x={x} b={_Main2.bool_to_int(b)} c={_Main2.bool_to_int(c)} y={y} f={f}")
+
+if __name__ == '__main__':
+    _Main2.main(sys.argv[1:])</pre> 
+
+<p>The output of the D language is not affected by the public keyword for the class.</p>
+
+<p><a name="typeconversions"> </a></p><h2>Type Conversions</h2>
+
+<p>Fusion does not support type conversions for instance from a string to an integer per default. But it can be implemented like this:</p>
+
+<pre class='code'><code class='code'>public static class Main3 {
+    public static int BoolToInt (bool b) {
+        if (b) { return(1); }
+        return(0);
+    }
+    public static bool StringToBool (string b) {
+        if (b.ToLower() == &quot;true&quot; || b == &quot;1&quot;) {
+            return(true);
+        } else {
+            return(false);
+        }
+    }
+    public static void Main (string[] args) {
+        string s1 = &quot;true&quot;;
+        bool b1 = StringToBool(s1);
+        string s2 = &quot;1&quot;;
+        bool b2 = StringToBool(s2);
+        string s3 = &quot;false&quot;;
+        bool b3 = StringToBool(s3);
+        string s4 = &quot;&quot;;
+        bool b4 = StringToBool(s4);
+        Console.WriteLine($&quot;s1={BoolToInt(b1)} s2={BoolToInt(b2)}&quot;);
+        Console.WriteLine($&quot;s3={BoolToInt(b3)} s4={BoolToInt(b4)}&quot;);
+    }   
+}</code></pre>
+
+<pre class='code'><code class='out'>s1=1 s2=1
+s3=0 s4=0</code></pre>
+
+<p><a name="parsingintegers"> </a></p><h2>Parsing Integers</h2>
+
+<p>To be continued ...</p>
+
+
+
+</body>
+</html>
+

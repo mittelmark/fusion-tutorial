@@ -156,7 +156,7 @@ public static class Main {
 
 That file can be then transpiled and executed as a Python program like this:
 
-```
+```bash
 fut -o main.py Main.fu 
 python3 main.py 
 Hello World!
@@ -164,7 +164,7 @@ Hello World!
 
 The generated output file main.py looks like this:
 
-```py
+```python
 # Generated automatically with "fut". Do not edit.
 
 class Main:
@@ -180,12 +180,18 @@ if __name__ == '__main__':
 
 You can as well execute this translation as an one liner:
 
-```
+```bash
 fut -o main.py Main.fu && cat main.py | python3 
 Hello World!
 ```
 
 Using Python as the target language allows for fast development without compilation steps.
+
+## Tutorial
+
+There is a more extensive tutorial as a WIP project which you can view here
+
+[![Fusion Tutorial](https://img.shields.io/badge/Fusion-Tutorial-blue)](http://htmlpreview.github.io/?https://github.com/mittelmark/fusion-tutorial/blob/master/tutorial/tutorial.html)
 
 ## Summary
 

@@ -1,7 +1,7 @@
 ---
-title: Tutorial of the Fusion Programming Language 
+title: Tutorial of the Fusion Programming Language (WIP)
 author: Detlef Groth, University of Potsdam
-date: 2026-01-19 11:10
+date: 2026-01-25 10:16
 ---
 
 `include tutorial.toc`
@@ -162,3 +162,7 @@ public static class Main3 {
     }   
 }
 ```
+
+## Parsing Integers
+
+To be continued ...
