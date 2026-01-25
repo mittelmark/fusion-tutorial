@@ -107,7 +107,7 @@ python3 out/main.py</code></pre>
 class Main:
 
     @staticmethod
-    def main() -> None:
+    def main() -&gt; None:
         print("Hello World!")
 
 if __name__ == '__main__':
@@ -134,7 +134,7 @@ class Main
     }
 }
 
-void main() => Main.main();</pre> 
+void main() =&gt; Main.main();</pre> 
 
 <p><a name="fusionscriptinterpreter"> </a></p><h2>Fusion Script Interpreter</h2>
 
@@ -198,13 +198,13 @@ import sys
 class _Main2:
 
     @staticmethod
-    def bool_to_int(b: bool) -> int:
+    def bool_to_int(b: bool) -&gt; int:
         if b:
             return 1
         return 0
 
     @staticmethod
-    def main(args: list[str]) -> None:
+    def main(args: list[str]) -&gt; None:
         x: int = 3
         b: bool = True
         c: bool = False
@@ -252,7 +252,272 @@ s3=0 s4=0</code></pre>
 
 <p><a name="parsingintegers"> </a></p><h2>Parsing Integers</h2>
 
-<p>To be continued ...</p>
+<p>That problem is more serious. The main issue is what to do if we get an
+invalid input. Usually an compile error, runtime error or exception is thrown
+by the compiler or interpeter. That handling can be vary different. We solve
+that problem here by returning an integer value which should be considered
+invalid. That value in the following example has an value of -1 per default,
+but these settings can be overwritten.</p>
+
+<pre class='code'><code class='code'>public static class Main4 {
+    public static int ParseInt(string s, int invalid=-1) {
+        int def = -1;
+        int i = 0;
+        int multi = 1;
+        string() s2;
+        if (s.Length == 0) {
+            return invalid;
+        }
+        if (s.StartsWith(&quot;-&quot;)) {
+            multi = -1;
+            s2=s.Substring(1);
+        } else {
+            s2 = s;
+        }     
+        foreach (int d in s2) {
+            // finish at floats
+            if (d == '.') {
+                break;
+            }
+            if (d &lt; '0' || d &gt; '9') {
+                return invalid;
+            }    
+            i = i * 10 + d - '0';
+        }
+        return i*multi;
+    }
+    public static void Main (string[] args) {
+        string s1 = &quot;12&quot;;
+        int i1 = ParseInt(s1);
+        string s2 = &quot;-23&quot;;
+        int i2 = ParseInt(s2);
+        string s3 = &quot;xyz&quot;;
+        int i3 = ParseInt(s3);
+        string s4 = &quot;1234.5678&quot;;
+        int i4 = ParseInt(s4);
+        string s5 = &quot;a1234.5678&quot;;
+        int i5 = ParseInt(s5,-100);
+        Console.WriteLine($&quot;s1={s1} i1={i1}&quot;);
+        Console.WriteLine($&quot;s2={s2} i2={i2}&quot;);
+        Console.WriteLine($&quot;s3={s3} i3={i3}&quot;);
+        Console.WriteLine($&quot;s4={s4} i4={i4}&quot;);
+        Console.WriteLine($&quot;s5={s5} i5={i5}&quot;);        
+    }   
+}</code></pre>
+
+<pre class='code'><code class='out'>s1=12 i1=12
+s2=-23 i2=-23
+s3=xyz i3=-1
+s4=1234.5678 i4=1234
+s5=a1234.5678 i5=-100</code></pre>
+
+<p>In between we should check if as well other languages are working correctly
+with the given code. Let's try first D and then C and C++.</p>
+
+<pre class='code'><code class='out'>s1=12 i1=12
+s2=-23 i2=-23
+s3=xyz i3=-1
+s4=1234.5678 i4=1234
+s5=a1234.5678 i5=-100</code></pre>
+
+<p>Let's have a look at the generated code:</p>
+
+<pre>// Generated automatically with "fut". Do not edit.
+import std.stdio;
+import std.string;
+
+class Main4
+{
+
+    static int parseInt(string s, int invalid = -1)
+    {
+        int def = -1;
+        int i = 0;
+        int multi = 1;
+        string s2;
+        if (s.length == 0) {
+            return invalid;
+        }
+        if (s.startsWith("-")) {
+            multi = -1;
+            s2 = s[1 .. $];
+        }
+        else {
+            s2 = s;
+        }
+        foreach (int d; s2) {
+            if (d == '.') {
+                break;
+            }
+            if (d &lt; '0' || d &gt; '9') {
+                return invalid;
+            }
+            i = i * 10 + d - '0';
+        }
+        return i * multi;
+    }
+
+    static void main(string[] args)
+    {
+        string s1 = "12";
+        int i1 = parseInt(s1);
+        string s2 = "-23";
+        int i2 = parseInt(s2);
+        string s3 = "xyz";
+        int i3 = parseInt(s3);
+        string s4 = "1234.5678";
+        int i4 = parseInt(s4);
+        string s5 = "a1234.5678";
+        int i5 = parseInt(s5, -100);
+        writefln("s1=%s i1=%d", s1, i1);
+        writefln("s2=%s i2=%d", s2, i2);
+        writefln("s3=%s i3=%d", s3, i3);
+        writefln("s4=%s i4=%d", s4, i4);
+        writefln("s5=%s i5=%d", s5, i5);
+    }
+}
+
+void main(string[] args) =&gt; Main4.main(args[1 .. $]);</pre>
+
+<p>We will now repeat the same with C, here the output of the C program:</p>
+
+<pre class='code'><code class='out'>s1=12 i1=12
+s2=-23 i2=-23
+s3=xyz i3=-1
+s4=1234.5678 i4=1234
+s5=a1234.5678 i5=-100</code></pre>
+
+<p>Let's have a look at the generated code:</p>
+
+<pre>// Generated automatically with "fut". Do not edit.
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include "main4.h"
+
+static void FuString_Assign(char **str, char *value)
+{
+    free(*str);
+    *str = value;
+}
+
+int Main4_ParseInt(const char *s, int invalid)
+{
+    int def = -1;
+    int i = 0;
+    int multi = 1;
+    char *s2 = NULL;
+    if (s[0] == '\0') {
+        free(s2);
+        return invalid;
+    }
+    if (s[0] == '-') {
+        multi = -1;
+        FuString_Assign(&s2, strdup(s + 1));
+    }
+    else {
+        FuString_Assign(&s2, strdup(s));
+    }
+    for (const char *d = s2; *d != '\0'; d++) {
+        if (*d == '.') {
+            break;
+        }
+        if (*d &lt; '0' || *d &gt; '9') {
+            free(s2);
+            return invalid;
+        }
+        i = i * 10 + *d - '0';
+    }
+    int returnValue = i * multi;
+    free(s2);
+    return returnValue;
+}
+
+int main(int argc, char **argv)
+{
+    const char *s1 = "12";
+    int i1 = Main4_ParseInt(s1, -1);
+    const char *s2 = "-23";
+    int i2 = Main4_ParseInt(s2, -1);
+    const char *s3 = "xyz";
+    int i3 = Main4_ParseInt(s3, -1);
+    const char *s4 = "1234.5678";
+    int i4 = Main4_ParseInt(s4, -1);
+    const char *s5 = "a1234.5678";
+    int i5 = Main4_ParseInt(s5, -100);
+    printf("s1=%s i1=%d\n", s1, i1);
+    printf("s2=%s i2=%d\n", s2, i2);
+    printf("s3=%s i3=%d\n", s3, i3);
+    printf("s4=%s i4=%d\n", s4, i4);
+    printf("s5=%s i5=%d\n", s5, i5);
+}</pre>
+
+<p>The generated code looks clean and nice to use later for using Swig to create library code for other languages.</p>
+
+<p>We will now repeat the same with C++, which does currently not work properly
+as in the main function <em>parseInt</em> is not prefixed with <em>Main4::</em>.</p>
+
+<pre>// Generated automatically with "fut". Do not edit.
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include "main4.hpp"
+
+int Main4::parseInt(std::string_view s, int invalid)
+{
+    int def = -1;
+    int i = 0;
+    int multi = 1;
+    std::string s2;
+    if (s.empty()) {
+        return invalid;
+    }
+    if (s.starts_with('-')) {
+        multi = -1;
+        s2 = s.substr(1);
+    }
+    else {
+        s2 = s;
+    }
+    for (int d : s2) {
+        if (d == '.') {
+            break;
+        }
+        if (d &lt; '0' || d &gt; '9') {
+            return invalid;
+        }
+        i = i * 10 + d - '0';
+    }
+    return i * multi;
+}
+
+int main(int argc, char **argv)
+{
+    std::string_view s1 = "12";
+    int i1 = parseInt(s1);
+    std::string_view s2 = "-23";
+    int i2 = parseInt(s2);
+    std::string_view s3 = "xyz";
+    int i3 = parseInt(s3);
+    std::string_view s4 = "1234.5678";
+    int i4 = parseInt(s4);
+    std::string_view s5 = "a1234.5678";
+    int i5 = parseInt(s5, -100);
+    std::cout &lt;&lt; "s1=" &lt;&lt; s1 &lt;&lt; " i1=" &lt;&lt; i1 &lt;&lt; '\n';
+    std::cout &lt;&lt; "s2=" &lt;&lt; s2 &lt;&lt; " i2=" &lt;&lt; i2 &lt;&lt; '\n';
+    std::cout &lt;&lt; "s3=" &lt;&lt; s3 &lt;&lt; " i3=" &lt;&lt; i3 &lt;&lt; '\n';
+    std::cout &lt;&lt; "s4=" &lt;&lt; s4 &lt;&lt; " i4=" &lt;&lt; i4 &lt;&lt; '\n';
+    std::cout &lt;&lt; "s5=" &lt;&lt; s5 &lt;&lt; " i5=" &lt;&lt; i5 &lt;&lt; '\n';
+}</pre>
+
+<p>We can fix that by prefixing <em>parseInt</em> with <em>'Main4::'</em> in the main function
+similarly we have prefixed <em>parseInt</em> in the C-code with <em>'Main4_'</em>.</p>
+
+<div class="side-caution"><p><b>Caution:</b> 
+We should keep in mind that the Fusion programming language is not meant to be used to 
+create application on its own. The basic library is quite limited so to write applications
+you could better code directly in C++ or any other language you are comfortable with.
+</p></div>
+
 
 
 
