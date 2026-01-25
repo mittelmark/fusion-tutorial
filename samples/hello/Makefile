@@ -27,7 +27,7 @@ py-run: ## create and run code translated to python
 
 c-run:  ## create and run code translated to C
 	fut -o c/$(LBASENAME).c $(FUFILE)
-b	gcc c/$(LBASENAME).c c/run-$(LBASENAME).c -o bin/$(LBASENAME)-c
+	gcc c/$(LBASENAME).c c/run-$(LBASENAME).c -o bin/$(LBASENAME)-c
 	./bin/$(LBASENAME)-c
 
 cpp-run: ## create and run code translated to C++
