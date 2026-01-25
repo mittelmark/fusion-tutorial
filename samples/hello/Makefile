@@ -1,13 +1,11 @@
 ##-*- makefile -*-############################################################
+# Synopsis:    make 
+#              make tasks
+#              make c-run
 #
-# Copyright (C) 2026 MicroEmacs User.
+# Authors:     Detlef Groth, University of Potsdam, Germany
 #
-# All rights reserved.
-#
-# Synopsis:    
-# Authors:     MicroEmacs User
-#
-##############################################################################
+###############################################################################
 
 CURRENT_MAKEFILE := $(lastword $(MAKEFILE_LIST))
 
@@ -29,7 +27,7 @@ py-run: ## create and run code translated to python
 
 c-run:  ## create and run code translated to C
 	fut -o c/$(LBASENAME).c $(FUFILE)
-	gcc c/$(LBASENAME).c c/run-$(LBASENAME).c -o bin/$(LBASENAME)-c
+b	gcc c/$(LBASENAME).c c/run-$(LBASENAME).c -o bin/$(LBASENAME)-c
 	./bin/$(LBASENAME)-c
 
 cpp-run: ## create and run code translated to C++
