@@ -164,7 +164,7 @@ Hello World!
 
 The generated output file main.py looks like this:
 
-```python
+```Python
 # Generated automatically with "fut". Do not edit.
 
 class Main:
