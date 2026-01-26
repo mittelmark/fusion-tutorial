@@ -134,8 +134,8 @@ echo "load ./hello.so; puts [Hello_GetMessage];" | tclsh    ## execute the code 
 ## Other Language Examples
 
 The file [samples/hello/Makefile](samples/hello/Makefile) contains as well
-examples to translate and compile the `Hello.fu` file show above to C++, C-
-sharp, D, Java, Javascript, Swift and via Swig as well to Tcl programs.
+examples to translate and compile the [Hello.fu](samples/hello/Hello.fu) file show above to C++, C-
+sharp, D, Java, Javascript, Python Swift and via Swig as well to Tcl programs.
 
 The file [samples/hello2/Makefile](samples/hello2/Makefile) contains as well
 examples to translate and compile a [Hello2.fu](samples/hello2/Hello2.fi) file shown above to C++, C-
@@ -227,6 +227,19 @@ syntax. This syntax is therefore easy for many programmers to comprehend.
 With the SWIG interface generator, you can target even more languages,
 including scripting languages such as Tcl, Perl, Lua, and Octave, as well as
 compiled languages such as GO.
+
+## Links
+
+- [Getting Started](https://github.com/fusionlanguage/fut/blob/master/doc/getting-started.md)
+- [Fusion Reference](https://github.com/fusionlanguage/fut/blob/master/doc/reference.md)
+- [Fusion Playground](https://www.fusion-lang.org/playground)
+. [Fusion Tutorial (WIP)](http://htmlpreview.github.io/?https://github.com/mittelmark/fusion-tutorial/blob/master/tutorial/tutorial.html)
+
+## TODO
+
+- adding swig/R examples
+- adding swig/Go examples
+- adding 
 
 ## Author
 
