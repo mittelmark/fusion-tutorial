@@ -135,7 +135,11 @@ echo "load ./hello.so; puts [Hello_GetMessage];" | tclsh    ## execute the code 
 
 The file [samples/hello/Makefile](samples/hello/Makefile) contains as well
 examples to translate and compile the `Hello.fu` file show above to C++, C-
-sharp, D, Java, Javascript and Swift programs.
+sharp, D, Java, Javascript, Swift and via Swig as well to Tcl programs.
+
+The file [samples/hello2/Makefile](samples/hello2/Makefile) contains as well
+examples to translate and compile a [Hello2.fu](samples/hello2/Hello2.fi) file shown above to C++, C-
+sharp, D, Java, Javascript, Swift and Tcl programs. In contrast to the example shown above this example shows how to use a Main Method within your class to create  terminal application.
 
 ## Standalone applications
 
