@@ -1,0 +1,15 @@
+/****************************************************************************
+ *
+ * Synopsis:    Example Hello World Script for Fusion Programming Language 
+ * Authors:     Fusion Tutorial: https://github.com/fusionlanguage/fut
+ *
+ ****************************************************************************/
+
+public static class Hello {
+    /// Returns a greeting message.
+    public static string GetMessage()
+    {
+        return "Hello, world!";
+    }
+}
+
