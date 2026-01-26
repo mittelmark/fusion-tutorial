@@ -87,3 +87,10 @@ r-run:
 	cd R && swig -r -module $(LBASENAME) $(LBASENAME).i
 	cd R && R CMD SHLIB hello_wrap.c hello.c -o hello.so
 	cd R && Rscript run-hello.R
+v-run:
+	fut -o v/$(LBASENAME).c $(FUFILE)
+	cd v && gcc -shared hello.c -o hello.o
+	cd v && v run hello.v
+	cd v && v .
+	./v/v
+	
