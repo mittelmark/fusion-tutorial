@@ -28,7 +28,7 @@
     <div class="document-header">
 <h1 class="title">Tutorial of the Fusion Programming Language (WIP)</h1>
 <h2 class="author">Detlef Groth, University of Potsdam</h2>
-<h2 class="date">2026-01-25</h2>
+<h2 class="date">2026-01-26</h2>
     </div>
 
 <div class='toc'>
@@ -182,7 +182,7 @@ boolean value to an integer.</p>
         bool c = false;
         byte y = 12; 
         float f = 1.234;        
-        Console.WriteLine($&quot; x={x} b={BoolToInt(b)} c={BoolToInt(c)} y={y} f={f}&quot;);
+        Console.WriteLine($&quot; x={x} b={Main2.BoolToInt(b)} c={Main2.BoolToInt(c)} y={y} f={f}&quot;);
     }   
 }</code></pre>
 
@@ -235,13 +235,13 @@ if __name__ == '__main__':
     }
     public static void Main (string[] args) {
         string s1 = &quot;true&quot;;
-        bool b1 = StringToBool(s1);
+        bool b1 = Main3.StringToBool(s1);
         string s2 = &quot;1&quot;;
-        bool b2 = StringToBool(s2);
+        bool b2 = Main3.StringToBool(s2);
         string s3 = &quot;false&quot;;
-        bool b3 = StringToBool(s3);
+        bool b3 = Main3.StringToBool(s3);
         string s4 = &quot;&quot;;
-        bool b4 = StringToBool(s4);
+        bool b4 = Main3.StringToBool(s4);
         Console.WriteLine($&quot;s1={BoolToInt(b1)} s2={BoolToInt(b2)}&quot;);
         Console.WriteLine($&quot;s3={BoolToInt(b3)} s4={BoolToInt(b4)}&quot;);
     }   
@@ -257,7 +257,9 @@ invalid input. Usually an compile error, runtime error or exception is thrown
 by the compiler or interpeter. That handling can be vary different. We solve
 that problem here by returning an integer value which should be considered
 invalid. That value in the following example has an value of -1 per default,
-but these settings can be overwritten.</p>
+but these settings can be overwritten. Prefixing the call to ParseInt with
+Main4 in the Main method is required for some languages like C++ to be
+correctly calling the appropiate method.</p>
 
 <pre class='code'><code class='code'>public static class Main4 {
     public static int ParseInt(string s, int invalid=-1) {
@@ -288,15 +290,15 @@ but these settings can be overwritten.</p>
     }
     public static void Main (string[] args) {
         string s1 = &quot;12&quot;;
-        int i1 = ParseInt(s1);
+        int i1 = Main4.ParseInt(s1);
         string s2 = &quot;-23&quot;;
-        int i2 = ParseInt(s2);
+        int i2 = Main4.ParseInt(s2);
         string s3 = &quot;xyz&quot;;
-        int i3 = ParseInt(s3);
+        int i3 = Main4.ParseInt(s3);
         string s4 = &quot;1234.5678&quot;;
-        int i4 = ParseInt(s4);
+        int i4 = Main4.ParseInt(s4);
         string s5 = &quot;a1234.5678&quot;;
-        int i5 = ParseInt(s5,-100);
+        int i5 = Main4.ParseInt(s5,-100);
         Console.WriteLine($&quot;s1={s1} i1={i1}&quot;);
         Console.WriteLine($&quot;s2={s2} i2={i2}&quot;);
         Console.WriteLine($&quot;s3={s3} i3={i3}&quot;);
@@ -360,15 +362,15 @@ class Main4
     static void main(string[] args)
     {
         string s1 = "12";
-        int i1 = parseInt(s1);
+        int i1 = Main4.parseInt(s1);
         string s2 = "-23";
-        int i2 = parseInt(s2);
+        int i2 = Main4.parseInt(s2);
         string s3 = "xyz";
-        int i3 = parseInt(s3);
+        int i3 = Main4.parseInt(s3);
         string s4 = "1234.5678";
-        int i4 = parseInt(s4);
+        int i4 = Main4.parseInt(s4);
         string s5 = "a1234.5678";
-        int i5 = parseInt(s5, -100);
+        int i5 = Main4.parseInt(s5, -100);
         writefln("s1=%s i1=%d", s1, i1);
         writefln("s2=%s i2=%d", s2, i2);
         writefln("s3=%s i3=%d", s3, i3);
@@ -454,8 +456,13 @@ int main(int argc, char **argv)
 
 <p>The generated code looks clean and nice to use later for using Swig to create library code for other languages.</p>
 
-<p>We will now repeat the same with C++, which does currently not work properly
-as in the main function <em>parseInt</em> is not prefixed with <em>Main4::</em>.</p>
+<p>We will now repeat the same with C++:</p>
+
+<pre class='code'><code class='out'>s1=12 i1=12
+s2=-23 i2=-23
+s3=xyz i3=-1
+s4=1234.5678 i4=1234
+s5=a1234.5678 i5=-100</code></pre>
 
 <pre>// Generated automatically with "fut". Do not edit.
 #include &lt;iostream&gt;
@@ -493,30 +500,21 @@ int Main4::parseInt(std::string_view s, int invalid)
 int main(int argc, char **argv)
 {
     std::string_view s1 = "12";
-    int i1 = parseInt(s1);
+    int i1 = Main4::parseInt(s1);
     std::string_view s2 = "-23";
-    int i2 = parseInt(s2);
+    int i2 = Main4::parseInt(s2);
     std::string_view s3 = "xyz";
-    int i3 = parseInt(s3);
+    int i3 = Main4::parseInt(s3);
     std::string_view s4 = "1234.5678";
-    int i4 = parseInt(s4);
+    int i4 = Main4::parseInt(s4);
     std::string_view s5 = "a1234.5678";
-    int i5 = parseInt(s5, -100);
+    int i5 = Main4::parseInt(s5, -100);
     std::cout &lt;&lt; "s1=" &lt;&lt; s1 &lt;&lt; " i1=" &lt;&lt; i1 &lt;&lt; '\n';
     std::cout &lt;&lt; "s2=" &lt;&lt; s2 &lt;&lt; " i2=" &lt;&lt; i2 &lt;&lt; '\n';
     std::cout &lt;&lt; "s3=" &lt;&lt; s3 &lt;&lt; " i3=" &lt;&lt; i3 &lt;&lt; '\n';
     std::cout &lt;&lt; "s4=" &lt;&lt; s4 &lt;&lt; " i4=" &lt;&lt; i4 &lt;&lt; '\n';
     std::cout &lt;&lt; "s5=" &lt;&lt; s5 &lt;&lt; " i5=" &lt;&lt; i5 &lt;&lt; '\n';
 }</pre>
-
-<p>We can fix that by prefixing <em>parseInt</em> with <em>'Main4::'</em> in the main function
-similarly we have prefixed <em>parseInt</em> in the C-code with <em>'Main4_'</em>.</p>
-
-<div class="side-caution"><p><b>Caution:</b> 
-We should keep in mind that the Fusion programming language is not meant to be used to 
-create application on its own. The basic library is quite limited so to write applications
-you could better code directly in C++ or any other language you are comfortable with.
-</p></div>
 
 
 

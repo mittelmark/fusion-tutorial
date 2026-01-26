@@ -1,7 +1,7 @@
 ---
 title: Tutorial of the Fusion Programming Language (WIP)
 author: Detlef Groth, University of Potsdam
-date: 2026-01-25 19:30
+date: 2026-01-26 11:24
 ---
 
 `include tutorial.toc`
@@ -116,7 +116,7 @@ static class Main2 {
         bool c = false;
         byte y = 12; 
         float f = 1.234;        
-        Console.WriteLine($" x={x} b={BoolToInt(b)} c={BoolToInt(c)} y={y} f={f}");
+        Console.WriteLine($" x={x} b={Main2.BoolToInt(b)} c={Main2.BoolToInt(c)} y={y} f={f}");
     }   
 }
 ```
@@ -150,13 +150,13 @@ public static class Main3 {
     }
     public static void Main (string[] args) {
         string s1 = "true";
-        bool b1 = StringToBool(s1);
+        bool b1 = Main3.StringToBool(s1);
         string s2 = "1";
-        bool b2 = StringToBool(s2);
+        bool b2 = Main3.StringToBool(s2);
         string s3 = "false";
-        bool b3 = StringToBool(s3);
+        bool b3 = Main3.StringToBool(s3);
         string s4 = "";
-        bool b4 = StringToBool(s4);
+        bool b4 = Main3.StringToBool(s4);
         Console.WriteLine($"s1={BoolToInt(b1)} s2={BoolToInt(b2)}");
         Console.WriteLine($"s3={BoolToInt(b3)} s4={BoolToInt(b4)}");
     }   
@@ -170,7 +170,9 @@ invalid input. Usually an compile error, runtime error or exception is thrown
 by the compiler or interpeter. That handling can be vary different. We solve
 that problem here by returning an integer value which should be considered
 invalid. That value in the following example has an value of -1 per default,
-but these settings can be overwritten.
+but these settings can be overwritten. Prefixing the call to ParseInt with
+Main4 in the Main method is required for some languages like C++ to be
+correctly calling the appropiate method.
 
 
 ```{.shell label=Main4 cmd="fuscript %i > %b.txt" chunk.ext=fu ext=txt}
@@ -203,15 +205,15 @@ public static class Main4 {
     }
     public static void Main (string[] args) {
         string s1 = "12";
-        int i1 = ParseInt(s1);
+        int i1 = Main4.ParseInt(s1);
         string s2 = "-23";
-        int i2 = ParseInt(s2);
+        int i2 = Main4.ParseInt(s2);
         string s3 = "xyz";
-        int i3 = ParseInt(s3);
+        int i3 = Main4.ParseInt(s3);
         string s4 = "1234.5678";
-        int i4 = ParseInt(s4);
+        int i4 = Main4.ParseInt(s4);
         string s5 = "a1234.5678";
-        int i5 = ParseInt(s5,-100);
+        int i5 = Main4.ParseInt(s5,-100);
         Console.WriteLine($"s1={s1} i1={i1}");
         Console.WriteLine($"s2={s2} i2={i2}");
         Console.WriteLine($"s3={s3} i3={i3}");
@@ -246,22 +248,13 @@ Let's have a look at the generated code:
 
 The generated code looks clean and nice to use later for using Swig to create library code for other languages. 
 
-We will now repeat the same with C++, which does currently not work properly
-as in the main function _parseInt_ is not prefixed with _Main4::_.
+We will now repeat the same with C++:
 
-```{.shell label=Main4 cmd="fut %i -o main4.cpp&&g++ -std=c++17 cc main4.cpp -o main4-cpp&&./main4-cpp > %b.txt" chunk.ext=fu ext=txt,echo=FALSE}
+```{.shell label=Main4 cmd="fut %i -o main4.cpp&&g++ -std=c++20 main4.cpp -o main4-cpp&&./main4-cpp > %b.txt" chunk.ext=fu ext=txt,echo=FALSE}
 #INCLUDE "Main4.fu"
 ```
 
 `include main4.cpp {<pre> </pre>}`
-
-We can fix that by prefixing _parseInt_ with *'Main4::'* in the main function
-similarly we have prefixed _parseInt_ in the C-code with *'Main4_'*.
-
-> [!CAUTION]
-> We should keep in mind that the Fusion programming language is not meant to be used to 
-> create application on its own. The basic library is quite limited so to write applications
-> you could better code directly in C++ or any other language you are comfortable with.
 
 
 
