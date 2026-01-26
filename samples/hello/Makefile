@@ -81,3 +81,9 @@ tcl-run:  ## create and run code translated to C and then wrapped using Swift as
 	cd tcl && gcc -fPIC -c $(LBASENAME)_wrap.c -I/usr/include/tcl8.6 ## compile the SWIG generated code
 	cd tcl && gcc -shared $(LBASENAME).o $(LBASENAME)_wrap.o -o $(LBASENAME).so    ## combine both to a Tcl library
 	cd tcl && echo "load ./$(LBASENAME).so; puts [Hello_GetMessage];" | tclsh     ## execute the code
+
+r-run:
+	fut -o R/$(LBASENAME).c $(FUFILE)
+	cd R && swig -r -module $(LBASENAME) $(LBASENAME).i
+	cd R && R CMD SHLIB hello_wrap.c hello.c -o hello.so
+	cd R && Rscript run-hello.R
