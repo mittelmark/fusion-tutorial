@@ -89,7 +89,7 @@ r-run:
 	cd R && Rscript run-hello.R
 v-run:
 	fut -o v/$(LBASENAME).c $(FUFILE)
-	cd v && gcc -shared hello.c -o hello.o
+	cd v && gcc -shared hello.c -o libhello.so
 	cd v && v run hello.v
 	cd v && v .
 	./v/v
