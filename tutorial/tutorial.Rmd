@@ -1,7 +1,7 @@
 ---
 title: Tutorial of the Fusion Programming Language (WIP)
 author: Detlef Groth, University of Potsdam
-date: 2026-01-27 23:21
+date: 2026-01-27 23:30
 ---
 
 `include tutorial.toc`
@@ -139,7 +139,7 @@ include the C header file and declare all functions we like to use from the libr
 
 `include assets/hello.v {<pre> </pre>}`
 
-In this case we will create a shared library from the hello file and the run
+In this case we will create a shared library from the hello file and then run
 our file _hello.v_ like this:
 
 ```{.shell label=vhello,cmd="bash %i > %b.txt",chunk.ext=sh,ext=txt}
@@ -149,6 +149,13 @@ gcc -shared hello.c -o libhello.so
 LD_LIBRARY_PATH=. v run hello.v
 cd ..
 ```
+
+So we are not limited to the target languages for Fusion using the nicely
+structured output we can as well use transpilers for that output or simply
+embed the C code in other programming languages. As C is the lingua franca of
+programming it should be possible with more or less effort to use the
+generated code. There are existing as well other interface generators, for example Swig which we will present later.
+
 
 ## Data Types
 
