@@ -1,7 +1,7 @@
 ---
 title: Tutorial of the Fusion Programming Language (WIP)
 author: Detlef Groth, University of Potsdam
-date: 2026-01-28 00:12
+date: 2026-01-29 13:41
 ---
 
 `include tutorial.toc`
@@ -134,7 +134,7 @@ npx tstl assets/hello.ts
 cd assets && lua run-hello.lua
 ```
 
-## V-lang
+### V-lang
 
 As C code can be easily used by other programming languages we might as well
 use the C output to use that in other programming languages. Here an example
@@ -160,7 +160,7 @@ embed the C code in other programming languages. As C is the lingua franca of
 programming it should be possible with more or less effort to use the
 generated code. There are existing as well other interface generators, for example Swig which we will present later.
 
-## Dart
+### Dart
 
 In the Dart programming language we use the ffi package to call functions in
 compiled C libraries. So we can use the same file we used in for the V
@@ -172,6 +172,7 @@ and the code to exectue these functions would look like this:
 
 
 `include assets/hello.dart {<pre> </pre>}`
+
 
 Our command line is the very simple:
 
@@ -185,7 +186,109 @@ cd ..
 
 So, we can see that we can support as well other language as the _fut_
 transpiler should output clean C code which can be then used in even more programming
-languages.
+languages. 
+
+### Swig - Simplified Wrapper and Interface Generator
+
+This manual creation of interfaces however is slightly cumbersome, so an
+automated process of creating an interface for the C library would offer a
+good alternative way. For instance the [Rust programming language](https://rust-lang.org/)
+has a tool called [bindgen](https://github.com/rust-lang/rust-bindgen) to
+simplify this process. Further there exists a tool called [Swig](https://swig.org) which automates this process for more than a dozen target languages. A few of these languages like C#, D, Java or Python are already directly supported by Fusion. Although it might be interested to get a fast implementation by using the C library made be usable by Swig than the Fusion Python output as the C library approach might be much faster than the Python code directly transpiled by the _fut_ tool.
+
+For illustrative purposes let's create bindings for two scripting languages, Lua and Tcl for our little hello library shown above.
+
+### Swig and Lua 
+
+Let's start with Lua. The process of creating a wrapper for a C library using
+Swig is usually started by creating an interface file which includes the
+Header file of the C library. In a second section we declare the functions we
+would like to use from that include file. Alternatively we can include here
+the header file again to indicate that we would like to use all C functions
+published in the header file. Afterwards we use Swig to create an interface C file, the original C and this wrapper file are then compiled either to a dynamic library or a static output file. For scripting languages we usually create a static library. So the process is as follows:
+
+
+```{.kroki dia=graphviz,echo=FALSE}
+digraph g {
+rankdir="LR"
+size="6,10"
+edge[fontsize="24"]
+node[shape=note,style=filled,fillcolor=cornsilk,height=2.2,width=1.5,fontsize=22]
+Fu -> C[label=""]
+Fu -> H[label="fut"]
+H -> I[label="editor"]
+I -> Wrap[label=" swig"]
+Wrap -> SO[label="gcc"]
+C -> SO[label=""]
+Fu[label="Hello.Fu"]
+C[label="hello.c"]
+H[label="hello.h"]
+I[label="hello.i"]
+Wrap[label="hello_\nwrap.c"]
+SO[label="hello.so"]
+}
+```
+
+Let's have a look at an example interface file for Lua:
+
+`include assets/hello.i {<pre> </pre>}`
+
+
+Using the following command line we can create an hello shared library file on Linux:
+
+```{.shell label=luaswigello,cmd="bash %i 2>&1 > %b.txt",chunk.ext=sh,ext=txt}
+if [ ! -d swig-lua ]; then mkdir swig-lua ; fi
+cp assets/hello.i swig-lua
+fut -o swig-lua/hello.c assets/Hello.fu
+cd swig-lua
+swig -lua -module hello -o hello_wrap.c hello.i
+gcc -fPIC -I/usr/include/lua5.1 -c  hello_wrap.c -o hello_wrap.o
+gcc -fPIC -I/usr/include/lua5.1 -c  hello.c -o hello.o
+gcc -shared -I/usr/include/lua5.1 -L/usr/lib/x86_64-linux-gnu/  hello_wrap.o hello.o -o hello.so
+### check if there is the function in the shared library
+nm hello.so | grep GetMessage
+cd ..
+```
+
+We can now try to run that function in a Lua script. Here is an example script:
+
+`include assets/run-hello.lua {<pre> </pre>}`
+
+```{.shell label=luaswigrun,cmd="bash %i 2>&1 > %b.txt",chunk.ext=sh,ext=txt}
+cp assets/run-hello.lua swig-lua/
+cd swig-lua 
+lua run-hello.lua
+```
+
+### Swig and Tcl
+
+Let's repeat that example with the Tcl programming language. As this is as
+well an interpreted language we will again compile a shared library to be
+used by Tcl. The interface file looks like this:
+
+
+`include assets/tcl-hello.i {<pre> </pre>}`
+
+Let's now create a shared library file and then pipe some Tcl code into the
+tclsh interpreter:
+
+```{.shell label=tclswighello,cmd="bash %i 2>&1 > %b.txt",chunk.ext=sh,ext=txt}
+if [ ! -d swig-tcl ]; then mkdir swig-tcl ; fi
+cp assets/tcl-hello.i swig-tcl/hello.i
+fut -o swig-tcl/hello.c assets/Hello.fu
+cd swig-tcl
+swig -tcl8 -module hello hello.i                ## create the interface wrap file
+gcc -fPIC -c hello.c                            ## compile the FU generated code
+gcc -fPIC -c hello_wrap.c -I/usr/include/tcl8.6 ## compile the SWIG generated code
+gcc -shared hello.o hello_wrap.o -o hello.so    ## combine both to a Tcl library
+echo "load ./hello.so; puts \"This is Tcl [set tcl_patchLevel]!\"; puts [Hello_GetMessage];" | tclsh
+```
+
+If you are interested in more example using Fusion with different language
+targets have a look at the examples in the
+[samples/hello](https://github.com/mittelmark/fusion-tutorial/samples/hello)
+folder of the project.
+
 
 
 ## Data Types
