@@ -1,7 +1,7 @@
 ---
 title: Tutorial of the Fusion Programming Language (WIP)
 author: Detlef Groth, University of Potsdam
-date: 2026-01-29 16:12
+date: 2026-01-29 16:15
 ---
 
 `include tutorial.toc`
@@ -145,7 +145,7 @@ mapping from Typescript to Lua code.
 
 More important for using our Fusion code library is the C code output. As C
 code can be easily used by other programming languages we might as well use
-the C output to use that in other programming languages. Here an example
+the C output in other programming languages. Here an example
 using the [V Programming Language](https://vlang.io/). To use the libary we
 include the C header file and declare all functions we like to use from the
 library file. So for the same file _Hello.fu_ show above we create the
