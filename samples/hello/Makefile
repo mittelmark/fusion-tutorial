@@ -67,6 +67,7 @@ swift-run: ## create and run code translated to Swift
 	## add /usr/bin folder therein to the PATH
 	## swift package init --type executable
 	## replace files in Source/swift where sources/swift/swift.swift is the main file
+	## we just need the file Package.swift in the root folder of the project
 	if [ ! -d "swift/Sources/swift" ]; then mkdir -p swift/Sources/swift ; fi
 	fut -o swift/Sources/swift/$(LBASENAME).swift $(FUFILE)
 	cp swift/run-$(LBASENAME).swift swift/Sources/swift/swift.swift	
@@ -74,7 +75,7 @@ swift-run: ## create and run code translated to Swift
 	cd swift && swift run
 	./swift/.build/x86_64-unknown-linux-gnu/debug/swift
 
-tcl-run:  ## create and run code translated to C and then wrapped using Swift as a Tcl library
+tcl-run:  ## create and run code translated to C and then wrapped with Swig as a Tcl library
 	fut -o tcl/$(LBASENAME).c $(FUFILE)
 	cd tcl && swig -tcl8 -module $(LBASENAME) $(LBASENAME).i                ## create the interface
 	cd tcl && gcc -fPIC -c $(LBASENAME).c                            ## compile the FU generated code

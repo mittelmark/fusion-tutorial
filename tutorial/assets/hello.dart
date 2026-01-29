@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:ffi/ffi.dart'; // Import for allocation functions
 // Define the C function signature
 typedef HelloFunc = Pointer<Utf8> Function();
-typedef Hello = Pointer<Utf8> Function();
 
 void main() {
   print("Greetings from Dart!");

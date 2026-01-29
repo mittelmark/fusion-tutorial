@@ -28,7 +28,7 @@
     <div class="document-header">
 <h1 class="title">Tutorial of the Fusion Programming Language (WIP)</h1>
 <h2 class="author">Detlef Groth, University of Potsdam</h2>
-<h2 class="date">2026-01-28</h2>
+<h2 class="date">2026-01-29</h2>
     </div>
 
 <div class='toc'>
@@ -42,11 +42,14 @@
 <li><a href="#fusionscriptinterpreter">Fusion Script Interpreter</a></li>
 <li><a href="#otherprogramminglanguages">Other Programming Languages</a>
 <ul>
-<li><a href="#lua">Lua</a></li></ul>
-
-</li>
+<li><a href="#lua">Lua</a></li>
 <li><a href="#vlang">V-lang</a></li>
 <li><a href="#dart">Dart</a></li>
+<li><a href="#swigsimplifiedwrapperandinterfacegenerator">Swig - Simplified Wrapper and Interface Generator</a></li>
+<li><a href="#swigandlua">Swig and Lua </a></li>
+<li><a href="#swigandtcl">Swig and Tcl</a></li></ul>
+
+</li>
 <li><a href="#datatypes">Data Types</a></li>
 <li><a href="#typeconversions">Type Conversions</a></li>
 <li><a href="#parsingintegers">Parsing Integers</a>
@@ -58,7 +61,7 @@
 
 </li>
 <li><a href="#nativelanguagecode">Native Language Code</a></li>
-<li><a href="#usingswigtotargetotherprogramminglanguages">Using Swig to target other Programming Languages</a></li>
+<li><a href="#checkinginput">Checking Input</a></li>
 <li><a href="#documentingcode">Documenting Code</a>
 </li></ul>
 
@@ -204,7 +207,7 @@ from that Typescript output. We can as an example create Lua scripts from Typesc
 <p>And now a Lua file to use that library:</p>
 
 <pre>#!/usr/bin/env lua
-print("Hello from Lua!")
+
 local Hello = require("hello")
 print(Hello.Hello.getMessage())
 </pre>
@@ -214,17 +217,37 @@ print(Hello.Hello.getMessage())
 <pre class='code'><code class='code'>### npm install -D typescript-to-lua
 fut -o assets/hello.ts assets/Hello.fu
 npx tstl assets/hello.ts
-cd assets &amp;&amp; lua run-hello.lua</code></pre>
+cd assets &amp;&amp; lua run-hello-tstl.lua</code></pre>
 
-<pre class='code'><code class='out'>Hello from Lua!
-Hello Message!</code></pre>
+<pre class='code'><code class='out'>Hello Message!</code></pre>
 
-<p><a name="vlang"> </a></p><h2>V-lang</h2>
+<p>BTW: The file created by <em>tstl</em> from the Typescript code looks like this:</p>
 
-<p>As C code can be easily used by other programming languages we might as well
-use the C output to use that in other programming languages. Here an example
+<pre>local ____lualib = require("lualib_bundle")
+local __TS__Class = ____lualib.__TS__Class
+local ____exports = {}
+____exports.Hello = __TS__Class()
+local Hello = ____exports.Hello
+Hello.name = "Hello"
+function Hello.prototype.____constructor(self)
+end
+function Hello.getMessage(self)
+    return "Hello Message!"
+end
+return ____exports</pre>
+
+<p>The file <em>lualib_bundle.lua</em> imported here is a 82kb file which supports the
+mapping from Typescript to Lua code.</p>
+
+<p><a name="vlang"> </a></p><h3>V-lang</h3>
+
+<p>More important for using our Fusion code library is the C code output. As C
+code can be easily used by other programming languages we might as well use
+the C output in other programming languages. Here an example
 using the <a href="https://vlang.io/">V Programming Language</a>. To use the libary we
-include the C header file and declare all functions we like to use from the library file. So for the same file <em>Hello.fu</em> show above we create the following V file.</p>
+include the C header file and declare all functions we like to use from the
+library file. So for the same file <em>Hello.fu</em> show above we create the
+following V file.</p>
 
 <pre>#flag -I. -L. -lhello
 #include "hello.h" 
@@ -255,7 +278,7 @@ embed the C code in other programming languages. As C is the lingua franca of
 programming it should be possible with more or less effort to use the
 generated code. There are existing as well other interface generators, for example Swig which we will present later.</p>
 
-<p><a name="dart"> </a></p><h2>Dart</h2>
+<p><a name="dart"> </a></p><h3>Dart</h3>
 
 <p>In the Dart programming language we use the ffi package to call functions in
 compiled C libraries. So we can use the same file we used in for the V
@@ -276,7 +299,6 @@ import 'dart:io';
 import 'package:ffi/ffi.dart'; // Import for allocation functions
 // Define the C function signature
 typedef HelloFunc = Pointer&lt;Utf8&gt; Function();
-typedef Hello = Pointer&lt;Utf8&gt; Function();
 
 void main() {
   print("Greetings from Dart!");
@@ -307,6 +329,105 @@ cd ..</code></pre>
 
 <pre class='code'><code class='out'>Greetings from Dart!
 Hello Message!</code></pre>
+
+<p>So, we can see that we can support as well other language as the <em>fut</em>
+transpiler should output clean C code which can be then used in even more programming
+languages.</p>
+
+<p><a name="swigsimplifiedwrapperandinterfacegenerator"> </a></p><h3>Swig - Simplified Wrapper and Interface Generator</h3>
+
+<p>This manual creation of interfaces however is slightly cumbersome, so an
+automated process of creating an interface for the C library would offer a
+good alternative way. For instance the <a href="https://rust-lang.org/">Rust programming language</a>
+has a tool called <a href="https://github.com/rust-lang/rust-bindgen">bindgen</a> to
+simplify this process. Further there exists a tool called <a href="https://swig.org">Swig</a> which automates this process for more than a dozen target languages. A few of these languages like C#, D, Java or Python are already directly supported by Fusion. Although it might be interested to get a fast implementation by using the C library made be usable by Swig than the Fusion Python output as the C library approach might be much faster than the Python code directly transpiled by the <em>fut</em> tool.</p>
+
+<p>For illustrative purposes let's create bindings for two scripting languages, Lua and Tcl for our little hello library shown above.</p>
+
+<p><a name="swigandlua"> </a></p><h3>Swig and Lua </h3>
+
+<p>Let's start with Lua. The process of creating a wrapper for a C library using
+Swig is usually started by creating an interface file which includes the
+Header file of the C library. In a second section we declare the functions we
+would like to use from that include file. Alternatively we can include here
+the header file again to indicate that we would like to use all C functions
+published in the header file. Afterwards we use Swig to create an interface C file, the original C and this wrapper file are then compiled either to a dynamic library or a static output file. For scripting languages we usually create a static library. So the process is as follows:</p>
+
+<p><img src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAkAAAACtCAIAAADXvVcUAAAABmJLR0QA/wD/AP+gvaeTAAAgAElEQVR4nO3dd1xT1/sH8JMBhAAJexdEQJEhyhZBxAIyVIai4kBREBQHrYq77l2/bpRqHbjQVkREZFilSrUOHEwVZMkeAgmEhJDk98f1l0ZERRkh8LxffbUnNyc3T3o1n9x7zz0Xx+PxEAAAACBq8MIuAAAAAPgeRGEXAESV49gxSkoKwq7i+717V3b+wiVdXV1hFwIA+E44OIQIvs+c2VPPntwp7Cq+3/TZy9htaPeeA3p6esKuBQDwPeAQIhigxMXEfj+2dVV4WH5+vrBrAQB8DwgwMHBJS0tFHt4UvnJZXl6esGsBAHwzOAcGBigHe+sFi9YhhMgk4uLQhUnJt4VdEQDg20CAgQFqfoDv/ABfrD0naINwiwEAfAc4hAgAAEAkQYABAAAQSRBgAAAARBIEGAAAAJEEAQYAAEAkQYABAAAQSRBgAAAARBIEGAAAAJEEAQYAAEAkQYABAAAQSRBgAAAARBIEGAAAAJEEAQYAAEAkQYABAAAQSRBgAAAARBIEGAAAAJEEAQYAAEAkQYABAAAQSRBgAAAARBIEGAAAAJEEAQYAAEAkQYABAAAQSRBgAAAARBIEGAAAAJEEAQYAAEAkQYABAAAQSRBgAAAARBIEGAAAAJFExP5TVlbGYrGEW0pX4HC4QYMG4XA4YRcCAAB9UXFxMYfDEXYV349IJGppabVfiP1nQdC8MXbmvV5St/nr7j+6ekMjIiIhwwAA4FP+s2e4uzoIu4rvFxN7y9t7yuo16wQXfggwRUX5VcvnC6Oq7kGnN2qqqy1dGnro0FHIMAAAaGfQoB9E+kv+9es8WRm0Y/vWtes28Bf2n3Ng7m4ODrbGS5eG8ng8YdcCAACgmwUG+CrKEXds38pf0k8CjNPGuX7jNovFxHEYc+f6C7scAAAA3amtre3SlRtSZInXr16Er1yBLewnAbYmfOEQfR1FRXkP97EN9bXCLgcAAEB32rdnrbKSgqKi/IxpE/PzX2ELicKtqbtQKNLjne2x9sUricItBgAAQPdSUpQX+JJPwhr9ZA8MAADAQAMBBgAAQCRBgAEAABBJEGCgN+S/LXZ2n2NjP/mrPX8/84eyplX0lfi2Ns5PK7dLUIZVVtX0QoUAAJEDAQZ6Q2lZZVl5ZWd65r8tbqTREUI4HMrIfNXayu7h0gAAogoCDPSGsWOsV60Ixtq5r96WV1Tzn+Jyubmv3pa8K8ce7ty6wshQHyFEIBCuXTkmuJLWVvbT9Myi4tLPvUtlVU36syzIPAAGCAgw0EsIBAJCaPuuiCl+oXqG416/KUAIVdfUObvPmRO4cpjp+B27P8QVHo9v10AIZWW/MRwxPmjRWsMRroEhaz6db+Xn8O2jxvhO8VtsNNK1pvZ9b3wkAIBQQYCB3lNRWTN7plf288ThxkOTUu4jhDZs2j9j+qQ9O1Zt2/Tzxq0HBPfM2pkVsHz39vDnj248/PuPs+djoq/ECz575c+Ep+lZedl/ZaYnjBxhWFdX3+MfBgAgbP3kQmYgEtRUlbR+UEcIaWtrNDUxEELJt9OwXTGE0OhR5lVVtepqyp++MCc3/2VG7gT3cQgh0+HDPCc6x1xP8ps2kd/hWlyy37QJRCJBWpp85cLhby2stLQsODj4W18lIyNDJH70NwiHw8nKygouIZPJEhIS/IcEAoFCoQh2kJaWFhMTQwjJyckhhCQkJMhkMkKISqXi8XgxMTFpaelvLQyAAQICDHzdu3fv1NTU2n1ZdwUOh+NyuQihuvf1j/+JUVKU/3L/uvf1CCEavUlJQh4hpKer/eJljmCH9+8bulKPmprqrl27urIGOp3e1tbGf8hms5uamgQ70Gg0wbsxsVgsBoOBEGpqauJ3xtpcLrexsREhxGAwsLv01dfXy8jItLW1tba2UiiUxsZGEomEw+EYDIasrCydTicSiWJiYkwmU1paWlpaWkJCgkqlSkpKkkgkWVlZCQkJKSkpGRkZEokkIyMjJSUlISHRLmgBEEUQYODrwsLC0tPTVVVV7e3tJ0+ebGFh0V1hpjtY64+rtxYFz0QI8Xg8Or2ZQulgh8NgqK6YGDE+4U6A/xSEUFVVrY31SMEO+nqDEhL/XrhgJvawsZFOpcp0vgwCgYDtAH23Lr68u7S0tDCZzIaGBhaL1dzcTKfTWSwWjUbDltTX12PBSaPRWCwWFpYSEhJMJpNIJBIIhJaWFhKJxOVyseSjUChUKpVKpcrKyvL/jTWE/UEBQAgCDHSGqqpqcXFxcXHxo0ePTpw4IS8vT6VSSRIELpcrOM7iC6pr6pJT7heXlP/zMF1GWior+w2N1lRWXrU8LDBo4VoajT7MQC/twdPVK0MeP3lZWFSa8tc/jmNt4hPuIoSu/JkQHOgXEjTjp5XbuVweh8NJvffoyYNrCKGKymocDqeqohQaMnuE1YRly7e6uox5+Oj51Mnu3xRg/YakpKSkpGTX05ROp7e0tDQ0NDQ2NjY2NtbX11dWVmJtbGG77c7j8dolHB+2RFxcvIslAfApCDDwAZfLraqqKi8vLy8vLysrq6ioKC0t5fF4bDa7paWF343FYuHxeG9v79e5LzqZXgihN3mFJe/Khw7RuXApTklJXlFBjsFoSX+WNcvPU1xM7NKVG3n5xatXBivIy+7+NdLEaMjbguKMzFeX/7jpYG8VE5vkN23i//as09RQ/TPmltYP6n8lnlNUkEMIXbocj8PhfloaMMxA927yhYNHzpy7GLtkkb+x0ZAe+X80YMjIyMjIyCgrd3A+8nP4aYc1KioqXr16xV/S2trK4/H4h47JZLKioqKCggL2bwUFBSUlJUVFxXYnCAH4MgiwgYXBYBQVFfHzqbKy8v3792JiYm1tbWJiYkpKShoaGurq6sOHD3d3d1dVVcV+OMfGxsbGxkpJSWlqai5evDgoKIhIJM6ZPbXz72tna5GacrHDp6ZOcZ86xZ3/cM+OVfy28492gj3Dly8IX75AcMnPy+bx27Y2ZrY2Zp0vCXQvbH+rk52ZTGZdXV1tbW1dXV11dXVhYSH2kE6nI4Swk4UEAkFWVlZFRUVVVVVZWVlVVVVFRUVJSQl25gAfBFj/1NjYiB30KywsLC4urqmpweFwCCEpKSktLS0NDQ1NTU1LS0tNTU0Zma8falNTUxsxYsTOnTudnZ17vnbQ/5FIJA0NDQ0NjS93w+Kturq6oqIiPz+/urq6vLwc24fjcDhEIpFCoaipqWG/utTV1Tv55xn0GxBgoq2+vr68vLyioqKgoKCgoKC8vJzJZJJIJElJycGDB6upqRkaGk6YMEFHRwcLsO9jbW399OnTbiwbgM7Aji4OGzbscx0aGhr4B70fP35cUVFRX19PJBLbHVHAsk1NTQ27YgH0GxBgIqOuri4vL+/169dv3rx59+4dQojH4ykoKOjo6Ghra1taWvr6+vaRsXAA9A7suKWhoeGnTwme083IyEhKSiotLW1tbcXj8TgcTlVVVUtLS0tLS1tbW0tLi0ql9n7xoOsgwPoiFotVVlaWnZ2dk5NTUlLS1tbW0tKC7VQZGhrOnz9fW1sbm5kJANAhPB6vpqampqZmbm7e7ikej1dZWVlcXFxSUpKUlFRSUtLQ0ICNMaFQKFpaWjo6OoMHD9bV1YULBvo4CDAha2trKygowPar8vLysItbJSUlhwwZoq+v7+XlpaOjA2etAehGOBwOyzYbG5t2T9Hp9JKSkoKCgvv37589e7ahoQEhhMfjNTU1dXV1dXV1Bw8erKGh0ZUD8qAbQYD1Kh6PV1RUlJ2dnZWV9fr1aw6Hg8Ph9PX1hwwZMm7cuODgYJg3CAAhkpGRMTIyMjIyElzI5XLfvXtXUFDw5s2bW7dulZWVYbtrCgoKQ4YMGTp06LBhw9TU1IRV80AGAdaz6HT6y5cvnz9/np2d3dTURCAQtLS0TExMJk6cuHz5cjilDEDfh8fjtbW1tbW1HR0dBZfX1dW9fv361atXiYmJFRUVPB5PQkJCT08PizQ9PT34C97TIMC6WXV19fPnz1+8eJGbm8vhcGRkZEaMGGFjYxMYGCgpKSns6gAA3UZBQcHW1tbW1pa/pLW1NT8/Pzc399q1a/n5+diYEWwwsKmpqZGREURa94IA66qmpqanT58+fPgwJycHIaSsrDxixIgJEyYsX768G2e/BQD0feLi4oaGhu1GRZaVleXm5qakpBw8eJDNZktKShobG48YMcLU1BQGiXQRfMN+j4KCgrS0tPT09Pr6enFxcRMTExcXl1WrVnV+aiUAwACBXbLt5OSEPWQymVlZWc+fP79y5QqNRsPj8cOGDRs1apSlpSV2Jx3QeRBgncJisR4/fnz37t03b94ghIYMGWJjY7Nlyxa4fAQA8E1IJJKFhYWFhQV/CfaD+PLly7W1tQoKCqNGjTI3N283kAR0CALss7DQSk1Nzc3NFRcXt7a29vX1NTAwgBG0AIBuNHjw4MGDB/v7+yOE6urq/v333+jo6MLCQgKBYGpqOnbsWFNTU7jus0MQYB9pa2t7+fLl7du337x5w2QysTlt169fD6EFAOgFCgoKHh4eHh4eCCEOh/Py5cu7d+/u378fh8OZm5uPHTvWxMQETlXwQYAhhFB2dnZycnJ6ejqRSLSyspo4cWKHk9N8GY1Gq62t7Ynyeo2ysjJciNah2tpaGo0m7Cq6RFNTU4SuiKfRaPMC/BUURHhqtJJ3ZefPX1JQUPjuNRAIBDMzMzMzM4QQh8NJT09PTEzcu3cvgUCwtLR0dHQ0NDQc4L+tB26A1dbW3r179+7du5WVlUOGDHFyclq8eHFXBrleunQx7V6KhrpqNxbZm5qbGffSniSn/KWioiLsWvqcDevXkklIdMdAF5eU1tTSbiYkSkhICLuWTmGz2Vo/KP9v96qvd+2rJk8PDQqc+9uJ04qKil1fG4FAsLKysrKyQgi1tbU9fvw4NjZ2+/bt0tLS48aNc3Z2bpeUFy9eNDAwwMKvHxtYAcZms//555/k5OTCwkJFRUUnJ6fdu3d32/0XeLyQoGmjR7WfeE1UFJeUEYm4kOD5RyN+U1dXF3Y5fQ1v68ZlZLKoXskXG5eS/7YkYO7sU6ejSCSSsMsZEKTIkts2/7wgKKC7MoyPSCTyrz9jMBgPHjzYt29faWmpurq6k5OTg4ODmJjYgQMHSkpKgoKCtmzZ0o/30gZEgFVXVyckJKSmpnI4nNGjRwcFBeno6Ai7qL5IWpp87ND6hYsWQIb1P4N1NMeNHTUvwB8yrNdo/aB+YG94T2QYH5lMdnJywsbo5+XlJScnR0VFcTicioqKqqqqffv23b59OyYmpr/OdNWfAyw7Ozs+Pj4/P19cXHzs2LFHjhyBEzxfgMPhikvK/3mQ7j7e1str4s2biUpKSsIuCnQPHA736MlLHo9najzIw8M1MTFFdA+HigoT46H+81YghBC3NSR4wZ9XY3r6HfX19fX19UNDQ8+ePXv16lWEUEtLy7///jtq1Kh9+/b19LsLRT8MMBqNvnDhwsbGxpEjR37fcIyBSesH9flzfRsaaMpKCmPtzB8/fowNhQL9gOdEJxwOx+PxDIbqvszKq6mpgT3snrby5yCsweFwgkK39eZbX7x4kUgkSktLi4mJEQiEtra2GTNmGBjoczicfjYcvx8GGIkksXPnTpij5Ts42FthDSazVbiVgG43acKPWOPfJ5nCrQT0tC1btrDZbCkpKSqVKiMjQyaTpaSk5vhP72fphfplgImLi0N6AQAGLGtra2GX0EvggjgAAAAiCQIMAACASOrUIcRTZ/8oeVeBtQMDppIlSYciorCHykoKi4JnfvqSd6UVua/eujjZIYQePXkpLUU2MtT/8rucPH2ltKyy3cJloXPk5GDCXAAA6A00WlPy7bQpPq5f7sbj8f6MSXQb7yAtTRZs906RfJ3aA2Oz26KvxG/dcaS6ug5bUldXv2N3RNT5GDab/Wn/cxdjhxg7xcQmIYRCl220sZ+cmfW6E+/Cvhgdd+joWewhk8m6dPlGeUV1Zz8KAACALkh78HSwwdhf95/4cjcWq9XC1mvqzCVNzc2C7d4pUlCn9sCCA/0YDOaBw6cjDm3Glhzev/Fe2hOvSc7LFs/9tL++3qDhJgZY29FhVPQfNzvzLgsXzGxqYkSevLRp/VJsybLFc3i8zrwUAABAVykqyNnbWVZ8bbdBQkJ8gvu4Z8+z27V7X2fPgeFwqN18JDgcTnBJQmLq/kOns7LfIIRsrEbYj/5wt5spPq46gzT53Wpq30dEXjh09GxZeVVH7/LfCvPyi1SUFfPfFm/aduhidBxC6GJ03KZthx4/ednZDwcAAKDTDIbq+niNRwgxmazjJy7GxqXwnyotqzz224VzF2PZ7DaE0MqfgvhPCbYRQtk5eb/uP3nm3FUGo6Xd+tvaOFEXriWl3C8qLsWWsFitF6Pj9uz77fsi8BsGcTQ00jZtO8T/p7Kyhv/UoqUbr9+4nZ3zxnas77+PX3xuDXn5RVajfbKy39y8dddopGuHxxXf1zdi6w9auJbL5fF4vD+uJly8fAMhxGhh7jtw8vHTjG/5gAAAADoLh8O1stkbNu/PzHo9xW9x6r1HCKGXGbkBQasKi0r3Hfjdd8biL7z8z5hEzynBZeVVe/93wmbMlObmjzJs5ZpdMbFJcfG3V6zehRBisVodnPxib6S8el1gM2by2fPfPFlJN1wHlv4s60l6hoebI0JIU0P1wOHT0ecOdthz1bo9Sxb5/7xsHkLoR9fZ4Wt334o71WHP1tbWisoahJCDvVVwoF/y7TSEUGDA1KvXErteMAAAgM+h05u3b14uLi5WUPgu/VnW2DHW6zftH2E6jEyWtLUxO/bbhVev32pqdDC5IpvdFrps4624U2YjjRoaaLqG444ci1q1Ipjf4fGTl1GnftUdrPUyIxchFHnykrKywpULhxFCg7Q1lofv8PVx+6Yps79hD0yWStm0fin/H1XVDxPlPUnPkPz/uUGnTvFw/tHuc2tISrlvYjwEa/vP8k578PTTPvJy1E3rl+7YsiLuaiQej0MICd69rXuvJOdyuQcPHpwwYcLatWsZDEY3rhkAAESUgrysuLgYQohKlWEyWQihp+mZkpIkhJCyssLG9Us/N5Hm8xfZ1TV1JsZDEUKyspRJHj/e/+ejL/mwJQH246avWL1TWVkBIZSYfA/rjBCaM9un7n1DTm7+N5XaDXtgbHabziBN/siLz+HxeDwej3/qS0VZ8ctpNHTI4K7X9mVr1qyh0+k+Pj4//fSTmprakiVLevodAQBAhPB4PIRQK5sd4D9FcDRDU1MHv/ixIXdl5ZWDtDURQioqivUNjYIdfCe7OYyx2n/otLmN18N7f/B4vLKy/xIBIUQkflskdXYPDDsd9fESLrbEbKTR1djE4pIybPmbvEL0/3H14VPxeDweD4fDjbGzPHXmTy6XixDKzslzG+/wybtweZ+MOxQTIzY20hFCHA6nqro2MfketvvZRW1tbceOHQsPD583b15OTs68efM67JaRkVFYWNj1twMAgL6v3Rf9hy/5EUb7DpzEljQ3t5RXVGPL2/3bxGiIvLzsiVOXsZ6ffsm/eJmrrKSwc+sK5x9H30r628HeKvZGSm1dPdZZQ11luMnQb6q2U3F38vSVE6cul5ZVLlzyy7rVi8iSpK07j756/fbchWtyspSwJQHurmOtRvtM8/V4X984dbJ7VXVtTGxyW1vbtevJde8bsnPyDkdEGRnq79oWPsZp+rjxs4abGCQkpibfPIsQotGazpy7GuA/5dKVG6fO/llcUr5o6cb1a0LV1ZSxdzcbYbTkp82hyzbi8XhpKfK9tMdl5VWmw4d90+f8VHV1NZ1Ox26MpKGh0WEfNpu9cOHCyMjILr4XAAB8VVJS0ooVK3JzczkcDkKISqU2NDS0tLSsXbs2Ojq6tbU1KCho586dOBwuLS1t+fLlWVlZhoaGv/3228iRI7ulgJzc/MMRUTm5eYcjohQV5O6m/puZ9drVZcy2zT87uc3Of1s8zECvoYEWeXTboqW/IIR+Dt8ReWTbz+Hb+e3d28ODQ9eXlJRzuNz6+sZ5c3wRQil/peFwOKdxo3/7PbqpqZlKlUm+nbZ6ZYimhuq5i7G2Dr4T3B1v3ko9enCz4AmjzuhUgOHxuGm+H91Zg0qVWbtqEUJIXFwcIRR97mBsXEphUWnQvGkmxkPTHjydM9sHIUQgEEgkidUrQ7BXjTAdlpmeEBObTCKJb1i7WElRHluOBTgej58+dcKn725pMfzalWOlZZUzpk26k/pwtK25ooLcN33IT127dm337t0IIR8fH0NDw8LCQg6Hs27dOmdn5wkTJjQ1Nf3yyy+jR4+eOXPmgwcPAgICxowZ019vqAMA6Atqamp8fHxOnTrl5ubm7++fl5eXnZ2NEFq4cCFC6NWrV7dv3w4KCgoJCWGxWN7e3nFxcYaGht7e3pGRkcePH++WGgyH6T1O+28ooN+0ifw2vfaj4d8nj+88eXznp+3AgKmBAVPbrZY/MELwSmKskf38w7i8/+1Z9x0FdyrAsBQV1O6MFx6Px64ewNjZWtjZWnS4Km0tjZ+WBgguoVCksauhP/3YfNgQR4SQ50SnzhT8VVZWVmFhYX5+fitWrNDS0nr37t2sWbOqqqoQQvPnz/fz86uursbaV69eXbRokZmZWbe8LwAAdOjt27cMBsPV1ZVCoQQGBnp5efF4vIaGhrNnz9bU1FCp1MmTJ0+ePBkhFBYWNn369FGjRiGE7ty5I+zChWmATuaroaFhY2ODELK1tbWwsPD29v7hhx+wp7y9vbEjihISEvb29gghS0tLU1NTIVYLAOj3LCwszMzMjhw5wmAwUlNTra2tcThcYWEhgUCQk/vomFNBQYGioqKw6uxTBmiAfVm7OUcAAKCnEYnEdevWxcbGKisrP3v2LCoqCiGkqanJ4XCePHki2FNTU/Phw4dCKrNvgQD7oF1oYUMlAQCgdzAYjPDw8Hv37jU1Nd25c0dXVxchpKys7ObmFhISkpub29zcHBUVlZGRMWfOnOTk5IMHD9Lp9Ly8vAMHDgi7dqEZuAHW0tKCEOJfv0wmk7Hh8hkZGQ0NDbt27bp58yY2JIbBYPz9999CLBUA0O/hcDgikUgmk7FpZikUCjY04+zZs7q6ulZWVubm5uLi4sOHD7e2tj537tyhQ4c0NTU3bNgwe/ZsYdcuNN1wIbMoSkxMnD9/PkLIzs5u6dKlq1ev9vPzW7t2bVxcXHBwsJycnJKSkpaWFplMHjp0qI+PDwxBBAD0qMrKypCQkLCwMIQQl8utra1ds2ZNSEiIkpLS1atX23WeOXPmzJkd3IgRc+TIkadPn1IoFBkZGUVFRTk5OSqVWlFR1dLCxCbU6Df6YYDR6U179uzx9vbW1//sLTRdXV3LysoEl6xYsWLFihVYOzAwkL/81atXPVQnAADwhYWFqaio5Ofna2lpMRiMO3fufPfgZxqNFhUVJXhFspSUlNlIk36WXqhfHkKUkZH28PC4cOHC1KlTw8LC0tLSPp3dAwAA+pT169eXlpZaW1vLyMg4OjoyGIzQ0NDvWA+XyzUyMlJW/jARhISEhImJSUZGho6OdrfW2yf0wz0whJCRkZGRkRFCqLCwMC4u7tixY8rKyh4eHmPHjv3WubYAAKAXWFpaJiQkfPfLm5ubk5OTk5KS6HS6lZWVgoJCVVWVkpKSq6vr77///rnpd0VdP/8219HRWbZsGUKopqbm1q1bQUFBBALB09PTxcVFQkJC2NUBAECXVFdXJyYmPnjwgMViOTo67tq1S1ZWFiGUnZ3d3Nx84sQJZ2dnYdfYg/p5gPEpKSn5+/v7+/vX19ffuHEjODiYxWK5ubl5eXlRKBRhVyeS6t7Xpz/LEnYV3aOtrU3YJQDwDbKzs+Pj47OzsxUUFDw8PA4fPtxuH2vdunU7d+5UUFAQVoW9Y6AEGJ+cnByWZC0tLbdv316xYkV9fb2dnd20adNUVVWFXZ0omeQ5JT2zUthVdA//OR3fiwCAvqOlpeWff/5JSEgoLy8fOXLkxIkTV61a9bnO2tr98IzXpwZcgPFJSkpOnDhx4sSJHA7n4cOHe/bsKS0tNTc3nzx5sp6enrCrEwELFgR/vRMAoGuw0x93795lsViurq4bNmxoN7PUQDZwA4yPQCDY2dnZ2dlxudznz5+fP38+IyNj+PDhU6dONTQ0FHZ1AICBiH+QkEwme3h4REZGYrf+AIIgwP6Dx+PNzc3Nzc0RQtnZ2Tdu3Ni1a5e8vPyUKVNGjx796QSJra2t8EcKgE9xudyRI0dGRESMHj1a2LWIEiaTmZaWlpCQUFhYaGpq+uWDhABBgH0OfyB+UVHR9evXIyIiqFSqu7u7q6srdrKUx+MZGxvv2rXLx8dH2MUC0Lfg8fiXL1/2/vsWFZdu23k04tAWcfEvjRpvaWEejoiytBju6GAj2O61Otupra1NSEi4e/dua2urg4NDeHg4nI/vJAiwrxg0aBA2EB/7QxYUFCQmJubi4qKiolJXVxcSEhIbG9uPL7MAQIQMNXFubWUfObDpy90meAfdSX14KepAu3Yvww4SZmVlSUtLu7u7w0HC7wAB1lmKior8gfjx8fErVqx4//49Qujy5csvXryIi4sTdoEADHQXzuz3nbH4q90ij2770XX2p+1e0NbW9u+//8bExBQVFQ0fPhwOEnZRP5xKqqfJycnNnj2bP419a2trZmamo6Pj8+fPhVuYqDt8+LCKisqRI0cQQlwud/r06U+fPhV2UQAhhH7++WdZWdnFixdHRUUdP34cmy79+PHj06dPx9qrV69GCCkqKuJwuBcvXiQnJ9va2iYmfrhbfFJSkomJCZFIxDpjV9r2BBvrEQghBqNl2fKt02YtLSuvwpbn5OYHhqzxnbH47/uPEUJ6utpKSvLYU4JthEEKc6kAABTYSURBVNCd1IdTZy7xmbboxs3uvNMxk8k8ffr03LlzAwMD3759u2bNmpiYmE2bNmFn3MF3gwD7HiUlJc3NzcbGxubm5qampra2tvLy8qmpf+fk5gu7NBGWm5tbX1+PtfF4fHR0tIWFBfaQxWI1NzcLr7QB7cWLF+np6fn5+YsXL37w4EFQUNDFixfl5OTmz58fHR0dERFhaGi4c+dOhNCWLVsyMzONjY19fX35d1ysqanx8fFZv379+/fvPT09DQ0NGxoaerTgY79ddLC3Kiou27E7AiH0rrRi9fo9XpOcrSxMXScGFBS++9wLk1LuhyzeMMXbzcLMxGfawus3bndXSfUNDRoaGpGRkWfOnJkzZ46SklJ3rXmAg0OI30NLSwu7eZigyOPHDA36+XXvPSoiIuJz95k9cuTI+PHjjY2Ne7kkgBCSk5N7/fp1UlKSr68vdoeqadOmrV69Oi0tzdHRUUJCorCwsLCwcPDgwXQ6HdtG79+/l5GRwV7+9u1bBoPh6upKoVACAwO9vLx4PF6P3vR8aegcGRmpknflSSn3EUJHj58vKi77df9JhBCXy716LXHlz0EdvnDT1oMb1i6eOsUdIVRQWLJ5+yHPiU7dUpKaqqqLi0u3rAoIgj0w0NuKi4szMzM5HA5/CZPJfPz4cWNjI4FA4C+sq6vDzjI+ePBg3bp1T5484Q9sYzKZT548yc//aH+3srKyqanp9evXVVVVvfI5Bgptbe24uLhLly5paWmdPXsWIYTH4/39/a9du4YQYjKZkydPjomJaWhowG4ijBAiEAj88QgWFhZmZmZHjhxhMBipqanW1tY9ml4IITExIkKIRJJoa+MghF6/KZjl57lpw7JNG5YlxZ+Z7O3a4at4PN7TZ5lKih8OJ7o42Wfn5PVonaDrIMBA72lubvbx8ZkyZYqTk5OtrS2NRkMIPXz4UEdHJzg42MbGBju4xOFw1q5dO2jQoMePH9NotM2bN7NYrIiIiKioKITQ7du39fT0goODTU1N3d3dm5ubGQzG0qVLdXR05s+fHxwcPJDvsN5DrKys4uPjk5OTly1blpmZiRCaO3fu9evX8/PzbWxs5s+fHxMT8+DBgwkTJnz6WiKRuG7dutjYWGVl5WfPnmEbsXdg91GSkiITCISxY6yxfwbr/NBhZxwOJyMjnfvqLfZQSkpSWQkOqPR1EGBCw+Fwzl+6jv1I/LJ3pRXJt9Ow9qMnLzv5wzD13qP8t8VdKrG77dixw8zMbO/evWfPnn3z5s3BgwdZLNaMGTN27Njx/Pnz2NjYkpIShBAej8/IyGhqakIIUSgU7Ha0p0+f3rdvX319/dSpU69cufLs2bOMjIy0tLRNmzYxGIycnBwmkzl79uzU1FTsfExf0MlNwGC0RF+Jx9qC2/rLSt6VR1241qX6OictLW3Hjh2lpaXS0tKSkpKtra0IIV1d3UGDBl27ds3MzMzBwaG2tpZOp5NIH+6XWF1dzWAwsK3JYDDCw8Pv3bvX1NR0584d/l5aT2htZSOEsL9TbHYb9nDcWJt9B35/W1CCEGpqYqQ9eIoQYrFaW9ls7FX8to+ny5FjUXXvGxBCSSn3Z0yf1HOlgm4BASYc7983mJi7zw5Y/tV50M9djB1i7BQTm4QQCl220cZ+cmbW66+uf/rsZY4uM/tagMXHx9+8eXPTpk27du0yNTVls9k3b96sr68PCAhACA0dOhQ7g4LD4eLj4/knUQRdv35dXFzc1tYWIaSrqztv3rwrV64oKipilzFoamr27gf6kk5ugozMV7rDxm3adgh9vK2/isfj9dqdWi0tLT09Pa2srJYsWcIfOBcQEGBgYIAQwuFwc+fOFUymwYMHs9ns4ODg+Ph4HA5HJBLJZDI2BJFCoWAn0nrCuPGzEEIWtl6X/7i5aduhfx6mb9i8f84sH7vR5sZmbuajPP38w0xNhi39eUtW9pvl4TtS/koTbO/ctpJCkdYzHDfcwiM7J2/Dmq+PyAfCBYM4hENCQsLddSz/eMUX6OsNGm5igLUdHUZF/3GzM+t3dRkTF/9Xl0rsAbW1tXFxcfxvwKampmPHjklJSfE74PH4Dtt8NTU1dDqd/3Do0KHYccgOOwtXJzeBrCzlx3G2T9Mz0cfb+qu0tTTmzOqNWWDs7OwQQp/eVmru3Ln89tq1awWfwvaeMYWFhSEhIWFhYQghLpdbW1u7Zs2akJCQnij1zMk9WEN3sNbV6KMIIWUlBQKBcOXC4fy3xSxWq+EwPRwOFxgw1cdrPEJomIGuirIiv62kKJ/+8PrLjFckksQwgx7cUwTdpc/9tR8gpKQkly2ei7WvXU8+9tsF7HAHQojBaDl/6frR4+era+oQQjZWI+xHfxhNPsXHVWfQfzsZNbXvIyIvHDp6ln+9C9/c2ZPVVJUQQk/TM3/df7KyqqaHP1CnDBky5MKFC1ibx+NdvXpVW1u7oqIiNzeX3yc/P/9zozDq6upGjhzJYDCSkj7so1RUVGBfr33QFzbBs+fZ+w+dxg4Vav2gPt3XA1suuK0xKX+l7f41ssNrkhiMlsud+zUjXGFhYTk5Ofn5+a2trTQa7c6dO2ZmZu36cLncbnkv/omuHzTVsIbhsA93ltDT1TYy1MfGjww3McCeVVFWFGwjhPB4/MgRhpBeogL2wIQG+7sUEXmhqLj0j6u3qqvrNq5f2tzc4jNtoYnx0NxXb3f/Gpn17BaFIt3hy/Pyi1w85rqNd3hbUPzLlgP3/4o2MR7abv13Uh8yGC0PHz2/eevu3eQLvfGpvmjt2rVubm5tbW0uLi4pKSk//fSTmpqanp7epEmTNm/eTKfTKysrDx48qKWlpa2tTafTb968aWlpSaVSCQRCdHS0mppaaGioo6Ojv7//7t27cTjc6dOn4+Li2Gz2+fPnEUIVFRXa2tp952YTHW6C01F/xifc1dZS3/1r5OqVwWFLAj738rAV2x49fmFtNWLP/054TXT+PfK/c3vPX+S4e86nUmWm/X/49Vnr16/fuHGjtbV1U1OToaHhkiVLQkND2/VZsGBBVlbWvHnz/Pz8Ojx0LCx7/3fi5q277Ra6uoxZvbJH9iDBt4IAEzJvTxedQZoa6ippD9IRQsdPXKRQpKWlpSwtht/9+9+Ll+NCgmZ0+MJV6/YsWeT/87J5CKEfXWeHr919K+5Uuz7DDHQD/Kc8evLSya33Jsv5Amdn55SUlBMnTkRHR69cuXLQoEEIobS0tK1bt166dGnhwoV+fn4uLi7Ozs5ubm729vaZmZlv3rwZNWrUoUOH7t+/v3jxYoRQXFzc3r17o6OjNTQ04uPjTU1NGxsbz58/7+DgsHfv3jVr1vSpe6i32wStrezdv/42feoEhJDZSKNdeyM/F2AvM3IvRse9e5smISHu4zXewclvQeB0a0tT7FlZWco4x1EicUdsS0vLhISEL/dpbGx89OjRs2fPtm/frqGhMXfuXFfXjge797KVPwd97qIx0BdAgAkZdpSJSpVhMlkIoSfpGZL/P5QrfPkCfb1Bn3thUsr9hQs+ZJv/LO/FYZs6WrkyQohKkcZW3hc4Ojo6OjoKLlFWVj58+DDWdnd3xxq3bt0S7LNo0aJFixZhbWlp6c2bNws+S6VSU1NTe6jgLmq3CQoKSxiMFuwpK0tTa0tTwevhBCWl3NfXGyQhIY4QGmNnOUhb837aE36A6QzSnOXn+X0B1tTEOHr0KB6PZ///MLwvaG5uxoYdfhmDwWCxPvozRiAQKBRKJ7th0wKw2eySkpKSkpL09HQikTjG3vrrHwYMbBBgfQU2oozNbhvvbB/gP+WrnXk8Hv/Ul4qyouAlwB31764y+7/m5uY1a9ZMnz7d2tr6y/9Xvwm2CdjsNhwOt2n90k705wme2lRRViASPyrmuy8HlpSUmDBhgoqKSrvlYmJi0tIdH68WRCQSu/0on5+fX3p6OkJISUlJXl7ey8trzpw5JyL3d++7gP4HAkxosMTij4TGGmYjjI4ePz9j2iTsp/ebvMIh+jqCA6axNg6HG2NneerMn/4zvfF4fHZOntt4h0/X327loDPExcUvX7585swZRUVFHR2dWbNmeXl5fd+qPt0Eerra9Q2Nf8YkTvFxRQjl5Rfp6WrzeKjd9kUIOYyxXr1+b8pfac4/2rFYrYVFpa4uYz638m9CIBC0tbXV1dW/70P1BBKJpK+v7+LismzZMn19fYRQXV2dsIsCIgACTDiYTNZPK7cjhEKXbQqcN/Xk6St5+UWXLt9YvHD2mXNXLUd7O/84+l1pxc6tK+//8yQmNrmtre3a9eS69w3ZOXmHI6KMDPV3bQsf4zR93PhZw00MEhJTk2+eRQi9ev32wb/P5s3x3bX3eMm78l/3n6RSZfYd+J3L5Yav3b1nxzfcuOHo0aOXL18mk8mysrJSUlJkMllGRoZKpZLJZP5CcXFxEokkKSkpLi4uOBpeJDQ0NPB4PBqNxuFwmpubWSxWQ0MDi8ViMBgkEqm6uppOpxcWFt6/fz8sLIxMJocu8DE2GtL59X9uE+zcunLm3J9u3rorLi6m9YP6nNk++w6cLCx6t2P3MXs7C/629vZ0meXn6TtjyewZXi9e5s6Z7WMwVBch9PuZP+xHW4iLi+3Z91th0bv9h07/tPSzw0BExb59++Tl5b/eD4CPQYAJjbHREP4X4gT3cQghMTExKlXm6YPYP2JusVitq1YEKyspVFRWz5ntgxAiEAgkkgR/+NMI02GZ6QkxsckkkviGtYv5c7hhP8plZSnrVn8Y62ViPNTEeKi0FPmbygsNDfXw8KDRaAwGg8Fg1NfXYw0ajVZTU5Obm4vN4cRisbAvfTabzWQyyWRyU1MTlUqtr6+XlZWl0WjS0tJYJLS2thIIBBKJ1O5Q1ZcftsOfrv7ThzweD5uJCpsSgs1mYxeHcblcIpHY2tpKIpGam5spFEpDQwM2UpFKpeLxeGlpaTExMQqFIi4uTqFQyGQy//akVCpVVVXV29u7sqLsc1MQfc7nNkFoyKyRIwwfPHxmYjx0vLN9aVnlWAebsQ420tJkHA7H39YIoahTv8bGpbzJK/Sc6OQ0bjT/Y/J30RzGWEtJSX5TVX1T19Prz5jErJw3RAJhQeD0iMgLCCFVFcWQoBlnzl0tKi6bN2dKWxuntKyyoYHW1NQ8Y/qkvPyim7fucrm8yd7jtbU0EELZOXktLUwej3f/n6cT3B2H6Ou0e4uq6tq4+L/Y7LZpvh4K8j11RxjwTSDAhINEkhA8EWJr89+VMVSqTGDAVP5DO1sLO9uPrg3i09bSaPfr22CoLvY7XXDsouDKvxWFQvn0VHxXMJnMlpYPoxjodLrgRCRfeCgpKcmfpujLDykUStdPXC1dulRVVdXAwGDdunU//vgjDodbGPLNQ9G+sAlsbcz4SzQ1VAX/JAhuaxwO5+3Zfgpz/p+NzpxIGziYLNZvJ6ONDPUXBE5vamred+D39WtCEULl5dVP0zPp9KbDEVGDdbQ8Jzpp/aBeVFxqOdrbf6b3i5e5+w+dKnz99y9b9u/+9bepU9zlZKkFhSUbtx54+eSm4E+WV6/fTvRZ4O469tHjF7/uP5GX/Vc3nh8F3w0CDPQqEonED5u+c8FWO+vXr3dzc1NVVRV2IaCzZvl51tc33kl9qKyk8OuuNVHnr9mPtkQIKSnJn/19b/qzrKSU+x5ujru3hyOEGhvph/73i/9M77LyKs3Bo2tq6yzNh6uqKBoN01+/JpTH45mP8jwcEbV/7zr++les3rV21cIA/ynVNXVXryVCevURMBMHAO0FBARAeomcab4eqfcesVitGZmvRo4wTEhMRQjhcDgFeVkXJzsbqxHYbVYQQlSqjP9M79ZW9sN/nyOEOByut6fLCFNDWVkK9hK38Q65rz66WU/ag6cO9tYIIWUlhYULZvbyRwOfAwEGAOgPlJUUrC1N/77/+NmL7N8jdyUm32Oz29TVlDvsfPDIGTObSddvpPCXCF6WQJKQwMKMj8vlvn/fszeSBt8BAgwA0E/M9POMT7ijIC+nqaGqoa4SE5vk6GDDf5Z/1UH0lfioC9eePog9fWKP4HL+fJV3Uh+OsbMSXPNIU8OTp69g7br3DRBmfQScAwMA9BPek1w2bjmwdeNPCKFZMzxfZORic0VevZZ4K+lvC3OT+/88sR9tyWSx8t8Wr1q3B5sB4OCRM7u2hSOEYmKTGhpoJe/K6U3N2GCZlL/ScDic07jR27csd/GYW11TpzNIs6mJEXl0m3A/KcBAgAEA+glpafLFqANUqgxCaIq3W1FxKbZcQkI8aP50hFB9PQ0hNHuGF4/HIxAIM6dP0tZSNx0+DJvlJDjQj0yWtLQY7uvjJi4uhj5clMJDCNnZWjz793pC4t9aP6h7TepDk20OcBBgAID+w8ZqBNaQkZHi359hgvs47FJLDIFA4M/WNtPPE2vweDw8Hh80b5rg2lyc/rtZD/8aFdB3QIABAAa6Q0fPPnz0vLyiariJgYO91ddfAPoGCDAAwEC3NHTO0tA5wq4CfDMYhQgAAEAkfdgDq6qqXb2hn9y8ID+/SNglAABA35KfX9RvvuSrqmqxxocAu/LH1c/dWE/krMHDbiUAAHwk4VYSl8sVdhXdgz+V14cA694JWwEAAPQpVCpV2CV0P9hZAQAAIJIgwAAAAIgkCDAAAAAiCQIMAACASIIAAwAAIJIgwAAAAIgkCDAAAAAiCQIMAACASIIAAwAAIJIgwAAAAIgkCDAAAAAiCQIMAACASIIAAwAAIJIgwAAAAIgkCDAAAAAiCQIMAACASIIAAwAAIJIgwAAAAIgkCDAAAAAiCQIMAACASIIAAwAAIJIgwAAAAIgkCDAAAAAiCQIMAACASIIAAwAAIJIgwAAAAIgkCDAAAAAiCQIMAACASIIAAwAAIJIgwAAAAIgkorALAACADjQ20gsK3wm7im7A4XCEXUK/BQHWfXC44ycu37j5t7Dr6AavXr8NCl4i7Cr6FNyGzYfExMSEXUY3+Pv+oyXLhF3E15DJ5CFDh/8R+0DYhXSPKb7ThF1C/4Tj8XjCrqGfoNFotbW1wq6i26iqqpLJZGFX0VfU1tbSaDRhV9FttLW1CQSCsKsAoKsgwAAAAIik/wMy6SS/oKZzswAAAABJRU5ErkJggg==" alt=" "/></p>
+
+<p>Let's have a look at an example interface file for Lua:</p>
+
+<pre>%{
+#include "lua.h"
+#include "lualib.h"
+#include "lauxlib.h"
+#include "hello.h"
+%}
+const char *Hello_GetMessage(void);</pre>
+
+<p>Using the following command line we can create an hello shared library file on Linux:</p>
+
+<pre class='code'><code class='code'>if [ ! -d swig-lua ]; then mkdir swig-lua ; fi
+cp assets/hello.i swig-lua
+fut -o swig-lua/hello.c assets/Hello.fu
+cd swig-lua
+swig -lua -module hello -o hello_wrap.c hello.i
+gcc -fPIC -I/usr/include/lua5.1 -c  hello_wrap.c -o hello_wrap.o
+gcc -fPIC -I/usr/include/lua5.1 -c  hello.c -o hello.o
+gcc -shared -I/usr/include/lua5.1 -L/usr/lib/x86_64-linux-gnu/  hello_wrap.o hello.o -o hello.so
+### check if there is the function in the shared library
+nm hello.so | grep GetMessage
+cd ..</code></pre>
+
+<pre class='code'><code class='out'>000000000000779c T Hello_GetMessage
+0000000000007179 t _wrap_Hello_GetMessage</code></pre>
+
+<p>We can now try to run that function in a Lua script. Here is an example script:</p>
+
+<pre>#!/usr/bin/env lua
+require("hello")
+print(hello.Hello_GetMessage())
+print("This is", _VERSION,"!")</pre>
+
+<pre class='code'><code class='code'>cp assets/run-hello.lua swig-lua/
+cd swig-lua 
+lua run-hello.lua</code></pre>
+
+<pre class='code'><code class='out'>Hello Message!
+This is Lua 5.1 !</code></pre>
+
+<p><a name="swigandtcl"> </a></p><h3>Swig and Tcl</h3>
+
+<p>Let's repeat that example with the Tcl programming language. As this is as
+well an interpreted language we will again compile a shared library to be
+used by Tcl. The interface file looks like this:</p>
+
+<pre>/* -*- C -*- */
+%{
+#include "hello.h"
+%}
+%include "hello.h"</pre>
+
+<p>Let's now create a shared library file and then pipe some Tcl code into the
+tclsh interpreter:</p>
+
+<pre class='code'><code class='code'>if [ ! -d swig-tcl ]; then mkdir swig-tcl ; fi
+cp assets/tcl-hello.i swig-tcl/hello.i
+fut -o swig-tcl/hello.c assets/Hello.fu
+cd swig-tcl
+swig -tcl8 -module hello hello.i                ## create the interface wrap file
+gcc -fPIC -c hello.c                            ## compile the FU generated code
+gcc -fPIC -c hello_wrap.c -I/usr/include/tcl8.6 ## compile the SWIG generated code
+gcc -shared hello.o hello_wrap.o -o hello.so    ## combine both to a Tcl library
+echo &quot;load ./hello.so; puts \&quot;This is Tcl [set tcl_patchLevel]!\&quot;; puts [Hello_GetMessage];&quot; | tclsh</code></pre>
+
+<pre class='code'><code class='out'>This is Tcl 8.6.16!
+Hello Message!</code></pre>
+
+<p>If you are interested in more example using Fusion with different language
+targets have a look at the examples in the
+<a href="https://github.com/mittelmark/fusion-tutorial/samples/hello">samples/hello</a>
+folder of the project.</p>
 
 <p><a name="datatypes"> </a></p><h2>Data Types</h2>
 
@@ -872,9 +993,78 @@ int main(int argc, char **argv)
 <p>We leave the creation and execution of D code generated by fut as an exercise
 for the reader.</p>
 
-<p><a name="usingswigtotargetotherprogramminglanguages"> </a></p><h2>Using Swig to target other Programming Languages</h2>
+<p><a name="checkinginput"> </a></p><h2>Checking Input</h2>
 
-<p>TODO</p>
+<p>Parsing strings to numbers or boelans is common task. To make it more safe we might check the string before we actually perform the parsing so it might be good to have method IsNumber or isBoolean returning true of false before we start actually the parsing.</p>
+
+<p>Let's show some possible implementations, we compile this with the c++ compiler and then execute the file.</p>
+
+<pre class='code'><code class='code'>public static class Main5 {
+    public static int BoolToInt (bool b) {
+        if (b) { return(1); }
+        return(0);
+    }
+    public static bool IsNumber(string s) {
+        if (s.Length == 0) {
+            return false;
+        }
+        foreach (int d in s) {
+            if ((d &lt; '0' || d &gt; '9') &amp;&amp; (d != '.' &amp;&amp; d != '-')) {
+                return false;
+            }    
+        }
+        return true;
+    }
+    public static void Main (string[] args) {
+        string s1 = &quot;12&quot;;
+        int i1 = Main5.BoolToInt(Main5.IsNumber(s1));
+        string s2 = &quot;-23&quot;;
+        int i2 = Main5.BoolToInt(Main5.IsNumber(s2));
+        string s3 = &quot;xyz&quot;;
+        int i3 = Main5.BoolToInt(Main5.IsNumber(s3));
+        string s4 = &quot;1234.5678&quot;;
+        int i4 = Main5.BoolToInt(Main5.IsNumber(s4));
+        string s5 = &quot;a1234.5678&quot;;
+        int i5 = Main5.BoolToInt(Main5.IsNumber(s5));
+        Console.WriteLine($&quot;s1={s1} i1={i1}&quot;);
+        Console.WriteLine($&quot;s2={s2} i2={i2}&quot;);
+        Console.WriteLine($&quot;s3={s3} i3={i3}&quot;);
+        Console.WriteLine($&quot;s4={s4} i4={i4}&quot;);
+        Console.WriteLine($&quot;s5={s5} i5={i5}&quot;);        
+    }   
+}</code></pre>
+
+<pre class='code'><code class='out'>s1=12 i1=1
+s2=-23 i2=1
+s3=xyz i3=0
+s4=1234.5678 i4=1
+s5=a1234.5678 i5=0</code></pre>
+
+<p>Here another trial with D:</p>
+
+<pre class='code'><code class='out'>s1=12 i1=1
+s2=-23 i2=1
+s3=xyz i3=0
+s4=1234.5678 i4=1
+s5=a1234.5678 i5=0</code></pre>
+
+<p>Just to prove it I execute that on the command line:</p>
+
+<pre class='code'><code class='code'>ls -lth main?-*
+./main5-d</code></pre>
+
+<pre class='code'><code class='out'>-rwxrwxr-x 1 dgroth dgroth 1,3M 29. Jan 19:16 main5-d
+-rw-r--r-- 1 dgroth dgroth 448K 29. Jan 19:16 main5-d.o
+-rwxrwxr-x 1 dgroth dgroth  17K 29. Jan 19:16 main5-cpp
+-rwxrwxr-x 1 dgroth dgroth  32K 29. Jan 19:16 main4-cpp
+-rwxrwxr-x 1 dgroth dgroth  16K 29. Jan 19:16 main4-c
+-rwxrwxr-x 1 dgroth dgroth 1,3M 29. Jan 19:16 main4-d
+-rw-r--r-- 1 dgroth dgroth 449K 29. Jan 19:16 main4-d.o
+s1=12 i1=1
+s2=-23 i2=1
+s3=xyz i3=0
+s4=1234.5678 i4=1
+s5=a1234.5678 i5=0</code></pre>
 
 <p><a name="documentingcode"> </a></p><h2>Documenting Code</h2>
 

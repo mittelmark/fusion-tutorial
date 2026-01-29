@@ -1,5 +1,4 @@
 #!/usr/bin/env lua
-print("Hello from Lua!")
-local Hello = require("hello")
-print(Hello.Hello.getMessage())
-
+require("hello")
+print(hello.Hello_GetMessage())
+print("This is", _VERSION,"!")
