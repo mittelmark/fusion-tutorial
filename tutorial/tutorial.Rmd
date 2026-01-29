@@ -1,7 +1,7 @@
 ---
 title: Tutorial of the Fusion Programming Language (WIP)
 author: Detlef Groth, University of Potsdam
-date: 2026-01-29 13:41
+date: 2026-01-29 15:22
 ---
 
 `include tutorial.toc`
@@ -122,7 +122,7 @@ Let's create a simple library file, _Hello.fu_ in a sub folder _assets_:_
 
 And now a Lua file to use that library:
 
-`include assets/run-hello.lua {<pre> </pre>}`
+`include assets/run-hello-tstl.lua {<pre> </pre>}`
 
 
 So a Makefile section for that conversion looks like this:
@@ -131,7 +131,7 @@ So a Makefile section for that conversion looks like this:
 ### npm install -D typescript-to-lua
 fut -o assets/hello.ts assets/Hello.fu
 npx tstl assets/hello.ts
-cd assets && lua run-hello.lua
+cd assets && lua run-hello-tstl.lua
 ```
 
 ### V-lang

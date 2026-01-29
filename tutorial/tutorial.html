@@ -207,16 +207,19 @@ from that Typescript output. We can as an example create Lua scripts from Typesc
 <p>And now a Lua file to use that library:</p>
 
 <pre>#!/usr/bin/env lua
-require("hello")
-print(hello.Hello_GetMessage())
-print("This is", _VERSION,"!")</pre>
+
+local Hello = require("hello")
+print(Hello.Hello.getMessage())
+</pre>
 
 <p>So a Makefile section for that conversion looks like this:</p>
 
 <pre class='code'><code class='code'>### npm install -D typescript-to-lua
 fut -o assets/hello.ts assets/Hello.fu
 npx tstl assets/hello.ts
-cd assets &amp;&amp; lua run-hello.lua</code></pre>
+cd assets &amp;&amp; lua run-hello-tstl.lua</code></pre>
+
+<pre class='code'><code class='out'>Hello Message!</code></pre>
 
 <p><a name="vlang"> </a></p><h3>V-lang</h3>
 
@@ -381,7 +384,6 @@ used by Tcl. The interface file looks like this:</p>
 <pre>/* -*- C -*- */
 %{
 #include "hello.h"
-    
 %}
 %include "hello.h"</pre>
 
