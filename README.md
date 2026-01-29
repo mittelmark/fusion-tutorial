@@ -17,14 +17,14 @@ scripting languages like Tcl, R or others using the
 
 Below you see a list of programming languages which you can target directly
 using using the [fut - command line tool for Fusion](https://github.com/fusionlanguage/fut/)
-or, indirectly, using the `fut` generated C code and with [Swig](https://www.swig.org). See below the Tcl section for that approach.
+or, indirectly, using the `fut` generated C code and with [Swig](https://www.swig.org). See the Tcl section below for that approach.
 
 
 ![Diagram](https://kroki.io/graphviz/svg/eNp1UU1PGzEQvfMrRu6lCDcB1EqVkHtZaBFCgGhuUQ5ee5IdxbEX25uwVPx3vF5Dg0oty18z7_nNG00rL9sGzuHPAaSRb3Mje9dFEXeuJe6di6K6uJld3C9yTqAnFOz72Vd2lu_WaZyH2BsUSzIGNR825YzzIkizcZaHRrYoavfId6RjI04mxyMX6hVCAQdnSPMNWYNWnIxxL-06YCtOYTqFgDE9aOoCB7JpqgZDTvu9oxV8-QHV6VyTF7VU68W7wFhdGjNlOFx3ksN9ml3dc7hVUW6Rwx16843DL5eOl3cc2GQyYRn3_MaVrKnRCDacWSlLkVcG94pmYd3XpkO2SKgMTboKsGIfJo7F_nUahnoxRFkbCg3EBuEz2S0Fqg0egkIb0WfnM3I63TcyJ46UI1v5_GcX6K0Z_6guWhaFsEA_4CydwIeONCWJViFIY7KaAEvvNgW7p-BdD1h1dMSSv9WntJ5zuJJbyYclKE9tTPb3sUlCoeKD6cv0MutbfI3etmir61drx95ANf-frQfPL1Yj40o=)
 
 ## Example
 
-Here the classical "Hello World" example:
+Here is the classical "Hello World" example:
 
 ```csharp
 public class Hello
@@ -42,13 +42,13 @@ one example to use Swig to generate a Tcl library based on the Fusion output.
 
 ## Python example
 
-If you write the code above into a file Hello.fu you can translate this file into a python file like this:
+If you put the code above into a file `Hello.fu`, you can translate this file into a Python source file with this command:
 
 ```
 fut Hello.fu -o hello.py
 ```
 
-The content of that file would then look like this:
+The contents of that file would then look like this:
 
 ```python
 # Generated automatically with "fut". Do not edit.
@@ -63,9 +63,9 @@ class Hello:
 ```
 
 The Fusion language is not meant to be used to write applications directly.
-You can do this as well if you will. For an example on how to this, see later. However, it is focused on
+It is possible to some extent and we will show it later. However, Fusion is focused on
 writing libraries which can be then used within the mentioned languages. To
-test the example code above you can create a little file which contains code
+test the example code above, you can create a small file which contains code
 to use the generated Python file with following content.
 
 ```python
@@ -79,7 +79,7 @@ So the full procedure to create and run the Python code is as follows:
 
 ```bash
 fut -o hello.py Hello.fu
-python3 hello.py
+python3 run-hello.py
 ```
 
 ## C example
@@ -93,8 +93,8 @@ fut Hello.fu -o hello.c
 This will create two files "hello.c" and "hello.h".
 
 
-To run the generated method in a C program you again might create a C file
-with a main function like this:
+To run the generated method in a C program, you might create a C file
+with a `main` function like this:
 
 ```c
 // file: run-hello.c
@@ -116,8 +116,8 @@ gcc hello.c run-hello.c -o hello
 
 ## Tcl example
 
-Using the Swig tools we can as well take the generated C or C++ code and wrap
-this into a Tcl, R, Perl, Ruby or many other language libraries by creating a Swig interface file which looks like
+Using the Swig tools, we can additionally take the generated C or C++ code and wrap
+it into a Tcl, R, Perl, Ruby or many other language libraries by creating a Swig interface file which looks like
 this:
 
 
@@ -129,10 +129,10 @@ this:
 ```
 
 The pipeline to create and test the code using a shared library on a Debian
-system then looks like this for a example for the Tcl programming language:
+system looks like this (using the Tcl programming language):
 
 ```bash
-fut -o tcl/hello.c Hello.fu                     ## gnerate hello.c and hello.h
+fut -o tcl/hello.c Hello.fu                     ## generate hello.c and hello.h
 swig -tcl8 -module hello hello.i                ## create the interface C code
 gcc -fPIC -c hello.c                            ## compile the FU generated code
 gcc -fPIC -c hello_wrap.c -I/usr/include/tcl8.6 ## compile the SWIG generated code
@@ -142,26 +142,27 @@ echo "load ./hello.so; puts [Hello_GetMessage];" | tclsh    ## execute the code 
 
 ## Other Language Examples
 
-The file [samples/hello/Makefile](samples/hello/Makefile) contains as well
-examples to translate and compile the [Hello.fu](samples/hello/Hello.fu) file show above to C++, C-
-sharp, D, Java, Javascript, Python Swift and via Swig as well to Tcl programs.
+The file [samples/hello/Makefile](samples/hello/Makefile) contains
+examples to translate and compile the [Hello.fu](samples/hello/Hello.fu) file shown above to C++, C#,
+D, Java, JavaScript, Python, Swift and via Swig to Tcl programs.
 
-The file [samples/hello2/Makefile](samples/hello2/Makefile) contains as well
-examples to translate and compile a [Hello2.fu](samples/hello2/Hello2.fi) file shown above to C++, C-
-sharp, D, Java, Javascript, Swift and Tcl programs. In contrast to the example shown above this example shows how to use a Main Method within your class to create  terminal application.
+The file [samples/hello2/Makefile](samples/hello2/Makefile) contains
+examples to translate and compile a [Hello2.fu](samples/hello2/Hello2.fi) file shown above to C++, C#,
+D, Java, JavaScript, Swift and Tcl programs. In contrast to the example shown above,
+this one shows how to use a `Main` method within your class to create a terminal application.
 
 ## Standalone applications
 
-Even if the main target of the Fusion language is writing libraries you can
-write for testing purposes as well simple standalone applications to test
-directly your code. This then does not require to create a second file to run
-the library code as shown above. Our "Hello World!" example show above would
+Even if the main target of the Fusion language is writing libraries, for testing purposes
+you can also write simple standalone applications, in order to directly test
+your code. This avoids a second source file to run the library code which we have shown before.
+Our "Hello World!" example show above would
 look then like this:
 
 ```csharp
 // file Main.fu
 public static class Main {
-    public static void Main () {
+    public static void Main() {
         Console.WriteLine("Hello World!");
     }   
 }
@@ -198,7 +199,7 @@ fut -o main.py Main.fu && cat main.py | python3
 Hello World!
 ```
 
-Using Python as the target language allows for fast development without compilation steps.
+Using Python as the target language allows for fast development without extra compilation steps.
 
 ## Tutorial
 
@@ -208,11 +209,11 @@ There is a more extensive tutorial as a WIP project which you can view here
 
 ## See Also
 
-Here are two other programming languages which transpile to several different programming languages
+Here are three other programming languages which transpile to several different programming languages
 
-- [Haxe](https://haxe.org/) - C++ and Java like language transpiles to C++, C-sharp, JVM, PHP, Lua, Python, Neko
-- [Temper](https://temperlang.dev/) - C++ and Java like language - transpiles to C-sharp, Java, Javascript/Typescript, Python, Lua
-- [Wax](https://github.com/LingDong-/wax) - Lisp like language - transpiles to C, Java, Typecript, Python, C-sharp, Swift, Lua 
+- [Haxe](https://haxe.org/) - C++ and Java like language, transpiles to C++, C#, JVM, PHP, Lua, Python, Neko
+- [Temper](https://temperlang.dev/) - C++ and Java like language - transpiles to C#, Java, JavaScript/TypeScript, Python, Lua
+- [Wax](https://github.com/LingDong-/wax) - Lisp like language - transpiles to C, Java, Typecript, Python, C#, Swift, Lua 
 
 The main __advantages__ of Fusion seem to be its easy-to-learn language,
 which is closely similar to C#, and its clear and small implementation. It
