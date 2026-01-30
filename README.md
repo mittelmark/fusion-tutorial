@@ -242,6 +242,7 @@ compiled languages such as GO.
 
 - adding swig/R examples (done - [src](https://github.com/mittelmark/fusion-tutorial/tree/main/samples/hello/R), [Makefile r-run section](https://github.com/mittelmark/fusion-tutorial/blob/main/samples/hello/Makefile))
 - adding swig/Go examples
+- fibonacci examples for return an integer and recursive programming
 
 ## Author
 

@@ -118,3 +118,8 @@ octave-run:
 go-cgo-run:
 	fut -o go/$(LBASENAME).c $(FUFILE)
 	cd go && go run run-$(LBASENAME).go $(LBASENAME)
+
+go-swig-run:
+	fut -o goswig/sdk/$(LBASENAME).c $(FUFILE)
+	cd goswig && make build
+	cd goswig && make run
