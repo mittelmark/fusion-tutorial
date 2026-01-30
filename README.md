@@ -151,7 +151,7 @@ echo "load ./hello.so; puts [Hello_GetMessage];" | tclsh    ## execute the code 
 
 The file [samples/hello/Makefile](samples/hello/Makefile) contains
 examples to translate and compile the [Hello.fu](samples/hello/Hello.fu) file shown above to C++, C#,
-D, Java, JavaScript, Python, Swift and via Swig to Tcl programs.
+D, Java, JavaScript, Python, Swift and via Swig to Tcl, R, Lua, Go or Octave programs.
 
 The file [samples/hello2/Makefile](samples/hello2/Makefile) contains
 examples to translate and compile a [Hello2.fu](samples/hello2/Hello2.fi) file shown above to C++, C#,
