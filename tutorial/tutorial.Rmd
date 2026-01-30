@@ -1,7 +1,7 @@
 ---
 title: Tutorial of the Fusion Programming Language (WIP)
 author: Detlef Groth, University of Potsdam
-date: 2026-01-29 19:15
+date: 2026-01-30 19:55
 ---
 
 `include tutorial.toc`
@@ -168,7 +168,40 @@ So we are not limited to the target languages for Fusion using the nicely
 structured output we can as well use transpilers for that output or simply
 embed the C code in other programming languages. As C is the lingua franca of
 programming it should be possible with more or less effort to use the
-generated code. There are existing as well other interface generators, for example Swig which we will present later.
+generated code. There are existing as well other interface generators, for
+example Swig which we will present later.
+
+### Go
+
+The [Go programming language]() is the language after which the V languange
+was designed. It as well supports easy integration for C code. In the code
+the user places an include statement just before the `import "C"` statement.
+Calls the C functions are then prefixed with the `C` letter.
+Here again the example were we use our hello library in a file run-hello.go.
+
+`include ../samples/hello/go/run-hello.go pre`
+
+the sequence of commands to compile an the output then would look like this:
+
+```{.shell label=gohello,cmd="bash %i > %b.txt",chunk.ext=sh,ext=txt}
+go version
+fut -o assets/hello.c Hello.fu
+cp ../samples/hello/go/run-hello.go assets/
+cd assets 
+go run run-hello.go
+go build -x run-hello.go
+cd ..
+```
+
+Optionally the variable `export CGO_ENABLED=1` must be set in your terminal
+on older versions of the Go compiler. The cgo approach has a few drawbacks,
+such as missing support for C++ and the limited support for more
+sophisticated data structure. Using Swig deals woth a few of these issues.
+For a review of both methods see this article of
+[friendlyuser](https://friendlyuser.github.io/posts/tech/go/how_to_call_c_cplusplus_from_go/). 
+For a swig based approach see the [samples/hello](../samples/hello) project which contains a simple
+ example to use swig for creating wrapper code.
+
 
 ### Dart
 

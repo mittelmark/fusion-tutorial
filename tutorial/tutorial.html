@@ -28,7 +28,7 @@
     <div class="document-header">
 <h1 class="title">Tutorial of the Fusion Programming Language (WIP)</h1>
 <h2 class="author">Detlef Groth, University of Potsdam</h2>
-<h2 class="date">2026-01-29</h2>
+<h2 class="date">2026-01-30</h2>
     </div>
 
 <div class='toc'>
@@ -44,6 +44,7 @@
 <ul>
 <li><a href="#lua">Lua</a></li>
 <li><a href="#vlang">V-lang</a></li>
+<li><a href="#go">Go</a></li>
 <li><a href="#dart">Dart</a></li>
 <li><a href="#swigsimplifiedwrapperandinterfacegenerator">Swig - Simplified Wrapper and Interface Generator</a></li>
 <li><a href="#swigandlua">Swig and Lua </a></li>
@@ -276,7 +277,63 @@ Hello Message!</code></pre>
 structured output we can as well use transpilers for that output or simply
 embed the C code in other programming languages. As C is the lingua franca of
 programming it should be possible with more or less effort to use the
-generated code. There are existing as well other interface generators, for example Swig which we will present later.</p>
+generated code. There are existing as well other interface generators, for
+example Swig which we will present later.</p>
+
+<p><a name="go"> </a></p><h3>Go</h3>
+
+<p>The <a href="">Go programming language</a> is the language after which the V languange
+was designed. It as well supports easy integration for C code. In the code
+the user places an include statement just before the <code>import &quot;C&quot;</code> statement.
+Calls the C functions are then prefixed with the <code>C</code> letter.
+Here again the example were we use our hello library in a file run-hello.go.</p>
+
+<pre>package main
+// #include "hello.c"
+import "C"
+
+import (
+    "fmt"
+    "os"
+)
+
+func main() {
+    argv := os.Args
+    cGreeting := C.Hello_GetMessage()
+    if cGreeting == nil {
+        fmt.Println("Error: C-function gave back null!")
+        return
+    }
+    // C-String back to Go-String 
+    goGreeting := C.GoString(cGreeting)
+    fmt.Printf("Go gets: %s\n", goGreeting) 
+    fmt.Println("Hello World from Go!")
+    fmt.Printf("Usage: %s\n",argv[0])
+}</pre>
+
+<p>the sequence of commands to compile an the output then would look like this:</p>
+
+<pre class='code'><code class='code'>go version
+fut -o assets/hello.c Hello.fu
+cp ../samples/hello/go/run-hello.go assets/
+cd assets 
+go run run-hello.go
+go build -x run-hello.go
+cd ..</code></pre>
+
+<pre class='code'><code class='out'>go version go1.24.4 linux/amd64
+Go gets: Hello Message!
+Hello World from Go!
+Usage: /home/dgroth/.cache/go-build/f6/f6a6612a536b8741727bdb2eb666dbe84e9f8c5819dbb89a04dc983e06ec64be-d/run-hello</code></pre>
+
+<p>Optionally the variable <code>export CGO_ENABLED=1</code> must be set in your terminal
+on older versions of the Go compiler. The cgo approach has a few drawbacks,
+such as missing support for C++ and the limited support for more
+sophisticated data structure. Using Swig deals woth a few of these issues.
+For a review of both methods see this article of
+<a href="https://friendlyuser.github.io/posts/tech/go/how_to_call_c_cplusplus_from_go/">friendlyuser</a>. 
+For a swig based approach see the <a href="../samples/hello">samples/hello</a> project which contains a simple
+ example to use swig for creating wrapper code.</p>
 
 <p><a name="dart"> </a></p><h3>Dart</h3>
 
@@ -1053,13 +1110,13 @@ s5=a1234.5678 i5=0</code></pre>
 <pre class='code'><code class='code'>ls -lth main?-*
 ./main5-d</code></pre>
 
-<pre class='code'><code class='out'>-rwxrwxr-x 1 dgroth dgroth 1,3M 29. Jan 19:16 main5-d
--rw-r--r-- 1 dgroth dgroth 448K 29. Jan 19:16 main5-d.o
--rwxrwxr-x 1 dgroth dgroth  17K 29. Jan 19:16 main5-cpp
--rwxrwxr-x 1 dgroth dgroth  32K 29. Jan 19:16 main4-cpp
--rwxrwxr-x 1 dgroth dgroth  16K 29. Jan 19:16 main4-c
--rwxrwxr-x 1 dgroth dgroth 1,3M 29. Jan 19:16 main4-d
--rw-r--r-- 1 dgroth dgroth 449K 29. Jan 19:16 main4-d.o
+<pre class='code'><code class='out'>-rwxrwxr-x 1 dgroth dgroth 1,3M 30. Jan 19:55 main5-d
+-rw-r--r-- 1 dgroth dgroth 448K 30. Jan 19:55 main5-d.o
+-rwxrwxr-x 1 dgroth dgroth  17K 30. Jan 19:55 main5-cpp
+-rwxrwxr-x 1 dgroth dgroth  32K 30. Jan 19:55 main4-cpp
+-rwxrwxr-x 1 dgroth dgroth  16K 30. Jan 19:55 main4-c
+-rwxrwxr-x 1 dgroth dgroth 1,3M 30. Jan 19:55 main4-d
+-rw-r--r-- 1 dgroth dgroth 449K 30. Jan 19:55 main4-d.o
 s1=12 i1=1
 s2=-23 i2=1
 s3=xyz i3=0
