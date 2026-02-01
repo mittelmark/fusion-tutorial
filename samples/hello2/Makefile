@@ -94,4 +94,5 @@ tcl-run:  ## create and run code translated to C and then wrapped using Swift as
 	cd tcl && gcc -fPIC -c $(LBASENAME)_wrap.c -I/usr/include/tcl8.6 ## compile the SWIG generated code
 	cd tcl && gcc -shared $(LBASENAME).o $(LBASENAME)_wrap.o -o $(LBASENAME).so    ## combine both to a Tcl library
 	cd tcl && echo "load ./$(LBASENAME).so Hello2; puts [Hello2_GetHello World];" | tclsh     ## execute the code
-	cd tcl && echo "load ./$(LBASENAME).so Hello2; puts [Hello2_GetHello {Max Musterman}];" | tclsh     ## execute the code	
+	cd tcl && echo "load ./$(LBASENAME).so Hello2; puts [Hello2_GetHello {Max Musterman}];" | tclsh     ## execute the code
+
