@@ -10,7 +10,7 @@ date: 2026-01-30 19:55
 
 [Fusion](https://fusion-lang.org/) is a programming language which works as a transpiler, a tool which
 translates code in the Fusion programming language into code of the
-programming languages C, C++, C#, D, Java, Javascript, Python, Swift, Typescript and OpenCL.
+programming languages C, C++, C#, D, Java, JavaScript, Python, Swift, TypeScript and OpenCL.
 
 <center>
 ![Diagram](https://kroki.io/graphviz/svg/eNptUMFOAyEQvfcrJvWiKbrqHS_bejBGjfbW9MAu0zIphRXY1o3pv8sC0R4kZCbMvPfmDZK2TnQK5vA9gXjSa6XFYPvAw9F2xJy1gdeLl-XifZ0wxkpc-TBo5BvSGiUbU2u1ddwLvbeGeSU65I39YkeSQfG7m9vMdcLsPHb8HqoKPIZYkNR7BmTibRX6DPubCSMSfRCNJq8gKIRLMgfy1Gi8ghZNQJc8JWZVodwiFH8JmCdntbhag5o_9p5-bbbkWo3nS-yGRve4LoKF-o9m2QE_e5IULZoWQWid3HjYOLsv3DMHcP1Q_nosMZjWs9l0TBcxzhk8iYPI0beOusDehqCiV_g40iYwWA4dlg68dmjq56iT9E5Z9Xx_bzXJ9SQ3JqcfG_ia7w==)
@@ -18,24 +18,24 @@ programming languages C, C++, C#, D, Java, Javascript, Python, Swift, Typescript
 [Edit this diagram](https://niolesk.top/#https://kroki.io/graphviz/svg/eNptUMFOAyEQvfcrJvWiKbrqHS_bejBGjfbW9MAu0zIphRXY1o3pv8sC0R4kZCbMvPfmDZK2TnQK5vA9gXjSa6XFYPvAw9F2xJy1gdeLl-XifZ0wxkpc-TBo5BvSGiUbU2u1ddwLvbeGeSU65I39YkeSQfG7m9vMdcLsPHb8HqoKPIZYkNR7BmTibRX6DPubCSMSfRCNJq8gKIRLMgfy1Gi8ghZNQJc8JWZVodwiFH8JmCdntbhag5o_9p5-bbbkWo3nS-yGRve4LoKF-o9m2QE_e5IULZoWQWid3HjYOLsv3DMHcP1Q_nosMZjWs9l0TBcxzhk8iYPI0beOusDehqCiV_g40iYwWA4dlg68dmjq56iT9E5Z9Xx_bzXJ9SQ3JqcfG_ia7w==)
 </center>
 
-For background on the difference between compilers and transpilers have a
+For background on the difference between compilers and transpilers, have a
 look at this [Geeks For Geeks Article](https://www.geeksforgeeks.org/compiler-design/difference-between-transpiler-and-compiler/).
 
 ## Installation
 
-The transpiler for Fusion code is the [fut command line application](https://github.com/fusionlanguage/fut).
-There are binaries available for Intel/AMD systems for Linux, MacOS and Windows systems. You should download the latest version for your platform from the [release page](https://github.com/fusionlanguage/fut/releases/).
-Here an example for a Debian like system using the
+The transpiler for Fusion code is the [fut command-line application](https://github.com/fusionlanguage/fut).
+There are binaries available for Intel/AMD/ARM systems for Linux, MacOS and Windows systems. You should download the latest version for your platform from the [release page](https://github.com/fusionlanguage/fut/releases/).
+Here is an example for a Debian-like system using the
 [dpkg](https://www.linuxbash.sh/post/using-dpkg-to-manually-install-deb-packages)
 command line application:
 
 ```
 VERSION=fut-3.2.13
-wget https://github.com/fusionlanguage/fut/releases/download/${V}/${V}-1_amd64.deb
-sudo dpkg -i ${V}-1_amd64.deb
+wget https://github.com/fusionlanguage/fut/releases/download/${VERSION}/${VERSION}-1_amd64.deb
+sudo dpkg -i ${VERSION}-1_amd64.deb
 ```
 
-For MacOS you would use the Brew package manager:
+For MacOS, you would use the [Homebrew](https://brew.sh) package manager:
 
 ```
 brew install fusionlanguage/fut/fut
@@ -43,11 +43,11 @@ brew install fusionlanguage/fut/fut
 
 ## Hello World Example
 
-As usually we start with the standard "Hello World!" example. 
+As usually, we start with the standard "Hello World!" example. 
 
-Fusion is not meant to write real programs, but libraries which can be then
-used in the aforementioned programming languages. Still Fusion supports the
-creation of simple command line applications, so here is our example and the expected output:
+Fusion is not meant for writing full programs, but libraries which can be then
+used from the aforementioned programming languages. However, Fusion supports the
+creation of simple command-line applications, so here is our example and the expected output:
 
 ```{.shell label=Main cmd="fuscript %i > %b.txt" chunk.ext=fu ext=txt}
 public static class Main {
@@ -57,8 +57,8 @@ public static class Main {
 }
 ```
 
-The fusion source code can be translated into the target programming language.
-Here an example for translating it into Python code and then executing it:
+The above Fusion source code can be translated into a target programming language.
+Here is an example for translating it into Python code and then executing it:
 
 ```
 fut Main.fu -o out/main.py
@@ -70,7 +70,7 @@ The Python output looks like this:
 `include Main.py {{<pre class="py">} {</pre>}}` 
 
 
-To compile to other targets you just have to change the file extension. Here an example to create D code:
+To compile to other targets, you just have to change the filename extension. Here is an example of creating D code:
 
 ```
 fut Main.fu -o out/main.d
@@ -87,8 +87,8 @@ The D language output looks like this:
 ## Fusion Script Interpreter
 
 In this tutorial we will use Python to directly execute the generated code
-and embed the output into the document. For this we will use a little Bash
-Script which generates Python code and then, thereafter, executes the generated script.
+and embed the output into the document. For this, we will use a little Bash
+script, which first generates Python code and then executes the generated script.
 
 The Bash script looks like this:
 
@@ -100,11 +100,11 @@ The Bash script looks like this:
 
 ### Lua
 
-The output generated by the Fusion tool can be as well used to support even
-more programming languages than the target languages of _fut_. For instance
-we can use a transpiler for Typescript code to generate not only code for
-different Javascript interpreters but as well create for instance Lua code
-from that Typescript output. We can as an example create Lua scripts from Typescript code by using the TypescriptToLua transpiler [(tstl)](https://github.com/TypeScriptToLua/TypeScriptToLua). So the workflow is than the following:
+The output generated by the Fusion tool can be used to support even
+more programming languages than the target languages of _fut_. For instance,
+we can use a transpiler for TypeScript code to generate not only code for
+different JavaScript interpreters, but also create for instance Lua code
+from that TypeScript output. We can create Lua scripts from TypeScript code using the TypeScriptToLua transpiler [(tstl)](https://github.com/TypeScriptToLua/TypeScriptToLua). The workflow is as follows:
 
 ```{.kroki label=tstl,dia=graphviz,echo=FALSE}
 digraph g {
@@ -125,7 +125,7 @@ And now a Lua file to use that library:
 `include assets/run-hello-tstl.lua {<pre> </pre>}`
 
 
-So a Makefile section for that conversion looks like this:
+A Makefile section for that conversion looks like this:
 
 ```{.shell label=tstlex,cmd="bash %i > %b.txt",chunk.ext=sh,ext=txt}
 ### npm install -D typescript-to-lua
@@ -139,21 +139,20 @@ BTW: The file created by _tstl_ from the Typescript code looks like this:
 `include assets/hello.lua {<pre> </pre>}`
 
 The file *lualib_bundle.lua* imported here is a 82kb file which supports the
-mapping from Typescript to Lua code.
+mapping from TypeScript to Lua code.
 
 ### V-lang
 
-More important for using our Fusion code library is the C code output. As C
-code can be easily used by other programming languages we might as well use
-the C output in other programming languages. Here an example
-using the [V Programming Language](https://vlang.io/). To use the libary we
+More important for using our Fusion code library is the C code output. C
+code can be easily used by other programming languages. Here is an example
+using the [V Programming Language](https://vlang.io/). To use the library, we
 include the C header file and declare all functions we like to use from the
-library file. So for the same file _Hello.fu_ show above we create the
+library file. For the same file _Hello.fu_ shown above, we create the
 following V file.
 
 `include assets/hello.v {<pre> </pre>}`
 
-In this case we will create a shared library from the hello file and then run
+In this case, we will create a shared library from the hello file and then run
 our file _hello.v_ like this:
 
 ```{.shell label=vhello,cmd="bash %i > %b.txt",chunk.ext=sh,ext=txt}
@@ -164,24 +163,24 @@ LD_LIBRARY_PATH=. v run hello.v
 cd ..
 ```
 
-So we are not limited to the target languages for Fusion using the nicely
-structured output we can as well use transpilers for that output or simply
+So we are not limited to the target languages for Fusion. Using the nicely
+structured output, we can as well use transpilers for that output or simply
 embed the C code in other programming languages. As C is the lingua franca of
-programming it should be possible with more or less effort to use the
+programming, it should be possible, with more or less effort, to use the
 generated code. There are existing as well other interface generators, for
-example Swig which we will present later.
+example Swig, which we will present later.
 
 ### Go
 
-The [Go programming language]() is the language after which the V languange
-was designed. It as well supports easy integration for C code. In the code
+The [Go programming language](https://go.dev) is the language that influenced the V language.
+It also supports easy integration with C code. In the code,
 the user places an include statement just before the `import "C"` statement.
-Calls the C functions are then prefixed with the `C` letter.
-Here again the example were we use our hello library in a file run-hello.go.
+Calls to C functions are then prefixed with the `C` letter.
+Here is again the example where we use our hello library in a file run-hello.go.
 
 `include ../samples/hello/go/run-hello.go pre`
 
-the sequence of commands to compile an the output then would look like this:
+The sequence of commands to compile the output would look like this:
 
 ```{.shell label=gohello,cmd="bash %i > %b.txt",chunk.ext=sh,ext=txt}
 go version
@@ -193,31 +192,31 @@ go build -x run-hello.go
 cd ..
 ```
 
-Optionally the variable `export CGO_ENABLED=1` must be set in your terminal
-on older versions of the Go compiler. The cgo approach has a few drawbacks,
+On older versions of the Go compiler, the variable `export CGO_ENABLED=1` must be set in your terminal.
+The cgo approach has a few drawbacks,
 such as missing support for C++ and the limited support for more
-sophisticated data structure. Using Swig deals woth a few of these issues.
-For a review of both methods see this article of
+sophisticated data structures. Using Swig deals with some of these issues.
+For a review of both methods, see this article of
 [friendlyuser](https://friendlyuser.github.io/posts/tech/go/how_to_call_c_cplusplus_from_go/). 
-For a swig based approach see the [samples/hello](../samples/hello) project which contains a simple
- example to use swig for creating wrapper code.
+For a Swig based approach, see the [samples/hello](../samples/hello) project which contains a simple
+example of using Swig for creating wrapper code.
 
 
 ### Dart
 
-In the Dart programming language we use the ffi package to call functions in
-compiled C libraries. So we can use the same file we used in for the V
-language. The project file for our Dart program using our hello library would look likes this:
+In the Dart programming language, we use the `ffi` package to call functions from
+compiled C libraries. So we can use the same file we used for the V
+language. The project file for our Dart program using our hello library would look like this:
 
 `include assets/pubspec.yaml {<pre> </pre>}`
 
-and the code to exectue these functions would look like this:
+and the code to execute these functions would look like this:
 
 
 `include assets/hello.dart {<pre> </pre>}`
 
 
-Our command line is the very simple:
+Our command line is very simple:
 
 ```{.shell label=darthello,cmd="bash %i > %b.txt",chunk.ext=sh,ext=txt}
 fut -o assets/hello.c assets/Hello.fu
@@ -233,22 +232,21 @@ languages.
 
 ### Swig - Simplified Wrapper and Interface Generator
 
-This manual creation of interfaces however is slightly cumbersome, so an
-automated process of creating an interface for the C library would offer a
-good alternative way. For instance the [Rust programming language](https://rust-lang.org/)
+Interfacing with C manually is somewhat cumbersome, so let's consider some automation.
+For instance, the [Rust programming language](https://rust-lang.org/)
 has a tool called [bindgen](https://github.com/rust-lang/rust-bindgen) to
-simplify this process. Further there exists a tool called [Swig](https://swig.org) which automates this process for more than a dozen target languages. A few of these languages like C#, D, Java or Python are already directly supported by Fusion. Although it might be interested to get a fast implementation by using the C library made be usable by Swig than the Fusion Python output as the C library approach might be much faster than the Python code directly transpiled by the _fut_ tool.
+simplify this process. There also exists a tool called [Swig](https://swig.org) which automates this process for more than a dozen target languages. A few of these languages, like C#, D, Java or Python, are already directly supported by Fusion. It might be still interesting to get a fast implementation by using the C library from Swig than the Fusion Python output, as the C code tends to be much faster than the Python code directly transpiled by the _fut_ tool.
 
-For illustrative purposes let's create bindings for two scripting languages, Lua and Tcl for our little hello library shown above.
+For illustrative purposes, let's create bindings for two scripting languages, Lua and Tcl for our little hello library shown above.
 
 ### Swig and Lua 
 
 Let's start with Lua. The process of creating a wrapper for a C library using
 Swig is usually started by creating an interface file which includes the
-Header file of the C library. In a second section we declare the functions we
-would like to use from that include file. Alternatively we can include here
+header file of the C library. In the second section, we declare the functions we
+would like to use from that include file. Alternatively, we can include here
 the header file again to indicate that we would like to use all C functions
-published in the header file. Afterwards we use Swig to create an interface C file, the original C and this wrapper file are then compiled either to a dynamic library or a static output file. For scripting languages we usually create a static library. So the process is as follows:
+published in the header file. After we use Swig to create an interface C file, the original C and this wrapper file are then compiled either to a dynamic library or a static output file. For scripting languages, we usually create a static library. The process is as follows:
 
 
 ```{.kroki dia=graphviz,echo=FALSE}
@@ -277,7 +275,7 @@ Let's have a look at an example interface file for Lua:
 `include assets/hello.i {<pre> </pre>}`
 
 
-Using the following command line we can create an hello shared library file on Linux:
+Using the following command line, we can create a hello shared library file on Linux:
 
 ```{.shell label=luaswigello,cmd="bash %i 2>&1 > %b.txt",chunk.ext=sh,ext=txt}
 if [ ! -d swig-lua ]; then mkdir swig-lua ; fi
@@ -305,8 +303,8 @@ lua run-hello.lua
 
 ### Swig and Tcl
 
-Let's repeat that example with the Tcl programming language. As this is as
-well an interpreted language we will again compile a shared library to be
+Let's repeat that example with the Tcl programming language. As this is
+also an interpreted language, we will again compile a shared library to be
 used by Tcl. The interface file looks like this:
 
 
@@ -327,8 +325,8 @@ gcc -shared hello.o hello_wrap.o -o hello.so    ## combine both to a Tcl library
 echo "load ./hello.so; puts \"This is Tcl [set tcl_patchLevel]!\"; puts [Hello_GetMessage];" | tclsh
 ```
 
-If you are interested in more example using Fusion with different language
-targets have a look at the examples in the
+If you are interested in more examples using Fusion with different language
+targets, have a look at the examples in the
 [samples/hello](https://github.com/mittelmark/fusion-tutorial/samples/hello)
 folder of the project.
 
@@ -336,21 +334,19 @@ folder of the project.
 
 ## Data Types
 
-The main basic data types in Fusion are boolean, int, float and double. For
-int types as well exists byte, short, ushort and unint. Below you see how you
+The main basic data types in Fusion are boolean, int, float and double. Other
+integer types are byte, short, ushort and uint. Below you see how you
 can create strings with embedded variable names. That does not work for
-boolean values, so we create a help method BoolToInt which converts the
+boolean values, so we create a helper method `BoolToInt` which converts the
 boolean value to an integer.
  
 ```{.shell label=Main2 cmd="fuscript %i > %b.txt" chunk.ext=fu ext=txt}
 static class Main2 {
-    public static int BoolToInt (bool b) {
-        if (b) { return(1); }
-        return(0);
-    }
+    public static int BoolToInt (bool b) => b ? 1 : 0;
+
     public static void Main (string[] args) {
         int x = 3 ;
-        bool b = true;  // bools can't be printed
+        bool b = true;  // bools can't be printed directly
         bool c = false;
         byte y = 12; 
         float f = 1.234;        
@@ -360,32 +356,24 @@ static class Main2 {
 ```
 
 
-As we did not prefix this class declaration with the public keyword that class will have an underscore in Python.
+As we did not prefix this class declaration with the `public` keyword, this class will get transpiled to Python with a leading underscore.
 
-Here the output for the Python script :
+Here is the output for the Python script :
 
 `include Main2.py {{<pre class="py">} {</pre>}}` 
 
-The output of the D language is not affected by the public keyword for the class.
+The output of the D language is not affected by the `public` keyword for the class.
 
 ## Type Conversions
 
-Fusion does not support type conversions for instance from a string to an integer per default. But it can be implemented like this:
+Conversions from and to boolean type work differently in the programming languages that Fusion transpiles to.
+For consistent behavior, we shall implement them ourselves:
 
 
 ```{.shell label=Main3 cmd="fuscript %i > %b.txt" chunk.ext=fu ext=txt}
 public static class Main3 {
-    public static int BoolToInt (bool b) {
-        if (b) { return(1); }
-        return(0);
-    }
-    public static bool StringToBool (string b) {
-        if (b.ToLower() == "true" || b == "1") {
-            return(true);
-        } else {
-            return(false);
-        }
-    }
+    public static int BoolToInt (bool b) => b ? 1 : 0;
+    public static bool StringToBool (string b) => b.ToLower() == "true" || b == "1";
     public static void Main (string[] args) {
         string s1 = "true";
         bool b1 = Main3.StringToBool(s1);
@@ -408,9 +396,9 @@ invalid input. Usually an compile error, runtime error or exception is thrown
 by the compiler or interpreter. That handling can be vary different. We solve
 that problem here by returning an integer value which should be considered
 invalid. That value in the following example has an value of -1 per default,
-but these settings can be overwritten. Prefixing the call to ParseInt with
-Main4 in the Main method is required for some languages like C++ to be
-correctly calling the appropriate method.
+but these settings can be overwritten. Prefixing the call to `ParseInt` with
+`Main4` in the `Main` method is required for C++ to
+correctly call the appropriate method.
 
 ### Python Output
 
@@ -418,31 +406,29 @@ Here is our next Fusion file to do some basic integer parsing and the expected o
 
 ```{.shell label=Main4 cmd="fuscript %i > %b.txt" chunk.ext=fu ext=txt}
 public static class Main4 {
-    public static int ParseInt(string s, int invalid=-1) {
-        int def = -1;
+    public static int ParseInt(string s, int invalid = -1) {
+        int sign = 0;
         int i = 0;
-        int multi = 1;
-        string() s2;
-        if (s.Length == 0) {
+        foreach (int c in s) {
+            if (c >= '0' && c <= '9') {
+                i = i * 10 + c - '0';
+                sign |= 1;
+            }
+            else if (c == '-' && sign == 0)
+                sign = -2;
+            else if (c == '.') // stop at the decimal point
+                break;
+            else
+                return invalid;
+        }
+        switch (sign) {
+        case 1:
+            return i;
+        case -1:
+            return -i;
+        default:
             return invalid;
         }
-        if (s.StartsWith("-")) {
-            multi = -1;
-            s2=s.Substring(1);
-        } else {
-            s2 = s;
-        }     
-        foreach (int d in s2) {
-            // finish at floats
-            if (d == '.') {
-                break;
-            }
-            if (d < '0' || d > '9') {
-                return invalid;
-            }    
-            i = i * 10 + d - '0';
-        }
-        return i*multi;
     }
     public static void Main (string[] args) {
         string s1 = "12";
@@ -470,8 +456,8 @@ That is the Python code which is generated by the command `fut Main4.fi -o Main4
 
 ### D Output
 
-In between we should check if as well other languages are working correctly
-with the given code. Let's try first D and then C and C++.
+Let's check if other languages are working correctly
+with the given code. Let's try D first, then C and C++.
 
 
 ```{.shell label=Main4 cmd="fut %i -o main4.d&&dmd main4.d -of=main4-d&&./main4-d > %b.txt" chunk.ext=fu ext=txt,echo=FALSE}
@@ -484,7 +470,7 @@ Let's have a look at the generated D code:
 
 ### C Output
 
-We will now repeat the same with C, here the output of the C program:
+We will now repeat the same with C, here is the output of the C program:
 
 ```{.shell label=Main4 cmd="fut %i -o main4.c&&gcc main4.c -o main4-c&&./main4-c > %b.txt" chunk.ext=fu ext=txt,echo=FALSE}
 #INCLUDE "Main4.fu"
@@ -495,30 +481,30 @@ Let's have a look at the generated C code:
 `include main4.c {<pre> </pre>}`
 
 
-And here the generated header file:
+And here is the generated header file:
 
 `include main4.h {<pre> </pre>}`
 
-The generated code looks clean and nice to use later for using Swig to create library code for other languages. 
+The generated code looks clean and nice for using Swig to create library code for other languages. 
 
 ### C++ Output
 
-But before we do this we repeat the procedure the same with C++, here the command to generate and compile the C++ code:
+But before we do this, let's repeat the procedure with C++. Here is the command to generate and compile the C++ code:
 
 ```
 fut Main4.fu -o main4.cpp
 g++ -std=c++20 main4.cpp -o main4-cpp
 ```
 
-Please note that many features require a C++20 standard compliant compiler.
+Please note that some features require the C++20 standard.
 
-And here the generated C++ code:
+Here is the generated C++ code:
 
 ```{.shell label=Main4 cmd="fut %i -o main4.cpp&&cat main4.cpp > %b.txt" chunk.ext=fu ext=txt,echo=FALSE}
 #INCLUDE "Main4.fu"
 ```
 
-And here the program output:
+And here is the program output:
 
 ```{.shell label=Main4 cmd="fut %i -o main4.cpp&&g++ -std=c++20 main4.cpp -o main4-cpp&&./main4-cpp > %b.txt" chunk.ext=fu ext=txt,echo=FALSE}
 #INCLUDE "Main4.fu"
@@ -526,11 +512,9 @@ And here the program output:
 
 ## Native Language Code
 
-That complicated approach to implement shown above for a feature which is probably available in all target
-languages in a much more straightforward way, seems a little bit awkward. To use target language specific
-functionalities you can instead embed code block within the native keyword.
+Instead of writing Fusion code to parse integers, we might use target languages in `native` blocks.
 
-Here an example for a _StringUtils_ class which uses this approach. To create
+Here is an example of the _StringUtils_ class which uses this approach. To create
 code in the target language you have than to call the _fut_ transpiler with a `-D` option like this:
 
 ```
@@ -590,11 +574,10 @@ The resulting Python file looks like this:
 
 > [!CAUTION]
 > The tricky thing in implementing Python code is to achieve the proper indentation. 
-> To accomplish this you should indent your code using <b>Tabstops!</b>. Only then then the structure can be recognized properly
-> by the <i>fut</i> transpiler.
+> To accomplish this you should indent your code using <b>tabs!</b>, because that's what the <i>fut</i> transpiler emits.
 
-Let's look as well just for curiosity into the generated C++ code. That could
-should be genrated and compiled using the following commands:
+Let's look as well, just for curiosity, into the generated C++ code. That could
+be generated and compiled using the following commands:
 
 
 ```{.shell label=compilecpp,cmd="bash %i > %b.txt" chunk.ext=sh ext=txt}
@@ -603,7 +586,7 @@ g++ -std=c++20 stringutils.cpp -o stringutils
 ./stringutils
 ```
 
-Here the code generated by _fut_:
+Here is the code generated by _fut_:
 
 `include stringutils.cpp {<pre> </pre>}`
 
@@ -612,21 +595,21 @@ for the reader.
 
 ## Checking Input
 
-Parsing strings to numbers or boelans is common task. To make it more safe we might check the string before we actually perform the parsing so it might be good to have method IsNumber or isBoolean returning true of false before we start actually the parsing.
+Parsing strings to numbers or boelans is common task. To make it more safe we might check the string before we actually perform the parsing, so it might be good to have method `IsNumber` or `IsBoolean` returning `true` of `false` before we start actually the parsing.
 
-Let's show some possible implementations, we compile this with the c++ compiler and then execute the file.
+Let's show some possible implementations, we compile this with the C++ compiler and then execute the file.
 
 ```{.shell label=Main5 cmd="fut %i -o main5.cpp&&g++ -std=c++20 main5.cpp -o main5-cpp&&./main5-cpp > %b.txt" chunk.ext=fu ext=txt,echo=TRUE}
 #INCLUDE "assets/Main5.fu"
 ```
 
-Here another trial with D:
+Here is another trial with D:
 
 ```{.shell label=Main5 cmd="fut %i -o main5.d&&dmd main5.d -of=main5-d&&./main5-d > %b.txt" chunk.ext=fu ext=txt,echo=FALSE}
 #INCLUDE "assets/Main5.fu"
 ```
 
-Just to prove it I execute that on the command line:
+Just to prove it, I execute that on the command line:
 
 ```{.shell cmd="bash %i > %b.txt",chunk.ext=sh,ext=txt}
 ls -lth main?-*
