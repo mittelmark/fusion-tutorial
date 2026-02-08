@@ -1,7 +1,7 @@
 ---
 title: Tutorial of the Fusion Programming Language (WIP)
 author: Detlef Groth, University of Potsdam
-date: 2026-01-30 19:55
+date: 2026-02-08 10:33
 ---
 
 `include tutorial.toc`
@@ -84,6 +84,27 @@ The D language output looks like this:
 `include out/main.d {{<pre class="py">} {</pre>}}` 
 
 
+### C Programming Language
+
+Let's finish this section if an example for generated and executed C output.
+We create, compile and execute the output  like so:
+
+```{.shell label=Main cmd="bash %i > %b.txt" chunk.ext=sh ext=txt}
+fut Main.fu -o out/main.c
+gcc -std=c99 out/main.c -o out/main-c
+./out/main-c
+```
+
+The C generated code looks like this:
+
+`include out/main.c {{<pre class="c">} {</pre>}}` 
+
+We can use the generate C code file and its header file later to support as
+well other programming languages like Go, V-lang or Dart which can directly
+use C libraries or other programming languages which are supported by the 
+[SWIG Simplified Wrapper and Interface Generator](https://www.swig.org) tool,
+like R, Tcl, Lua, Octave, PHP, Perl etc using this C output. Examples will be given later.
+
 ## Fusion Script Interpreter
 
 In this tutorial we will use Python to directly execute the generated code
@@ -95,6 +116,89 @@ The Bash script looks like this:
 ```{.shell eval=FALSE,include=FALSE}
 #INCLUDE "fuscript.sh"
 ```
+
+## Fusion Language
+
+Let's shortly review the fusion languages, so we will cover data types,
+operators, control flow constructs, data structures and classes and methods.
+
+Fusion is closely related to C-Sharp highlighting works quite fine, I am
+using the [MicroEmacs](https://github.com/bjasspa/jasspa) text editor which
+has native Fusion support. For more details on the language consult the original [reference](https://github.com/fusionlanguage/fut/blob/master/doc/reference.md).
+
+### Data Types
+
+The main basic data types in Fusion are boolean, int, float and double. For
+int types as well exists byte, short, ushort and unint, so we have: 
+
+* boolean - _bool_ with the values _true_ or _false_ (note in C-shapr these are _True_ and _False_)
+* integers - coming as _byte_, _shorts_, _ushort_, _int_, _long_ etc
+* floats - coming as _float_ and _double_
+* characters - written in single quotes are represented as integers pointing to the unicode character - so like: `int c = 'x'`
+* strings - come in different flavors, see later for a few examples
+
+There are as well variations for these types which are always mapped to the
+language specific types which are at least providing the expected value
+ranges. Let's output a few of these types. Below you see how you
+can output variables as strings using string interpolations started by the `$` operator with embedded variable names. That does not work for
+boolean values, so we create a help method BoolToInt which converts the
+boolean value to an integer.
+ 
+```{.shell label=Main2 cmd="fuscript %i > %b.txt" chunk.ext=fu ext=txt}
+static class Main2 {
+    public static int BoolToInt (bool b) {
+        if (b) { return(1); }
+        return(0);
+    }
+    public static void Main (string[] args) {
+        int x = 3 ;
+        bool b = true;  // bools can't be printed
+        bool c = false;
+        int d = 'x'; // chars are ints unicode char 120 is x
+        string() e = "hello";
+        byte y = 12; 
+        float f = 1.234;        
+        Console.WriteLine($" x={x} b={Main2.BoolToInt(b)} c={Main2.BoolToInt(c)} d={d} e={e} y={y} f={f}");
+    }   
+}
+```
+
+As we did not prefix this class declaration with the public keyword that class will have an underscore in Python.
+
+Here the output for the Python script :
+
+`include Main2.py {{<pre class="py">} {</pre>}}` 
+
+The output of the D language is not affected by the public keyword for the class.
+
+Fusion does not support type conversions for instance from a string to an
+integer per default. But such a conversion can be implemented. For an example
+see below in the section [Type Conversions](#typeconversions).
+
+### Operators
+
+Here we have just the usual ones for numeric types
+*, +, -, / and ^ for exponentiation and the usual comparison operators, bitwise operators etc.
+
+For boolean values we have `||` for OR, `&&` for AND and `!` for NOT.
+
+### Control Flow
+
+Here we have the decion making constructs.
+
+
+```{.shell label=MainControl cmd="fuscript %i > %b.txt" chunk.ext=fu ext=txt}
+#INCLUDE "code/MainControl.fu"
+```
+
+```{.shell label=MainForeach cmd="fuscript %i > %b.txt" chunk.ext=fu ext=txt}
+#INCLUDE "code/MainForeach.fu"
+```
+
+There are as well switch statements, foreach and do-white loops etc. Again
+you should check the Fusion reference for example on this. Here we will just
+show how to loop over keys and values of a dictionary data structure:
+
 
 ## Other Programming Languages
 
@@ -332,41 +436,6 @@ targets have a look at the examples in the
 [samples/hello](https://github.com/mittelmark/fusion-tutorial/samples/hello)
 folder of the project.
 
-
-
-## Data Types
-
-The main basic data types in Fusion are boolean, int, float and double. For
-int types as well exists byte, short, ushort and unint. Below you see how you
-can create strings with embedded variable names. That does not work for
-boolean values, so we create a help method BoolToInt which converts the
-boolean value to an integer.
- 
-```{.shell label=Main2 cmd="fuscript %i > %b.txt" chunk.ext=fu ext=txt}
-static class Main2 {
-    public static int BoolToInt (bool b) {
-        if (b) { return(1); }
-        return(0);
-    }
-    public static void Main (string[] args) {
-        int x = 3 ;
-        bool b = true;  // bools can't be printed
-        bool c = false;
-        byte y = 12; 
-        float f = 1.234;        
-        Console.WriteLine($" x={x} b={Main2.BoolToInt(b)} c={Main2.BoolToInt(c)} y={y} f={f}");
-    }   
-}
-```
-
-
-As we did not prefix this class declaration with the public keyword that class will have an underscore in Python.
-
-Here the output for the Python script :
-
-`include Main2.py {{<pre class="py">} {</pre>}}` 
-
-The output of the D language is not affected by the public keyword for the class.
 
 ## Type Conversions
 

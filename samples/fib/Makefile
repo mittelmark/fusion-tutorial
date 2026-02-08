@@ -106,9 +106,14 @@ lua-tstl-run:
 	cd lua-tstl && npx tstl $(LBASENAME).ts
 	cd lua-tstl && lua run-$(LBASENAME).lua
 
-octave-run:
+octave-swig-run:
 	## sudo apt install octave-dev
 	fut -o octave/$(LBASENAME).c $(FUFILE)
 	cd octave && swig -octave -module $(LBASENAME) -o $(LBASENAME)_wrap.cpp $(LBASENAME).i
 	cd octave && mkoctfile $(LBASENAME)_wrap.cpp $(LBASENAME).c -o $(LBASENAME)
 	cd octave && octave run-$(LBASENAME).m
+
+go-c-run:
+	# fut -o go-c/$(LBASENAME).c $(FUFILE) # main is disturbing
+	cd go-c && go clean -cache
+	cd go-c && go run run-$(LBASENAME).go

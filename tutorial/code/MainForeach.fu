@@ -1,0 +1,12 @@
+public static class MainForeach {
+    public static void Main (string[] args) {
+		SortedDictionary<string(), int>() dict;
+		dict["foo"] = 1;
+		dict["bar"] = 2;
+		dict["baz"] = 3;
+		foreach ((string k, int v) in dict) {
+			Console.WriteLine($"{k} => {v}");
+     	}
+		Console.WriteLine($"Number of items in the dictionary is {dict.Count}!");
+    }   
+}

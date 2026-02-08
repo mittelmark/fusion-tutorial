@@ -28,7 +28,7 @@
     <div class="document-header">
 <h1 class="title">Tutorial of the Fusion Programming Language (WIP)</h1>
 <h2 class="author">Detlef Groth, University of Potsdam</h2>
-<h2 class="date">2026-01-30</h2>
+<h2 class="date">2026-02-08</h2>
     </div>
 
 <div class='toc'>
@@ -38,8 +38,20 @@
 <ul>
 <li><a href="#introduction">Introduction</a></li>
 <li><a href="#installation">Installation</a></li>
-<li><a href="#helloworldexample">Hello World Example</a></li>
+<li><a href="#helloworldexample">Hello World Example</a>
+<ul>
+<li><a href="#cprogramminglanguage">C Programming Language</a></li></ul>
+
+</li>
+<li><a href="#fusionlanguage">Fusion Language</a>
+<ul>
+<li><a href="#datatypes">Data Types</a></li>
+<li><a href="#operators">Operators</a></li>
+<li><a href="#controlflow">Control Flow</a></li></ul>
+
+</li>
 <li><a href="#fusionscriptinterpreter">Fusion Script Interpreter</a></li>
+<li><a href="#languagedetails">Language Details</a></li>
 <li><a href="#otherprogramminglanguages">Other Programming Languages</a>
 <ul>
 <li><a href="#lua">Lua</a></li>
@@ -51,7 +63,6 @@
 <li><a href="#swigandtcl">Swig and Tcl</a></li></ul>
 
 </li>
-<li><a href="#datatypes">Data Types</a></li>
 <li><a href="#typeconversions">Type Conversions</a></li>
 <li><a href="#parsingintegers">Parsing Integers</a>
 <ul>
@@ -157,6 +168,35 @@ class Main
 
 void main() =&gt; Main.main();</pre> 
 
+<p><a name="cprogramminglanguage"> </a></p><h3>C Programming Language</h3>
+
+<p>Let's finish this section if an example for generated and executed C output.
+We create, compile and execute the output  like so:</p>
+
+<pre class='code'><code class='code'>fut Main.fu -o out/main.c
+gcc -std=c99 out/main.c -o out/main-c
+./out/main-c</code></pre>
+
+<pre class='code'><code class='out'>Hello World!</code></pre>
+
+<p>The C generated code looks like this:</p>
+
+<pre class="c">// Generated automatically with "fut". Do not edit.
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include "main.h"
+
+int main(void)
+{
+    puts("Hello World!");
+}</pre> 
+
+<p>We can use the generate C code file and its header file later to support as
+well other programming languages like Go, V-lang or Dart which can directly
+use C libraries or other programming languages which are supported by the 
+<a href="https://www.swig.org">SWIG Simplified Wrapper and Interface Generator</a> tool,
+like R, Tcl, Lua, Octave, PHP, Perl etc using this C output. Examples will be given later.</p>
+
 <p><a name="fusionscriptinterpreter"> </a></p><h2>Fusion Script Interpreter</h2>
 
 <p>In this tutorial we will use Python to directly execute the generated code
@@ -183,6 +223,154 @@ else
     shift
     python3 ${BN}.py &quot;$@&quot;
 fi</code></pre>
+
+<p><a name="fusionlanguage"> </a></p><h2>Fusion Language</h2>
+
+<p>Let's shortly review the fusion languages, so we will cover data types,
+operators, control flow constructs, data structures and classes and methods.</p>
+
+<p>Fusion is closely related to C-Sharp highlighting works quite fine, I am
+using the <a href="https://github.com/bjasspa/jasspa">MicroEmacs</a> text editor which
+has native Fusion support. For more details on the language consult the original <a href="https://github.com/fusionlanguage/fut/blob/master/doc/reference.md">reference</a>.</p>
+
+<p><a name="datatypes"> </a></p><h3>Data Types</h3>
+
+<p>The main basic data types in Fusion are boolean, int, float and double. For
+int types as well exists byte, short, ushort and unint, so we have:</p>
+
+<ul>
+<li>boolean - <em>bool</em> with the values <em>true</em> or <em>false</em> (note in C-shapr these are <em>True</em> and <em>False</em>)</li>
+<li>integers - coming as <em>byte</em>, <em>shorts</em>, <em>ushort</em>, <em>int</em>, <em>long</em> etc</li>
+<li>floats - coming as <em>float</em> and <em>double</em></li>
+<li>characters - written in single quotes are represented as integers pointing to the unicode character - so like: <code>int c = 'x'</code></li>
+<li>strings - come in different flavors, see later for a few examples
+</li></ul>
+
+<p>There are as well variations for these types which are always mapped to the
+language specific types which are at least providing the expected value
+ranges. Let's output a few of these types. Below you see how you
+can output variables as strings using string interpolations started by the <code>$</code> operator with embedded variable names. That does not work for
+boolean values, so we create a help method BoolToInt which converts the
+boolean value to an integer.</p>
+
+<pre class='code'><code class='code'>static class Main2 {
+    public static int BoolToInt (bool b) {
+        if (b) { return(1); }
+        return(0);
+    }
+    public static void Main (string[] args) {
+        int x = 3 ;
+        bool b = true;  // bools can't be printed
+        bool c = false;
+        int d = 'x'; // chars are ints unicode char 120 is x
+        string() e = &quot;hello&quot;;
+        byte y = 12; 
+        float f = 1.234;        
+        Console.WriteLine($&quot; x={x} b={Main2.BoolToInt(b)} c={Main2.BoolToInt(c)} d={d} e={e} y={y} f={f}&quot;);
+    }   
+}</code></pre>
+
+<pre class='code'><code class='out'>x=3 b=1 c=0 d=120 e=hello y=12 f=1.234</code></pre>
+
+<p>As we did not prefix this class declaration with the public keyword that class will have an underscore in Python.</p>
+
+<p>Here the output for the Python script :</p>
+
+<pre class="py"># Generated automatically with "fut". Do not edit.
+import sys
+
+class _Main2:
+
+    @staticmethod
+    def bool_to_int(b: bool) -&gt; int:
+        if b:
+            return 1
+        return 0
+
+    @staticmethod
+    def main(args: list[str]) -&gt; None:
+        x: int = 3
+        b: bool = True
+        c: bool = False
+        d: int = 120
+        e: str = "hello"
+        y: int = 12
+        f: float = 1.234
+        print(f" x={x} b={_Main2.bool_to_int(b)} c={_Main2.bool_to_int(c)} d={d} e={e} y={y} f={f}")
+
+if __name__ == '__main__':
+    _Main2.main(sys.argv[1:])</pre> 
+
+<p>The output of the D language is not affected by the public keyword for the class.</p>
+
+<p>Fusion does not support type conversions for instance from a string to an
+integer per default. But such a conversion can be implemented. For an example
+see below in the section <a href="#typeconversions">Type Conversions</a>.</p>
+
+<p><a name="operators"> </a></p><h3>Operators</h3>
+
+<p>Here we have just the usual ones for numeric types
+*, +, -, / and ^ for exponentiation and the usual comparison operators, bitwise operators etc.</p>
+
+<p>For boolean values we have <code>||</code> for OR, <code>&amp;&amp;</code> for AND and <code>!</code> for NOT.</p>
+
+<p><a name="controlflow"> </a></p><h3>Control Flow</h3>
+
+<p>Here we have the decion making constructs.</p>
+
+<pre class='code'><code class='code'>public static class MainControl {
+    public static void Main (string[] args) {
+        int x = 3 ;
+        if (x &lt; 3) {
+            Console.WriteLine(&quot;X is small!&quot;);
+        } else if (x == 3) {
+            Console.WriteLine(&quot;X is 3!&quot;);
+        } else {
+            Console.WriteLine(&quot;X is large!&quot;);
+        }
+        while (x &lt; 10) {
+            x = x + 1;
+            Console.WriteLine($&quot;X is {x}!&quot;);
+        }
+        for (int i = 0; i &lt; 3; i++) {
+            x=x+1;
+        }
+        Console.WriteLine($&quot;Final value of X is {x}!&quot;);
+        
+    }   
+}</code></pre>
+
+<pre class='code'><code class='out'>X is 3!
+X is 4!
+X is 5!
+X is 6!
+X is 7!
+X is 8!
+X is 9!
+X is 10!
+Final value of X is 13!</code></pre>
+
+<pre class='code'><code class='code'>public static class MainForeach {
+    public static void Main (string[] args) {
+        SortedDictionary&lt;string(), int&gt;() dict;
+        dict[&quot;foo&quot;] = 1;
+        dict[&quot;bar&quot;] = 2;
+        dict[&quot;baz&quot;] = 3;
+        foreach ((string k, int v) in dict) {
+            Console.WriteLine($&quot;{k} =&gt; {v}&quot;);
+        }
+        Console.WriteLine($&quot;Number of items in the dictionary is {dict.Count}!&quot;);
+    }   
+}</code></pre>
+
+<pre class='code'><code class='out'>bar =&gt; 2
+baz =&gt; 3
+foo =&gt; 1
+Number of items in the dictionary is 3!</code></pre>
+
+<p>There are as well switch statements, foreach and do-white loops etc. Again
+you should check the Fusion reference for example on this. Here we will just
+show how to loop over keys and values of a dictionary data structure:</p>
 
 <p><a name="otherprogramminglanguages"> </a></p><h2>Other Programming Languages</h2>
 
@@ -485,60 +673,6 @@ Hello Message!</code></pre>
 targets have a look at the examples in the
 <a href="https://github.com/mittelmark/fusion-tutorial/samples/hello">samples/hello</a>
 folder of the project.</p>
-
-<p><a name="datatypes"> </a></p><h2>Data Types</h2>
-
-<p>The main basic data types in Fusion are boolean, int, float and double. For
-int types as well exists byte, short, ushort and unint. Below you see how you
-can create strings with embedded variable names. That does not work for
-boolean values, so we create a help method BoolToInt which converts the
-boolean value to an integer.</p>
-
-<pre class='code'><code class='code'>static class Main2 {
-    public static int BoolToInt (bool b) {
-        if (b) { return(1); }
-        return(0);
-    }
-    public static void Main (string[] args) {
-        int x = 3 ;
-        bool b = true;  // bools can't be printed
-        bool c = false;
-        byte y = 12; 
-        float f = 1.234;        
-        Console.WriteLine($&quot; x={x} b={Main2.BoolToInt(b)} c={Main2.BoolToInt(c)} y={y} f={f}&quot;);
-    }   
-}</code></pre>
-
-<pre class='code'><code class='out'>x=3 b=1 c=0 y=12 f=1.234</code></pre>
-
-<p>As we did not prefix this class declaration with the public keyword that class will have an underscore in Python.</p>
-
-<p>Here the output for the Python script :</p>
-
-<pre class="py"># Generated automatically with "fut". Do not edit.
-import sys
-
-class _Main2:
-
-    @staticmethod
-    def bool_to_int(b: bool) -&gt; int:
-        if b:
-            return 1
-        return 0
-
-    @staticmethod
-    def main(args: list[str]) -&gt; None:
-        x: int = 3
-        b: bool = True
-        c: bool = False
-        y: int = 12
-        f: float = 1.234
-        print(f" x={x} b={_Main2.bool_to_int(b)} c={_Main2.bool_to_int(c)} y={y} f={f}")
-
-if __name__ == '__main__':
-    _Main2.main(sys.argv[1:])</pre> 
-
-<p>The output of the D language is not affected by the public keyword for the class.</p>
 
 <p><a name="typeconversions"> </a></p><h2>Type Conversions</h2>
 
@@ -1110,13 +1244,13 @@ s5=a1234.5678 i5=0</code></pre>
 <pre class='code'><code class='code'>ls -lth main?-*
 ./main5-d</code></pre>
 
-<pre class='code'><code class='out'>-rwxrwxr-x 1 dgroth dgroth 1,3M 30. Jan 19:55 main5-d
--rw-r--r-- 1 dgroth dgroth 448K 30. Jan 19:55 main5-d.o
--rwxrwxr-x 1 dgroth dgroth  17K 30. Jan 19:55 main5-cpp
--rwxrwxr-x 1 dgroth dgroth  32K 30. Jan 19:55 main4-cpp
--rwxrwxr-x 1 dgroth dgroth  16K 30. Jan 19:55 main4-c
--rwxrwxr-x 1 dgroth dgroth 1,3M 30. Jan 19:55 main4-d
--rw-r--r-- 1 dgroth dgroth 449K 30. Jan 19:55 main4-d.o
+<pre class='code'><code class='out'>-rwxrwxr-x 1 dgroth dgroth 1,3M  8. Feb 10:33 main5-d
+-rw-r--r-- 1 dgroth dgroth 448K  8. Feb 10:33 main5-d.o
+-rwxrwxr-x 1 dgroth dgroth  17K  8. Feb 10:33 main5-cpp
+-rwxrwxr-x 1 dgroth dgroth  32K  8. Feb 10:33 main4-cpp
+-rwxrwxr-x 1 dgroth dgroth  16K  8. Feb 10:33 main4-c
+-rwxrwxr-x 1 dgroth dgroth 1,3M  8. Feb 10:33 main4-d
+-rw-r--r-- 1 dgroth dgroth 449K  8. Feb 10:33 main4-d.o
 s1=12 i1=1
 s2=-23 i2=1
 s3=xyz i3=0
