@@ -105,3 +105,10 @@ lua-tstl-run:
 	fut -o lua-tstl/$(LBASENAME).ts $(FUFILE)
 	cd lua-tstl && npx tstl $(LBASENAME).ts
 	cd lua-tstl && lua run-$(LBASENAME).lua
+
+octave-run:
+	## sudo apt install octave-dev
+	fut -o octave/$(LBASENAME).c $(FUFILE)
+	cd octave && swig -octave -module $(LBASENAME) -o $(LBASENAME)_wrap.cpp $(LBASENAME).i
+	cd octave && mkoctfile $(LBASENAME)_wrap.cpp $(LBASENAME).c -o $(LBASENAME)
+	cd octave && octave run-$(LBASENAME).m
