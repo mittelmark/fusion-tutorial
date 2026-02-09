@@ -51,6 +51,7 @@
 <li><a href="#controlflow">Control Flow</a></li></ul>
 
 </li>
+<li><a href="#datastructures">Data Structures</a></li>
 <li><a href="#otherprogramminglanguages">Other Programming Languages</a>
 <ul>
 <li><a href="#lua">Lua</a></li>
@@ -389,7 +390,7 @@ List as a nested list and a Dictionary collection.</p>
         // keys are here not sorted
         Dictionary&lt;string(), float&gt;() aasize;
         // Example for a 2x3 matrix 
-        List&lt;List&lt;byte&gt;()&gt;() M;
+        List&lt;List&lt;int&gt;()&gt;() M; // byte would be better but C++ fails
         M.Add();
         M[0].Add(0);
         M[0].Add(1);
@@ -418,6 +419,53 @@ List as a nested list and a Dictionary collection.</p>
 <pre class='code'><code class='out'>Amino acid Ala has a weight of 71.1
 Amino acid Gly has a weight of 57.1
 Amino acid Leu has a weight of 113.2
+ M[0,0] = 0!
+ M[0,1] = 1!
+ M[0,2] = 0!
+ M[1,0] = 0!
+ M[1,1] = 1!
+ M[1,2] = 1!
+Number of items in the aasize dictionary is 3!
+Number of row in Matrix is 2!</code></pre>
+
+<p>Let's check if we can use this as well in the C++ and the C programming language:</p>
+
+<pre class='code'><code class='code'>fut code/MainDictionary.fu -o out/dict.c
+gcc out/dict.c  `pkg-config --cflags --libs glib-2.0` -o out/dict-c
+echo &quot;C++ code output&quot;
+./out/dict-c</code></pre>
+
+<pre class='code'><code class='out'>C++ code output
+Amino acid Gly has a weight of 57.1
+Amino acid Leu has a weight of 113.2
+Amino acid Ala has a weight of 71.1
+ M[0,0] = 0!
+ M[0,1] = 1!
+ M[0,2] = 0!
+ M[1,0] = 0!
+ M[1,1] = 1!
+ M[1,2] = 1!
+Number of items in the aasize dictionary is 3!
+Number of row in Matrix is 2!</code></pre>
+
+<div class="side-caution"><p><b>Caution:</b> 
+For this we need the actual Git version of the fut transpiler
+from the repository as
+the version from September 2025 contains a bug in the C output. Further we need
+the glib library for these data structures if we comppile the C code.
+</p></div>
+
+<p>Let's finish this section with an example for C++, lease note that we have to use the -std=c++20 flag for compilation.</p>
+
+<pre class='code'><code class='code'>fut code/MainDictionary.fu -o out/dict.cpp
+g++ -std=c++20 out/dict.cpp -o out/dict-cpp
+echo &quot;C++ code output&quot;
+./out/dict-cpp</code></pre>
+
+<pre class='code'><code class='out'>C++ code output
+Amino acid Leu has a weight of 113.2
+Amino acid Gly has a weight of 57.1
+Amino acid Ala has a weight of 71.1
  M[0,0] = 0!
  M[0,1] = 1!
  M[0,2] = 0!
@@ -1309,13 +1357,13 @@ s5=a1234.5678 i5=0</code></pre>
 <pre class='code'><code class='code'>ls -lth main?-*
 ./main5-d</code></pre>
 
-<pre class='code'><code class='out'>-rwxrwxr-x 1 dgroth dgroth 1,3M  9. Feb 09:53 main5-d
--rw-r--r-- 1 dgroth dgroth 448K  9. Feb 09:53 main5-d.o
--rwxrwxr-x 1 dgroth dgroth  17K  9. Feb 09:53 main5-cpp
--rwxrwxr-x 1 dgroth dgroth  32K  9. Feb 09:53 main4-cpp
--rwxrwxr-x 1 dgroth dgroth  16K  9. Feb 09:53 main4-c
--rwxrwxr-x 1 dgroth dgroth 1,3M  9. Feb 09:53 main4-d
--rw-r--r-- 1 dgroth dgroth 449K  9. Feb 09:53 main4-d.o
+<pre class='code'><code class='out'>-rwxrwxr-x 1 dgroth dgroth 1,3M  9. Feb 16:33 main5-d
+-rw-r--r-- 1 dgroth dgroth 448K  9. Feb 16:33 main5-d.o
+-rwxrwxr-x 1 dgroth dgroth  17K  9. Feb 16:33 main5-cpp
+-rwxrwxr-x 1 dgroth dgroth  32K  9. Feb 16:33 main4-cpp
+-rwxrwxr-x 1 dgroth dgroth  16K  9. Feb 16:33 main4-c
+-rwxrwxr-x 1 dgroth dgroth 1,3M  9. Feb 16:33 main4-d
+-rw-r--r-- 1 dgroth dgroth 449K  9. Feb 16:33 main4-d.o
 s1=12 i1=1
 s2=-23 i2=1
 s3=xyz i3=0

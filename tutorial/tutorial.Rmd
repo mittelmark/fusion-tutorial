@@ -1,7 +1,7 @@
 ---
 title: Tutorial of the Fusion Programming Language (WIP)
 author: Detlef Groth, University of Potsdam
-date: 2026-02-09 09:54
+date: 2026-02-09 16:32
 ---
 
 `include tutorial.toc`
@@ -220,7 +220,27 @@ Let's check if we can use this as well in the C++ and the C programming language
 
 
 
+```{.shell label=MainDictionary cmd="bash %i > %b.txt" chunk.ext=sh ext=txt}
+fut code/MainDictionary.fu -o out/dict.c
+gcc out/dict.c  `pkg-config --cflags --libs glib-2.0` -o out/dict-c
+echo "C++ code output"
+./out/dict-c
+```
 
+> [!CAUTION]
+> For this we need the actual Git version of the fut transpiler
+> from the repository as
+> the version from September 2025 contains a bug in the C output. Further we need
+> the glib library for these data structures if we comppile the C code.
+
+Let's finish this section with an example for C++, lease note that we have to use the -std=c++20 flag for compilation.
+
+```{.shell label=MainDictionary cmd="bash %i > %b.txt" chunk.ext=sh ext=txt}
+fut code/MainDictionary.fu -o out/dict.cpp
+g++ -std=c++20 out/dict.cpp -o out/dict-cpp
+echo "C++ code output"
+./out/dict-cpp
+```
 
 ## Other Programming Languages
 
