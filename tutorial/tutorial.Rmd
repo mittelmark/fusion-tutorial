@@ -1,7 +1,7 @@
 ---
 title: Tutorial of the Fusion Programming Language (WIP)
 author: Detlef Groth, University of Potsdam
-date: 2026-02-09 16:41
+date: 2026-02-09 19:08
 ---
 
 `include tutorial.toc`
@@ -276,7 +276,7 @@ digraph g {
 }
 ```
 
-Let's create a simple library file, _Hello.fu_ in a sub folder _assets_:_
+Let's create a simple library file, _Hello.fu_ in a sub folder _assets_:
 
 
 `include assets/Hello.fu {<pre> </pre>}`
@@ -357,11 +357,10 @@ cd ..
 Optionally the variable `export CGO_ENABLED=1` must be set in your terminal
 on older versions of the Go compiler. The cgo approach has a few drawbacks,
 such as missing support for C++ and the limited support for more
-sophisticated data structure. Using Swig deals woth a few of these issues.
-For a review of both methods see this article of
-[friendlyuser](https://friendlyuser.github.io/posts/tech/go/how_to_call_c_cplusplus_from_go/). 
-For a swig based approach see the [samples/hello](../samples/hello) project which contains a simple
- example to use swig for creating wrapper code.
+sophisticated data structures. Using the Swig tool, were we will show later
+some examples, deals with a few of these issues. For a review of both methods
+see this article of [friendlyuser](https://friendlyuser.github.io/posts/tech/go/how_to_call_c_cplusplus_from_go/). For a swig based approach see the [samples/hello](../samples/hello) project
+which contains a simple example to use swig for creating wrapper code.
 
 
 ### Dart language
