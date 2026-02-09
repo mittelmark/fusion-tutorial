@@ -28,7 +28,7 @@
     <div class="document-header">
 <h1 class="title">Tutorial of the Fusion Programming Language (WIP)</h1>
 <h2 class="author">Detlef Groth, University of Potsdam</h2>
-<h2 class="date">2026-02-08</h2>
+<h2 class="date">2026-02-09</h2>
     </div>
 
 <div class='toc'>
@@ -370,6 +370,62 @@ show how to loop over keys and values of a dictionary data structure:</p>
 baz =&gt; 3
 foo =&gt; 1
 Number of items in the dictionary is 3!</code></pre>
+
+<p><a name="datastructures"> </a></p><h2>Data Structures</h2>
+
+<p>Beyond the basic scalar types Fusion offers the typical data structures like
+Lists which can have only a single type or Dictionary a key value structure.</p>
+
+<p>Further we have Queues, Stacks, HasSets, SortedSets. There are as well
+special cases of the Dictionary structure, the SortedDictionary where the
+keys are sorted or an OrderedDictionary where the keys are in insertion
+order. Dependent on the predominant use case, insertion or data retrieval, one or
+the other form of these data structures might be preferable. We here give examples for the important
+List as a nested list and a Dictionary collection.</p>
+
+<pre class='code'><code class='code'>public static class MainDictionary {
+    public static void Main (string[] args) {
+        // key is a string value is a float
+        // keys are here not sorted
+        Dictionary&lt;string(), float&gt;() aasize;
+        // Example for a 2x3 matrix 
+        List&lt;List&lt;byte&gt;()&gt;() M;
+        M.Add();
+        M[0].Add(0);
+        M[0].Add(1);
+        M[0].Add(0);
+        M.Add();
+        M[1].Add(0);
+        M[1].Add(1);
+        M[1].Add(1);        
+        aasize[&quot;Ala&quot;] = 71.1;
+        aasize[&quot;Gly&quot;] = 57.1;
+        aasize[&quot;Leu&quot;] = 113.2;
+        foreach ((string k, float v) in aasize) {
+            Console.WriteLine($&quot;Amino acid {k} has a weight of {v}&quot;);
+        }
+        for (int i = 0; i &lt; M.Count; i++) {
+            for (int j = 0 ; j &lt; M[i].Count; j++) {
+                Console.WriteLine($&quot; M[{i},{j}] = {M[i][j]}!&quot;);
+                
+            }
+        }
+        Console.WriteLine($&quot;Number of items in the aasize dictionary is {aasize.Count}!&quot;);
+        Console.WriteLine($&quot;Number of row in Matrix is {M.Count}!&quot;);
+    }   
+}</code></pre>
+
+<pre class='code'><code class='out'>Amino acid Ala has a weight of 71.1
+Amino acid Gly has a weight of 57.1
+Amino acid Leu has a weight of 113.2
+ M[0,0] = 0!
+ M[0,1] = 1!
+ M[0,2] = 0!
+ M[1,0] = 0!
+ M[1,1] = 1!
+ M[1,2] = 1!
+Number of items in the aasize dictionary is 3!
+Number of row in Matrix is 2!</code></pre>
 
 <p><a name="otherprogramminglanguages"> </a></p><h2>Other Programming Languages</h2>
 
@@ -1253,13 +1309,13 @@ s5=a1234.5678 i5=0</code></pre>
 <pre class='code'><code class='code'>ls -lth main?-*
 ./main5-d</code></pre>
 
-<pre class='code'><code class='out'>-rwxrwxr-x 1 dgroth dgroth 1,3M  8. Feb 10:44 main5-d
--rw-r--r-- 1 dgroth dgroth 448K  8. Feb 10:44 main5-d.o
--rwxrwxr-x 1 dgroth dgroth  17K  8. Feb 10:44 main5-cpp
--rwxrwxr-x 1 dgroth dgroth  32K  8. Feb 10:44 main4-cpp
--rwxrwxr-x 1 dgroth dgroth  16K  8. Feb 10:44 main4-c
--rwxrwxr-x 1 dgroth dgroth 1,3M  8. Feb 10:44 main4-d
--rw-r--r-- 1 dgroth dgroth 449K  8. Feb 10:44 main4-d.o
+<pre class='code'><code class='out'>-rwxrwxr-x 1 dgroth dgroth 1,3M  9. Feb 09:53 main5-d
+-rw-r--r-- 1 dgroth dgroth 448K  9. Feb 09:53 main5-d.o
+-rwxrwxr-x 1 dgroth dgroth  17K  9. Feb 09:53 main5-cpp
+-rwxrwxr-x 1 dgroth dgroth  32K  9. Feb 09:53 main4-cpp
+-rwxrwxr-x 1 dgroth dgroth  16K  9. Feb 09:53 main4-c
+-rwxrwxr-x 1 dgroth dgroth 1,3M  9. Feb 09:53 main4-d
+-rw-r--r-- 1 dgroth dgroth 449K  9. Feb 09:53 main4-d.o
 s1=12 i1=1
 s2=-23 i2=1
 s3=xyz i3=0

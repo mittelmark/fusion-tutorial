@@ -1,7 +1,7 @@
 ---
 title: Tutorial of the Fusion Programming Language (WIP)
 author: Detlef Groth, University of Potsdam
-date: 2026-02-08 10:44
+date: 2026-02-09 09:54
 ---
 
 `include tutorial.toc`
@@ -198,6 +198,28 @@ show how to loop over keys and values of a dictionary data structure:
 ```{.shell label=MainForeach cmd="fuscript %i > %b.txt" chunk.ext=fu ext=txt}
 #INCLUDE "code/MainForeach.fu"
 ```
+
+## Data Structures
+
+Beyond the basic scalar types Fusion offers the typical data structures like
+Lists which can have only a single type or Dictionary a key value structure.
+
+Further we have Queues, Stacks, HasSets, SortedSets. There are as well
+special cases of the Dictionary structure, the SortedDictionary where the
+keys are sorted or an OrderedDictionary where the keys are in insertion
+order. Dependent on the predominant use case, insertion or data retrieval, one or
+the other form of these data structures might be preferable. We here give examples for the important
+List as a nested list and a Dictionary collection.
+
+
+```{.shell label=MainForeach cmd="fuscript %i > %b.txt" chunk.ext=fu ext=txt}
+#INCLUDE "code/MainDictionary.fu"
+```
+
+Let's check if we can use this as well in the C++ and the C programming language:
+
+
+
 
 
 ## Other Programming Languages

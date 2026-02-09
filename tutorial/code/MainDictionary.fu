@@ -1,0 +1,31 @@
+public static class MainDictionary {
+    public static void Main (string[] args) {
+		// key is a string value is a float
+		// keys are here not sorted
+		Dictionary<string(), float>() aasize;
+		// Example for a 2x3 matrix 
+		List<List<byte>()>() M;
+		M.Add();
+		M[0].Add(0);
+		M[0].Add(1);
+		M[0].Add(0);
+		M.Add();
+		M[1].Add(0);
+		M[1].Add(1);
+		M[1].Add(1);		
+		aasize["Ala"] = 71.1;
+		aasize["Gly"] = 57.1;
+		aasize["Leu"] = 113.2;
+		foreach ((string k, float v#) in aasize) {
+			Console.WriteLine($"Amino acid {k} has a weight of {v}");
+     	}
+		for (int i = 0; i < M.Count; i++) {
+			for (int j = 0 ; j < M[i].Count; j++) {
+				Console.WriteLine($" M[{i},{j}] = {M[i][j]}!");
+				
+			}
+		}
+		Console.WriteLine($"Number of items in the aasize dictionary is {aasize.Count}!");
+		Console.WriteLine($"Number of row in Matrix is {M.Count}!");
+    }   
+}
