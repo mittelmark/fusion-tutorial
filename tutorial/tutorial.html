@@ -40,7 +40,9 @@
 <li><a href="#installation">Installation</a></li>
 <li><a href="#helloworldexample">Hello World Example</a>
 <ul>
-<li><a href="#cprogramminglanguage">C Programming Language</a></li></ul>
+<li><a href="#pythoncodeoutput">Python Code Output</a></li>
+<li><a href="#dcodeoutput">D Code Output</a></li>
+<li><a href="#ccodeouput">C Code Ouput</a></li></ul>
 
 </li>
 <li><a href="#fusionscriptinterpreter">Fusion Script Interpreter</a></li>
@@ -55,10 +57,13 @@
 <li><a href="#otherprogramminglanguages">Other Programming Languages</a>
 <ul>
 <li><a href="#lua">Lua</a></li>
-<li><a href="#vlang">V-lang</a></li>
-<li><a href="#go">Go</a></li>
-<li><a href="#dart">Dart</a></li>
-<li><a href="#swigsimplifiedwrapperandinterfacegenerator">Swig - Simplified Wrapper and Interface Generator</a></li>
+<li><a href="#vlanguage">V language</a></li>
+<li><a href="#golanguage">Go language</a></li>
+<li><a href="#dartlanguage">Dart language</a></li></ul>
+
+</li>
+<li><a href="#swigsimplifiedwrapperandinterfacegenerator">Swig - Simplified Wrapper and Interface Generator</a>
+<ul>
 <li><a href="#swigandlua">Swig and Lua </a></li>
 <li><a href="#swigandtcl">Swig and Tcl</a></li></ul>
 
@@ -126,6 +131,8 @@ creation of simple command line applications, so here is our example and the exp
 
 <pre class='code'><code class='out'>Hello World!</code></pre>
 
+<p><a name="pythoncodeoutput"> </a></p><h3>Python Code Output</h3>
+
 <p>The fusion source code can be translated into the target programming language.
 Here an example for translating it into Python code and then executing it:</p>
 
@@ -144,6 +151,8 @@ class Main:
 
 if __name__ == '__main__':
     Main.main()</pre> 
+
+<p><a name="dcodeoutput"> </a></p><h3>D Code Output</h3>
 
 <p>To compile to other targets you just have to change the file extension. Here an example to create D code:</p>
 
@@ -168,7 +177,7 @@ class Main
 
 void main() =&gt; Main.main();</pre> 
 
-<p><a name="cprogramminglanguage"> </a></p><h3>C Programming Language</h3>
+<p><a name="ccodeouput"> </a></p><h3>C Code Ouput</h3>
 
 <p>Let's finish this section if an example for generated and executed C output.
 We create, compile and execute the output  like so:</p>
@@ -432,10 +441,10 @@ Number of row in Matrix is 2!</code></pre>
 
 <pre class='code'><code class='code'>fut code/MainDictionary.fu -o out/dict.c
 gcc out/dict.c  `pkg-config --cflags --libs glib-2.0` -o out/dict-c
-echo &quot;C++ code output&quot;
+echo &quot;C code output&quot;
 ./out/dict-c</code></pre>
 
-<pre class='code'><code class='out'>C++ code output
+<pre class='code'><code class='out'>C code output
 Amino acid Gly has a weight of 57.1
 Amino acid Leu has a weight of 113.2
 Amino acid Ala has a weight of 71.1
@@ -541,7 +550,7 @@ return ____exports</pre>
 <p>The file <em>lualib_bundle.lua</em> imported here is a 82kb file which supports the
 mapping from Typescript to Lua code.</p>
 
-<p><a name="vlang"> </a></p><h3>V-lang</h3>
+<p><a name="vlanguage"> </a></p><h3>V language</h3>
 
 <p>More important for using our Fusion code library is the C code output. As C
 code can be easily used by other programming languages we might as well use
@@ -581,7 +590,7 @@ programming it should be possible with more or less effort to use the
 generated code. There are existing as well other interface generators, for
 example Swig which we will present later.</p>
 
-<p><a name="go"> </a></p><h3>Go</h3>
+<p><a name="golanguage"> </a></p><h3>Go language</h3>
 
 <p>The <a href="">Go programming language</a> is the language after which the V languange
 was designed. It as well supports easy integration for C code. In the code
@@ -636,7 +645,7 @@ For a review of both methods see this article of
 For a swig based approach see the <a href="../samples/hello">samples/hello</a> project which contains a simple
  example to use swig for creating wrapper code.</p>
 
-<p><a name="dart"> </a></p><h3>Dart</h3>
+<p><a name="dartlanguage"> </a></p><h3>Dart language</h3>
 
 <p>In the Dart programming language we use the ffi package to call functions in
 compiled C libraries. So we can use the same file we used in for the V
@@ -692,7 +701,7 @@ Hello Message!</code></pre>
 transpiler should output clean C code which can be then used in even more programming
 languages.</p>
 
-<p><a name="swigsimplifiedwrapperandinterfacegenerator"> </a></p><h3>Swig - Simplified Wrapper and Interface Generator</h3>
+<p><a name="swigsimplifiedwrapperandinterfacegenerator"> </a></p><h2>Swig - Simplified Wrapper and Interface Generator</h2>
 
 <p>This manual creation of interfaces however is slightly cumbersome, so an
 automated process of creating an interface for the C library would offer a
@@ -1357,13 +1366,13 @@ s5=a1234.5678 i5=0</code></pre>
 <pre class='code'><code class='code'>ls -lth main?-*
 ./main5-d</code></pre>
 
-<pre class='code'><code class='out'>-rwxrwxr-x 1 dgroth dgroth 1,3M  9. Feb 16:33 main5-d
--rw-r--r-- 1 dgroth dgroth 448K  9. Feb 16:33 main5-d.o
--rwxrwxr-x 1 dgroth dgroth  17K  9. Feb 16:33 main5-cpp
--rwxrwxr-x 1 dgroth dgroth  32K  9. Feb 16:33 main4-cpp
--rwxrwxr-x 1 dgroth dgroth  16K  9. Feb 16:33 main4-c
--rwxrwxr-x 1 dgroth dgroth 1,3M  9. Feb 16:33 main4-d
--rw-r--r-- 1 dgroth dgroth 449K  9. Feb 16:33 main4-d.o
+<pre class='code'><code class='out'>-rwxrwxr-x 1 dgroth dgroth 1,3M  9. Feb 16:41 main5-d
+-rw-r--r-- 1 dgroth dgroth 448K  9. Feb 16:41 main5-d.o
+-rwxrwxr-x 1 dgroth dgroth  17K  9. Feb 16:41 main5-cpp
+-rwxrwxr-x 1 dgroth dgroth  32K  9. Feb 16:41 main4-cpp
+-rwxrwxr-x 1 dgroth dgroth  16K  9. Feb 16:41 main4-c
+-rwxrwxr-x 1 dgroth dgroth 1,3M  9. Feb 16:41 main4-d
+-rw-r--r-- 1 dgroth dgroth 449K  9. Feb 16:41 main4-d.o
 s1=12 i1=1
 s2=-23 i2=1
 s3=xyz i3=0

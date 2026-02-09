@@ -1,7 +1,7 @@
 ---
 title: Tutorial of the Fusion Programming Language (WIP)
 author: Detlef Groth, University of Potsdam
-date: 2026-02-09 16:32
+date: 2026-02-09 16:41
 ---
 
 `include tutorial.toc`
@@ -57,6 +57,8 @@ public static class Main {
 }
 ```
 
+### Python Code Output
+
 The fusion source code can be translated into the target programming language.
 Here an example for translating it into Python code and then executing it:
 
@@ -69,6 +71,8 @@ The Python output looks like this:
 
 `include Main.py {{<pre class="py">} {</pre>}}` 
 
+
+### D Code Output
 
 To compile to other targets you just have to change the file extension. Here an example to create D code:
 
@@ -84,7 +88,7 @@ The D language output looks like this:
 `include out/main.d {{<pre class="py">} {</pre>}}` 
 
 
-### C Programming Language
+### C Code Ouput
 
 Let's finish this section if an example for generated and executed C output.
 We create, compile and execute the output  like so:
@@ -223,7 +227,7 @@ Let's check if we can use this as well in the C++ and the C programming language
 ```{.shell label=MainDictionary cmd="bash %i > %b.txt" chunk.ext=sh ext=txt}
 fut code/MainDictionary.fu -o out/dict.c
 gcc out/dict.c  `pkg-config --cflags --libs glib-2.0` -o out/dict-c
-echo "C++ code output"
+echo "C code output"
 ./out/dict-c
 ```
 
@@ -235,7 +239,7 @@ echo "C++ code output"
 
 Let's finish this section with an example for C++, lease note that we have to use the -std=c++20 flag for compilation.
 
-```{.shell label=MainDictionary cmd="bash %i > %b.txt" chunk.ext=sh ext=txt}
+```{.shell label=MainDictionaryCpp cmd="bash %i > %b.txt" chunk.ext=sh ext=txt}
 fut code/MainDictionary.fu -o out/dict.cpp
 g++ -std=c++20 out/dict.cpp -o out/dict-cpp
 echo "C++ code output"
@@ -298,7 +302,7 @@ BTW: The file created by _tstl_ from the Typescript code looks like this:
 The file *lualib_bundle.lua* imported here is a 82kb file which supports the
 mapping from Typescript to Lua code.
 
-### V-lang
+### V language
 
 More important for using our Fusion code library is the C code output. As C
 code can be easily used by other programming languages we might as well use
@@ -328,7 +332,7 @@ programming it should be possible with more or less effort to use the
 generated code. There are existing as well other interface generators, for
 example Swig which we will present later.
 
-### Go
+### Go language
 
 The [Go programming language]() is the language after which the V languange
 was designed. It as well supports easy integration for C code. In the code
@@ -360,7 +364,7 @@ For a swig based approach see the [samples/hello](../samples/hello) project whic
  example to use swig for creating wrapper code.
 
 
-### Dart
+### Dart language
 
 In the Dart programming language we use the ffi package to call functions in
 compiled C libraries. So we can use the same file we used in for the V
@@ -388,7 +392,7 @@ So, we can see that we can support as well other language as the _fut_
 transpiler should output clean C code which can be then used in even more programming
 languages. 
 
-### Swig - Simplified Wrapper and Interface Generator
+## Swig - Simplified Wrapper and Interface Generator
 
 This manual creation of interfaces however is slightly cumbersome, so an
 automated process of creating an interface for the C library would offer a
