@@ -4,7 +4,7 @@ public static class MainDictionary {
 		// keys are here not sorted
 		Dictionary<string(), float>() aasize;
 		// Example for a 2x3 matrix 
-		List<List<int>()>() M; // byte would be better but C++ fails
+		List<List<byte>()>() M; // byte would be better but C++ fails
 		M.Add();
 		M[0].Add(0);
 		M[0].Add(1);
@@ -21,6 +21,7 @@ public static class MainDictionary {
      	}
 		for (int i = 0; i < M.Count; i++) {
 			for (int j = 0 ; j < M[i].Count; j++) {
+				int k = M[i][j];
 				Console.WriteLine($" M[{i},{j}] = {M[i][j]}!");
 				
 			}
