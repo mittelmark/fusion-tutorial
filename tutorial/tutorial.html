@@ -53,11 +53,8 @@
 <li><a href="#controlflow">Control Flow</a></li></ul>
 
 </li>
-<li><a href="#datastructures">Data Structures</a>
-<ul>
-<li><a href="#strings">Strings</a></li></ul>
-
-</li>
+<li><a href="#datastructures">Data Structures</a></li>
+<li><a href="#strings">Strings</a></li>
 <li><a href="#otherprogramminglanguages">Other Programming Languages</a>
 <ul>
 <li><a href="#lua">Lua</a></li>
@@ -516,27 +513,27 @@ have the same type.</p>
     <td>BinarySearch, Contains, Fill, Sort</td>
   </tr>
   <tr>
-    <td>List<T></td>
+    <td>List&lt;T&gt;</td>
     <td>vector of elements</td>
     <td>Add, Clear, Contains, Insert, RemoveAt, Sort, ...</td>
   </tr>
   <tr>
-    <td>Queue<T></td>
+    <td>Queue&lt;T&gt;</td>
     <td>vector of elements, first-in, first-out</td>
     <td>Clear, Enqueue, Dequeue, Peak</td>
   </tr>
   <tr>
-    <td>Stack<T></td>
+    <td>Stack&lt;T&gt;</td>
     <td>vector of elements, last-in, first-out</td>
     <td>Clear, Peak, Pop, Push</td>
   </tr>
   <tr>
-    <td>HashSet<T></td>
+    <td>HashSet&lt;T&gt;</td>
     <td>vector of unique elements</td>
     <td>Add, Clear, Contains, Remove</td>
   </tr>
   <tr>
-    <td>SortedSet<T></td>
+    <td>SortedSet&lt;T&gt;</td>
     <td>vector of sorted unique elements</td>
     <td>see HashSet</td>
   </tr>
@@ -559,7 +556,7 @@ have the same type.</p>
 </table>
 
 
-<p><a name="strings"> </a></p><h3>Strings</h3>
+<p><a name="strings"> </a></p><h2>Strings</h2>
 
 <p>String declarations come in three types:</p>
 
@@ -1482,13 +1479,13 @@ s5=a1234.5678 i5=0</code></pre>
 <pre class='code'><code class='code'>ls -lth main?-*
 ./main5-d</code></pre>
 
-<pre class='code'><code class='out'>-rwxrwxr-x 1 dgroth dgroth 1,3M 11. Feb 11:23 main5-d
--rw-r--r-- 1 dgroth dgroth 448K 11. Feb 11:23 main5-d.o
--rwxrwxr-x 1 dgroth dgroth  17K 11. Feb 11:23 main5-cpp
--rwxrwxr-x 1 dgroth dgroth  32K 11. Feb 11:23 main4-cpp
--rwxrwxr-x 1 dgroth dgroth  16K 11. Feb 11:23 main4-c
--rwxrwxr-x 1 dgroth dgroth 1,3M 11. Feb 11:23 main4-d
--rw-r--r-- 1 dgroth dgroth 449K 11. Feb 11:23 main4-d.o
+<pre class='code'><code class='out'>-rwxrwxr-x 1 dgroth dgroth 1,3M 11. Feb 11:32 main5-d
+-rw-r--r-- 1 dgroth dgroth 448K 11. Feb 11:32 main5-d.o
+-rwxrwxr-x 1 dgroth dgroth  17K 11. Feb 11:32 main5-cpp
+-rwxrwxr-x 1 dgroth dgroth  32K 11. Feb 11:32 main4-cpp
+-rwxrwxr-x 1 dgroth dgroth  16K 11. Feb 11:32 main4-c
+-rwxrwxr-x 1 dgroth dgroth 1,3M 11. Feb 11:32 main4-d
+-rw-r--r-- 1 dgroth dgroth 449K 11. Feb 11:32 main4-d.o
 s1=12 i1=1
 s2=-23 i2=1
 s3=xyz i3=0

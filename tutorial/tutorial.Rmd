@@ -1,7 +1,7 @@
 ---
 title: Tutorial of the Fusion Programming Language (WIP)
 author: Detlef Groth, University of Potsdam
-date: 2026-02-11 11:22
+date: 2026-02-11 11:32
 ---
 
 `include tutorial.toc`
@@ -256,16 +256,16 @@ have the same type.
 | structure    | description                                       | mMethods |
 |--------------|---------------------------------------------------|----------|
 | T[n], T[m][n]  | Array as fixed size collection                  | BinarySearch, Contains, Fill, Sort         |
-| List<T>      | vector of elements                                | Add, Clear, Contains, Insert, RemoveAt, Sort, ... |
-| Queue<T>     | vector of elements, first-in, first-out           | Clear, Enqueue, Dequeue, Peak |
-| Stack<T>     | vector of elements, last-in, first-out            | Clear, Peak, Pop, Push |
-| HashSet<T>   | vector of unique elements                         | Add, Clear, Contains, Remove |
-| SortedSet<T> | vector of sorted unique elements                  | see HashSet | 
+| List&lt;T&gt;      | vector of elements                                | Add, Clear, Contains, Insert, RemoveAt, Sort, ... |
+| Queue&lt;T&gt;     | vector of elements, first-in, first-out           | Clear, Enqueue, Dequeue, Peak |
+| Stack&lt;T&gt;     | vector of elements, last-in, first-out            | Clear, Peak, Pop, Push |
+| HashSet&lt;T&gt;   | vector of unique elements                         | Add, Clear, Contains, Remove |
+| SortedSet&lt;T&gt; | vector of sorted unique elements                  | see HashSet | 
 | Dictionary<T,T> | key-value data structure, key can be only number, string or enumeration  | Add, Clear, ContainsKey |
 | SortedDictionary<T,T> | key-value structure, but keys are in order | see Dictionary |
 | OrderedDictionary<T,T> | key-value structure, keys stays in insertion order | see Dictionary |
 
-### Strings
+## Strings
 
 String declarations come in three types:
 
