@@ -1,7 +1,7 @@
 ---
 title: Tutorial of the Fusion Programming Language (WIP)
 author: Detlef Groth, University of Potsdam
-date: 2026-02-10 06:40
+date: 2026-02-11 11:22
 ---
 
 `include tutorial.toc`
@@ -253,17 +253,37 @@ different types, however all keys must have the same type and all values must
 have the same type.
 
 
-| structure    | description                                       |
-|--------------|---------------------------------------------------|
-| List<T>      | vector of elements                                |
-| Queue<T>     | vector of elements, first-in, first-out           |
-| Stack<T>     | vector of elements, last-in, first-out            |
-| HashSet<T>   | vector of unique elements                         |
-| SortedSet<T> | vector of sorted unique elements                  |
-| Dictionary<T,T> | key-value data structure, key can be only number, string or enumeration  |
-| SortedDictionary<T,T> | key-value structure, but keys are in order |
-| OrderedDictionary<T,T> | key-value structure, keys stays in insertion order |
+| structure    | description                                       | mMethods |
+|--------------|---------------------------------------------------|----------|
+| T[n], T[m][n]  | Array as fixed size collection                  | BinarySearch, Contains, Fill, Sort         |
+| List<T>      | vector of elements                                | Add, Clear, Contains, Insert, RemoveAt, Sort, ... |
+| Queue<T>     | vector of elements, first-in, first-out           | Clear, Enqueue, Dequeue, Peak |
+| Stack<T>     | vector of elements, last-in, first-out            | Clear, Peak, Pop, Push |
+| HashSet<T>   | vector of unique elements                         | Add, Clear, Contains, Remove |
+| SortedSet<T> | vector of sorted unique elements                  | see HashSet | 
+| Dictionary<T,T> | key-value data structure, key can be only number, string or enumeration  | Add, Clear, ContainsKey |
+| SortedDictionary<T,T> | key-value structure, but keys are in order | see Dictionary |
+| OrderedDictionary<T,T> | key-value structure, keys stays in insertion order | see Dictionary |
 
+### Strings
+
+String declarations come in three types:
+
+* storage - written as `string()`
+* reference - written as `string`
+* nullable - written as `string?`
+
+Here an exmple:
+
+```{.shell label=StringSample cmd="fuscript %i > %b.txt" chunk.ext=fu ext=txt}
+#INCLUDE "assets/StringSample.fu"
+```
+
+If we try to modify hw2 we get an error!
+
+```{.shell label=StringSample2 cmd="fuscript %i > %b.txt" chunk.ext=fu ext=txt}
+#INCLUDE "assets/StringSample2.fu"
+```
 
 ## Other Programming Languages
 
