@@ -2,6 +2,7 @@ public class IntMatrix {
 	List<List<int>()>() M;
 	int nc = 0;
 	int nr = 0;
+	// constructors can't take arguments so we do a create function
 	public void create! (int nrow, int ncol, int value=0) {
 		for (int i = 0; i < nrow; i++) {
 			M.Add();
@@ -12,6 +13,7 @@ public class IntMatrix {
 		nc = ncol;
 		nr = nrow;
 	}
+	// exclamation mark as object is modified
 	public void set!(int row,int col,int value) {
 		M[row][col]= value;
 	}
@@ -34,6 +36,7 @@ public class IntMatrix {
 		IntMatrix() N;
 		N.create(4,4,0);
 		N.set(1,2,1);
+		N.set(0,0,2);		
 		Console.WriteLine($"Nrow={N.nrow()} - ncol={N.ncol()}");
 		for (int i = 0; i < N.nrow(); i++) {
 			for (int j = 0; j < N.ncol(); j++) {

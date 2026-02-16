@@ -609,6 +609,7 @@ rows and columns and to set and get some values. Further we illustrate the retri
     List&lt;List&lt;int&gt;()&gt;() M;
     int nc = 0;
     int nr = 0;
+    // constructors can't take arguments so we do a create function
     public void create! (int nrow, int ncol, int value=0) {
         for (int i = 0; i &lt; nrow; i++) {
             M.Add();
@@ -619,6 +620,7 @@ rows and columns and to set and get some values. Further we illustrate the retri
         nc = ncol;
         nr = nrow;
     }
+    // exclamation mark as object is modified
     public void set!(int row,int col,int value) {
         M[row][col]= value;
     }
@@ -641,6 +643,7 @@ rows and columns and to set and get some values. Further we illustrate the retri
         IntMatrix() N;
         N.create(4,4,0);
         N.set(1,2,1);
+        N.set(0,0,2);       
         Console.WriteLine($&quot;Nrow={N.nrow()} - ncol={N.ncol()}&quot;);
         for (int i = 0; i &lt; N.nrow(); i++) {
             for (int j = 0; j &lt; N.ncol(); j++) {
@@ -659,7 +662,7 @@ rows and columns and to set and get some values. Further we illustrate the retri
 }</code></pre>
 
 <pre class='code'><code class='out'>Nrow=4 - ncol=4
-0   0   0   0   
+2   0   0   0   
 0   0   1   0   
 0   0   0   0   
 0   0   0   0   
@@ -1547,13 +1550,13 @@ s5=a1234.5678 i5=0</code></pre>
 <pre class='code'><code class='code'>ls -lth main?-*
 ./main5-d</code></pre>
 
-<pre class='code'><code class='out'>-rwxrwxr-x 1 dgroth dgroth 1,3M 16. Feb 10:02 main5-d
--rw-r--r-- 1 dgroth dgroth 448K 16. Feb 10:02 main5-d.o
--rwxrwxr-x 1 dgroth dgroth  17K 16. Feb 10:02 main5-cpp
--rwxrwxr-x 1 dgroth dgroth  32K 16. Feb 10:02 main4-cpp
--rwxrwxr-x 1 dgroth dgroth  16K 16. Feb 10:02 main4-c
--rwxrwxr-x 1 dgroth dgroth 1,3M 16. Feb 10:02 main4-d
--rw-r--r-- 1 dgroth dgroth 449K 16. Feb 10:02 main4-d.o
+<pre class='code'><code class='out'>-rwxrwxr-x 1 dgroth dgroth 1,3M 16. Feb 10:05 main5-d
+-rw-r--r-- 1 dgroth dgroth 448K 16. Feb 10:05 main5-d.o
+-rwxrwxr-x 1 dgroth dgroth  17K 16. Feb 10:05 main5-cpp
+-rwxrwxr-x 1 dgroth dgroth  32K 16. Feb 10:05 main4-cpp
+-rwxrwxr-x 1 dgroth dgroth  16K 16. Feb 10:05 main4-c
+-rwxrwxr-x 1 dgroth dgroth 1,3M 16. Feb 10:05 main4-d
+-rw-r--r-- 1 dgroth dgroth 449K 16. Feb 10:05 main4-d.o
 s1=12 i1=1
 s2=-23 i2=1
 s3=xyz i3=0
