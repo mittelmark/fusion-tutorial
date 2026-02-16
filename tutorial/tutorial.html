@@ -28,7 +28,7 @@
     <div class="document-header">
 <h1 class="title">Tutorial of the Fusion Programming Language (WIP)</h1>
 <h2 class="author">Detlef Groth, University of Potsdam</h2>
-<h2 class="date">2026-02-11</h2>
+<h2 class="date">2026-02-16</h2>
     </div>
 
 <div class='toc'>
@@ -55,6 +55,7 @@
 </li>
 <li><a href="#datastructures">Data Structures</a></li>
 <li><a href="#strings">Strings</a></li>
+<li><a href="#classes">Classes</a></li>
 <li><a href="#otherprogramminglanguages">Other Programming Languages</a>
 <ul>
 <li><a href="#lua">Lua</a></li>
@@ -566,7 +567,7 @@ have the same type.</p>
 <li>nullable - written as <code>string?</code>
 </li></ul>
 
-<p>Here an exmple:</p>
+<p>Here an example:</p>
 
 <pre class='code'><code class='code'>public static class StringSample {
     public static void Main () {
@@ -597,6 +598,73 @@ Hello String!</code></pre>
 
 <pre class='code'><code class='out'>An transpile error occured!
 StringSample2.fu(6): ERROR: New string must be assigned to 'string()'</code></pre>
+
+<p><a name="classes"> </a></p><h2>Classes</h2>
+
+<p>As the reference covers that topic sufficiently we just provide a practical example
+class a matrix class which allows to initialize the matrix with the number of
+rows and columns and to set and get some values. Further we illustrate the retrieval of row and column values.</p>
+
+<pre class='code'><code class='code'>public class IntMatrix {
+    List&lt;List&lt;int&gt;()&gt;() M;
+    int nc = 0;
+    int nr = 0;
+    public void create! (int nrow, int ncol, int value=0) {
+        for (int i = 0; i &lt; nrow; i++) {
+            M.Add();
+            for (int j = 0; j &lt; ncol; j++) {
+                M[i].Add(value);
+            }
+        }
+        nc = ncol;
+        nr = nrow;
+    }
+    public void set!(int row,int col,int value) {
+        M[row][col]= value;
+    }
+    public int get(int row,int col) {
+        return(M[row][col]);
+    }
+    public List&lt;int&gt; getRow(int row) {
+        return(M[0]);
+    }
+    public List&lt;int&gt;() getColumn(int col) {
+        List&lt;int&gt;() values;
+        for (int i = 0; i &lt; nr; i++) {
+            values.Add(M[i][col]);
+        }
+        return(values);
+    }
+    public int nrow() =&gt; nr;
+    public int ncol() =&gt; nc;
+    public static void Main (string[] args) {
+        IntMatrix() N;
+        N.create(4,4,0);
+        N.set(1,2,1);
+        Console.WriteLine($&quot;Nrow={N.nrow()} - ncol={N.ncol()}&quot;);
+        for (int i = 0; i &lt; N.nrow(); i++) {
+            for (int j = 0; j &lt; N.ncol(); j++) {
+                Console.Write($&quot;{N.get(i,j)}\t&quot;);
+            }
+            Console.WriteLine(&quot;&quot;);
+        }
+        Console.WriteLine(&quot;################################&quot;);
+        List&lt;int&gt; x = N.getColumn(2);
+        for (int i = 0; i &lt; x.Count; i++) {
+            Console.Write($&quot;{x[i]}\t&quot;);
+        }
+        Console.WriteLine(&quot;&quot;);
+        
+    }
+}</code></pre>
+
+<pre class='code'><code class='out'>Nrow=4 - ncol=4
+0   0   0   0   
+0   0   1   0   
+0   0   0   0   
+0   0   0   0   
+################################
+0   1   0   0</code></pre>
 
 <p><a name="otherprogramminglanguages"> </a></p><h2>Other Programming Languages</h2>
 
@@ -1479,13 +1547,13 @@ s5=a1234.5678 i5=0</code></pre>
 <pre class='code'><code class='code'>ls -lth main?-*
 ./main5-d</code></pre>
 
-<pre class='code'><code class='out'>-rwxrwxr-x 1 dgroth dgroth 1,3M 11. Feb 11:32 main5-d
--rw-r--r-- 1 dgroth dgroth 448K 11. Feb 11:32 main5-d.o
--rwxrwxr-x 1 dgroth dgroth  17K 11. Feb 11:32 main5-cpp
--rwxrwxr-x 1 dgroth dgroth  32K 11. Feb 11:32 main4-cpp
--rwxrwxr-x 1 dgroth dgroth  16K 11. Feb 11:32 main4-c
--rwxrwxr-x 1 dgroth dgroth 1,3M 11. Feb 11:32 main4-d
--rw-r--r-- 1 dgroth dgroth 449K 11. Feb 11:32 main4-d.o
+<pre class='code'><code class='out'>-rwxrwxr-x 1 dgroth dgroth 1,3M 16. Feb 10:02 main5-d
+-rw-r--r-- 1 dgroth dgroth 448K 16. Feb 10:02 main5-d.o
+-rwxrwxr-x 1 dgroth dgroth  17K 16. Feb 10:02 main5-cpp
+-rwxrwxr-x 1 dgroth dgroth  32K 16. Feb 10:02 main4-cpp
+-rwxrwxr-x 1 dgroth dgroth  16K 16. Feb 10:02 main4-c
+-rwxrwxr-x 1 dgroth dgroth 1,3M 16. Feb 10:02 main4-d
+-rw-r--r-- 1 dgroth dgroth 449K 16. Feb 10:02 main4-d.o
 s1=12 i1=1
 s2=-23 i2=1
 s3=xyz i3=0

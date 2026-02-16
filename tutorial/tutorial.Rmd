@@ -1,7 +1,7 @@
 ---
 title: Tutorial of the Fusion Programming Language (WIP)
 author: Detlef Groth, University of Potsdam
-date: 2026-02-11 11:32
+date: 2026-02-16 10:01
 ---
 
 `include tutorial.toc`
@@ -223,7 +223,6 @@ List as a nested list and a Dictionary collection.
 Let's check if we can use this as well in the C++ and the C programming language:
 
 
-
 ```{.shell label=MainDictionary cmd="bash %i > %b.txt" chunk.ext=sh ext=txt}
 fut code/MainDictionary.fu -o out/dict.c
 gcc out/dict.c  `pkg-config --cflags --libs glib-2.0` -o out/dict-c
@@ -273,7 +272,7 @@ String declarations come in three types:
 * reference - written as `string`
 * nullable - written as `string?`
 
-Here an exmple:
+Here an example:
 
 ```{.shell label=StringSample cmd="fuscript %i > %b.txt" chunk.ext=fu ext=txt}
 #INCLUDE "assets/StringSample.fu"
@@ -283,6 +282,15 @@ If we try to modify hw2 we get an error!
 
 ```{.shell label=StringSample2 cmd="fuscript %i > %b.txt" chunk.ext=fu ext=txt}
 #INCLUDE "assets/StringSample2.fu"
+```
+## Classes
+
+As the reference covers that topic sufficiently we just provide a practical example
+class a matrix class which allows to initialize the matrix with the number of
+rows and columns and to set and get some values. Further we illustrate the retrieval of row and column values.
+
+```{.shell label=StringSample2 cmd="fuscript %i > %b.txt" chunk.ext=fu ext=txt}
+#INCLUDE "assets/Matrix.fu"
 ```
 
 ## Other Programming Languages
