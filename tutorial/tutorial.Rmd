@@ -1,7 +1,7 @@
 ---
 title: Tutorial of the Fusion Programming Language (WIP)
 author: Detlef Groth, University of Potsdam
-date: 2026-02-16 10:01
+date: 2026-02-17 07:52
 ---
 
 `include tutorial.toc`
@@ -289,8 +289,13 @@ As the reference covers that topic sufficiently we just provide a practical exam
 class a matrix class which allows to initialize the matrix with the number of
 rows and columns and to set and get some values. Further we illustrate the retrieval of row and column values.
 
-```{.shell label=StringSample2 cmd="fuscript %i > %b.txt" chunk.ext=fu ext=txt}
+```{.shell label=Matrix cmd="fuscript %i > %b.txt" chunk.ext=fu ext=txt}
 #INCLUDE "assets/Matrix.fu"
+```
+Let's show a second class example a Stats class which can calculate the mean of a List of doubles.
+
+```{.shell label=Stats cmd="fuscript %i > %b.txt" chunk.ext=fu ext=txt}
+#INCLUDE "assets/Stats.fu"
 ```
 
 ## Other Programming Languages

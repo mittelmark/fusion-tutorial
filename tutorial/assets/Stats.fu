@@ -1,0 +1,22 @@
+public static class Stats {
+	static double Mean (List<double> x) {
+		double sum = 0.0;
+		int n = 0;
+		for (int i = 0; i < x.Count; i++) {
+			if (!Math.IsNaN(x[i])) {
+				sum = sum + x[i];
+				n = n + 1 ;
+			}
+			
+		}
+		return(sum/n);
+	}
+	public static void Main (string[] args) {
+		List<double>() x ;
+		x.Add(0.2);
+		x.Add(0.5);
+		x.Add(0.9);
+		double m = Stats.Mean(x);
+		Console.WriteLine($"mean is {m}");
+	}
+}
