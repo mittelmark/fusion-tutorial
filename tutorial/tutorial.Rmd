@@ -1,7 +1,7 @@
 ---
 title: Tutorial of the Fusion Programming Language (WIP)
 author: Detlef Groth, University of Potsdam
-date: 2026-02-17 07:52
+date: 2026-02-18 06:07
 ---
 
 `include tutorial.toc`
@@ -305,7 +305,7 @@ more programming languages than the currently 9 target languages of _fut_. We
 can use the output of some of these target languages and then use other tools
 or for instance as well C binding support of many languages to use the generated code with even more than the mentioned direct target languages.
 
-So for instance for Typescript exists a transpiler to convert such code to
+So for instance for TypeScript exists a transpiler to convert such code to
 Lua code, some languages like Go, V-lang or Dart allow direct use of C code
 or for many scripting languages like Python, R, Perl, Tcl, PHP, Ruby etc we
 can user [SWIG](https://www.swig.org) to use that C code.
@@ -315,9 +315,9 @@ Let's start with Lua.
 
 ### Lua
 
-we can use a transpiler for Typescript code to generate not only code for
-different Javascript interpreters but as well create for instance Lua code
-from that Typescript output. We can as an example create Lua scripts from Typescript code by using the TypescriptToLua transpiler [(tstl)](https://github.com/TypeScriptToLua/TypeScriptToLua). So the workflow is than the following:
+we can use a transpiler for TypeScript code to generate not only code for
+different JavaScript interpreters but as well create for instance Lua code
+from that TypeScript output. We can as an example create Lua scripts from TypeScript code by using the TypeScriptToLua transpiler [(tstl)](https://github.com/TypeScriptToLua/TypeScriptToLua). So the workflow is than the following:
 
 ```{.kroki label=tstl,dia=graphviz,echo=FALSE}
 digraph g {
@@ -347,7 +347,7 @@ npx tstl assets/hello.ts
 cd assets && lua run-hello-tstl.lua
 ```
 
-BTW: The file created by _tstl_ from the Typescript code looks like this:
+BTW: The file created by _tstl_ from the TypeScript code looks like this:
 
 `include assets/hello.lua {<pre> </pre>}`
 
