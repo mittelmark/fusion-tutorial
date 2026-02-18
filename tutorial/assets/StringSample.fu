@@ -1,0 +1,11 @@
+public static class StringSample {
+	public static void Main () {
+		string() hw1 = "Hello World!";
+		string hw2 = "Hello String!";
+		// only hw1 can be modified
+		hw1 = hw1+" "+ hw2;
+		Console.WriteLine(hw1);
+		Console.WriteLine(hw2);
+	}
+}
+

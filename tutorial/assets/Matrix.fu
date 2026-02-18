@@ -1,0 +1,57 @@
+public class IntMatrix {
+	List<List<int>()>() M;
+	int nc = 0;
+	int nr = 0;
+	// constructors can't take arguments so we do a create function
+	public void Create! (int nrow, int ncol, int value=0) {
+		for (int i = 0; i < nrow; i++) {
+			M.Add();
+			for (int j = 0; j < ncol; j++) {
+				M[i].Add(value);
+			}
+		}
+		nc = ncol;
+		nr = nrow;
+	}
+	// exclamation mark as object is modified
+	public void Set!(int row,int col,int value) {
+		M[row][col]= value;
+	}
+	public int Get(int row,int col) {
+		return(M[row][col]);
+	}
+	public List<int> GetRow(int row) {
+		return(M[0]);
+	}
+	public List<int>() GetColumn(int col) {
+		List<int>() values;
+		for (int i = 0; i < nr; i++) {
+			values.Add(M[i][col]);
+		}
+		return(values);
+	}
+	public int Nrow() => nr;
+	public int Ncol() => nc;
+	public static void Main (string[] args) {
+		IntMatrix() N;
+		N.Create(4,4,0);
+		N.Set(1,2,1);
+		N.Set(0,0,2);		
+		Console.WriteLine($"Nrow={N.Nrow()} - ncol={N.Ncol()}");
+		for (int i = 0; i < N.Nrow(); i++) {
+			for (int j = 0; j < N.Ncol(); j++) {
+				Console.Write($"{N.Get(i,j)}\t");
+			}
+			Console.WriteLine("");
+		}
+		Console.WriteLine("################################");
+		List<int> x = N.GetColumn(2);
+		for (int i = 0; i < x.Count; i++) {
+			Console.Write($"{x[i]}\t");
+		}
+		Console.WriteLine("");
+		
+	}
+}
+
+

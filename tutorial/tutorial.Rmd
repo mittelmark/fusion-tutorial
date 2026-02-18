@@ -1,7 +1,7 @@
 ---
 title: Tutorial of the Fusion Programming Language (WIP)
 author: Detlef Groth, University of Potsdam
-date: 2026-01-30 19:55
+date: 2026-02-17 07:52
 ---
 
 `include tutorial.toc`
@@ -57,8 +57,10 @@ public static class Main {
 }
 ```
 
-The above Fusion source code can be translated into a target programming language.
-Here is an example for translating it into Python code and then executing it:
+### Python Code Output
+
+The fusion source code can be translated into the target programming language.
+Here an example for translating it into Python code and then executing it:
 
 ```
 fut Main.fu -o out/main.py
@@ -70,7 +72,9 @@ The Python output looks like this:
 `include Main.py {{<pre class="py">} {</pre>}}` 
 
 
-To compile to other targets, you just have to change the filename extension. Here is an example of creating D code:
+### D Code Output
+
+To compile to other targets you just have to change the file extension. Here an example to create D code:
 
 ```
 fut Main.fu -o out/main.d
@@ -84,6 +88,27 @@ The D language output looks like this:
 `include out/main.d {{<pre class="py">} {</pre>}}` 
 
 
+### C Code Ouput
+
+Let's finish this section if an example for generated and executed C output.
+We create, compile and execute the output  like so:
+
+```{.shell label=Main cmd="bash %i > %b.txt" chunk.ext=sh ext=txt}
+fut Main.fu -o out/main.c
+gcc -std=c99 out/main.c -o out/main-c
+./out/main-c
+```
+
+The C generated code looks like this:
+
+`include out/main.c {{<pre class="c">} {</pre>}}` 
+
+We can use the generate C code file and its header file later to support as
+well other programming languages like Go, V-lang or Dart which can directly
+use C libraries or other programming languages which are supported by the 
+[SWIG Simplified Wrapper and Interface Generator](https://www.swig.org) tool,
+like R, Tcl, Lua, Octave, PHP, Perl etc using this C output. Examples will be given later.
+
 ## Fusion Script Interpreter
 
 In this tutorial we will use Python to directly execute the generated code
@@ -96,15 +121,203 @@ The Bash script looks like this:
 #INCLUDE "fuscript.sh"
 ```
 
+## Fusion Language
+
+Let's shortly review the fusion languages, so we will cover data types,
+operators, control flow constructs, data structures and classes and methods.
+
+Fusion is closely related to C-Sharp highlighting works quite fine, I am
+using the [MicroEmacs](https://github.com/bjasspa/jasspa) text editor which
+has native Fusion support. For more details on the language consult the original [reference](https://github.com/fusionlanguage/fut/blob/master/doc/reference.md).
+
+### Data Types
+
+The main basic data types in Fusion are boolean, int, float and double. For
+int types as well exists byte, short, ushort and unint, so we have: 
+
+* boolean - _bool_ with the values _true_ or _false_ (note in C-shapr these are _True_ and _False_)
+* integers - coming as _byte_, _shorts_, _ushort_, _int_, _long_ etc
+* floats - coming as _float_ and _double_
+* characters - written in single quotes are represented as integers pointing to the unicode character - so like: `int c = 'x'`
+* strings - come in different flavors, see later for a few examples
+
+There are as well variations for these types which are always mapped to the
+language specific types which are at least providing the expected value
+ranges. Let's output a few of these types. Below you see how you
+can output variables as strings using string interpolations started by the `$` operator with embedded variable names. That does not work for
+boolean values, so we create a help method BoolToInt which converts the
+boolean value to an integer.
+ 
+```{.shell label=Main2 cmd="fuscript %i > %b.txt" chunk.ext=fu ext=txt}
+static class Main2 {
+    public static int BoolToInt (bool b) {
+        if (b) { return(1); }
+        return(0);
+    }
+    public static void Main (string[] args) {
+        int x = 3 ;
+        bool b = true;  // bools can't be printed
+        bool c = false;
+        int d = 'x'; // chars are ints unicode char 120 is x
+        string() e = "hello";
+        byte y = 12; 
+        float f = 1.234;        
+        Console.WriteLine($" x={x} b={Main2.BoolToInt(b)} c={Main2.BoolToInt(c)} d={d} e={e} y={y} f={f}");
+    }   
+}
+```
+
+As we did not prefix this class declaration with the public keyword that class will have an underscore in Python.
+
+Here the output for the Python script :
+
+`include Main2.py {{<pre class="py">} {</pre>}}` 
+
+The output of the D language is not affected by the public keyword for the class.
+
+Fusion does not support type conversions for instance from a string to an
+integer per default. But such a conversion can be implemented. For an example
+see below in the section [Type Conversions](#typeconversions).
+
+### Operators
+
+Here we have just the usual ones for numeric types
+*, +, -, / and ^ for exponentiation and the usual comparison operators, bitwise operators etc.
+
+For boolean values we have `||` for OR, `&&` for AND and `!` for NOT.
+
+### Control Flow
+
+Here we have examples for decision making constructs like if/else if/else and for and while loops.
+
+
+```{.shell label=MainControl cmd="fuscript %i > %b.txt" chunk.ext=fu ext=txt}
+#INCLUDE "code/MainControl.fu"
+```
+
+There are as well switch statements, foreach and do-white loops etc. Again
+you should check the Fusion reference for example on this. Here we will just
+show how to loop over keys and values of a dictionary data structure:
+
+```{.shell label=MainForeach cmd="fuscript %i > %b.txt" chunk.ext=fu ext=txt}
+#INCLUDE "code/MainForeach.fu"
+```
+
+## Data Structures
+
+Beyond the basic scalar types Fusion offers the typical data structures like
+Lists which can have only a single type or Dictionary a key value structure.
+
+Further we have Queues, Stacks, HasSets, SortedSets. There are as well
+special cases of the Dictionary structure, the SortedDictionary where the
+keys are sorted or an OrderedDictionary where the keys are in insertion
+order. Dependent on the predominant use case, insertion or data retrieval, one or
+the other form of these data structures might be preferable. We here give examples for the important
+List as a nested list and a Dictionary collection.
+
+
+```{.shell label=MainForeach cmd="fuscript %i > %b.txt" chunk.ext=fu ext=txt}
+#INCLUDE "code/MainDictionary.fu"
+```
+
+Let's check if we can use this as well in the C++ and the C programming language:
+
+
+```{.shell label=MainDictionary cmd="bash %i > %b.txt" chunk.ext=sh ext=txt}
+fut code/MainDictionary.fu -o out/dict.c
+gcc out/dict.c  `pkg-config --cflags --libs glib-2.0` -o out/dict-c
+echo "C code output"
+./out/dict-c
+```
+
+> [!CAUTION]
+> For this we need the actual Git version of the fut transpiler
+> from the repository as
+> the version from September 2025 contains a bug in the C output. Further we need
+> the glib library for these data structures if we comppile the C code.
+
+Let's finish this section with an example for C++, lease note that we have to use the -std=c++20 flag for compilation.
+
+```{.shell label=MainDictionaryCpp cmd="bash %i > %b.txt" chunk.ext=sh ext=txt}
+fut code/MainDictionary.fu -o out/dict.cpp
+g++ -std=c++20 out/dict.cpp -o out/dict-cpp
+echo "C++ code output"
+./out/dict-cpp
+```
+
+The following table summarizes the available data structures of the Fusion
+programming language. They all does not allow type mixing within the same
+data structures except for the dictionaries where key and values can be of
+different types, however all keys must have the same type and all values must
+have the same type.
+
+
+| structure    | description                                       | mMethods |
+|--------------|---------------------------------------------------|----------|
+| T[n], T[m][n]  | Array as fixed size collection                  | BinarySearch, Contains, Fill, Sort         |
+| List&lt;T&gt;      | vector of elements                                | Add, Clear, Contains, Insert, RemoveAt, Sort, ... |
+| Queue&lt;T&gt;     | vector of elements, first-in, first-out           | Clear, Enqueue, Dequeue, Peak |
+| Stack&lt;T&gt;     | vector of elements, last-in, first-out            | Clear, Peak, Pop, Push |
+| HashSet&lt;T&gt;   | vector of unique elements                         | Add, Clear, Contains, Remove |
+| SortedSet&lt;T&gt; | vector of sorted unique elements                  | see HashSet | 
+| Dictionary<T,T> | key-value data structure, key can be only number, string or enumeration  | Add, Clear, ContainsKey |
+| SortedDictionary<T,T> | key-value structure, but keys are in order | see Dictionary |
+| OrderedDictionary<T,T> | key-value structure, keys stays in insertion order | see Dictionary |
+
+## Strings
+
+String declarations come in three types:
+
+* storage - written as `string()`
+* reference - written as `string`
+* nullable - written as `string?`
+
+Here an example:
+
+```{.shell label=StringSample cmd="fuscript %i > %b.txt" chunk.ext=fu ext=txt}
+#INCLUDE "assets/StringSample.fu"
+```
+
+If we try to modify hw2 we get an error!
+
+```{.shell label=StringSample2 cmd="fuscript %i > %b.txt" chunk.ext=fu ext=txt}
+#INCLUDE "assets/StringSample2.fu"
+```
+## Classes
+
+As the reference covers that topic sufficiently we just provide a practical example
+class a matrix class which allows to initialize the matrix with the number of
+rows and columns and to set and get some values. Further we illustrate the retrieval of row and column values.
+
+```{.shell label=Matrix cmd="fuscript %i > %b.txt" chunk.ext=fu ext=txt}
+#INCLUDE "assets/Matrix.fu"
+```
+Let's show a second class example a Stats class which can calculate the mean of a List of doubles.
+
+```{.shell label=Stats cmd="fuscript %i > %b.txt" chunk.ext=fu ext=txt}
+#INCLUDE "assets/Stats.fu"
+```
+
 ## Other Programming Languages
+
+The output generated by the Fusion tool can be as well used to support even
+more programming languages than the currently 9 target languages of _fut_. We
+can use the output of some of these target languages and then use other tools
+or for instance as well C binding support of many languages to use the generated code with even more than the mentioned direct target languages.
+
+So for instance for Typescript exists a transpiler to convert such code to
+Lua code, some languages like Go, V-lang or Dart allow direct use of C code
+or for many scripting languages like Python, R, Perl, Tcl, PHP, Ruby etc we
+can user [SWIG](https://www.swig.org) to use that C code.
+
+Let's start with Lua.
+
 
 ### Lua
 
-The output generated by the Fusion tool can be used to support even
-more programming languages than the target languages of _fut_. For instance,
-we can use a transpiler for TypeScript code to generate not only code for
-different JavaScript interpreters, but also create for instance Lua code
-from that TypeScript output. We can create Lua scripts from TypeScript code using the TypeScriptToLua transpiler [(tstl)](https://github.com/TypeScriptToLua/TypeScriptToLua). The workflow is as follows:
+we can use a transpiler for Typescript code to generate not only code for
+different Javascript interpreters but as well create for instance Lua code
+from that Typescript output. We can as an example create Lua scripts from Typescript code by using the TypescriptToLua transpiler [(tstl)](https://github.com/TypeScriptToLua/TypeScriptToLua). So the workflow is than the following:
 
 ```{.kroki label=tstl,dia=graphviz,echo=FALSE}
 digraph g {
@@ -115,7 +328,7 @@ digraph g {
 }
 ```
 
-Let's create a simple library file, _Hello.fu_ in a sub folder _assets_:_
+Let's create a simple library file, _Hello.fu_ in a sub folder _assets_:
 
 
 `include assets/Hello.fu {<pre> </pre>}`
@@ -141,7 +354,7 @@ BTW: The file created by _tstl_ from the Typescript code looks like this:
 The file *lualib_bundle.lua* imported here is a 82kb file which supports the
 mapping from TypeScript to Lua code.
 
-### V-lang
+### V language
 
 More important for using our Fusion code library is the C code output. C
 code can be easily used by other programming languages. Here is an example
@@ -170,7 +383,7 @@ programming, it should be possible, with more or less effort, to use the
 generated code. There are existing as well other interface generators, for
 example Swig, which we will present later.
 
-### Go
+### Go language
 
 The [Go programming language](https://go.dev) is the language that influenced the V language.
 It also supports easy integration with C code. In the code,
@@ -195,14 +408,13 @@ cd ..
 On older versions of the Go compiler, the variable `export CGO_ENABLED=1` must be set in your terminal.
 The cgo approach has a few drawbacks,
 such as missing support for C++ and the limited support for more
-sophisticated data structures. Using Swig deals with some of these issues.
-For a review of both methods, see this article of
-[friendlyuser](https://friendlyuser.github.io/posts/tech/go/how_to_call_c_cplusplus_from_go/). 
-For a Swig based approach, see the [samples/hello](../samples/hello) project which contains a simple
-example of using Swig for creating wrapper code.
+sophisticated data structures. Using the Swig tool, were we will show later
+some examples, deals with a few of these issues. For a review of both methods
+see this article of [friendlyuser](https://friendlyuser.github.io/posts/tech/go/how_to_call_c_cplusplus_from_go/). For a swig based approach see the [samples/hello](../samples/hello) project
+which contains a simple example to use swig for creating wrapper code.
 
 
-### Dart
+### Dart language
 
 In the Dart programming language, we use the `ffi` package to call functions from
 compiled C libraries. So we can use the same file we used for the V
@@ -230,7 +442,7 @@ So, we can see that we can support as well other language as the _fut_
 transpiler should output clean C code which can be then used in even more programming
 languages. 
 
-### Swig - Simplified Wrapper and Interface Generator
+## Swig - Simplified Wrapper and Interface Generator
 
 Interfacing with C manually is somewhat cumbersome, so let's consider some automation.
 For instance, the [Rust programming language](https://rust-lang.org/)

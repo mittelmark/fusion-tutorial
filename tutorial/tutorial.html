@@ -28,7 +28,7 @@
     <div class="document-header">
 <h1 class="title">Tutorial of the Fusion Programming Language (WIP)</h1>
 <h2 class="author">Detlef Groth, University of Potsdam</h2>
-<h2 class="date">2026-01-30</h2>
+<h2 class="date">2026-02-17</h2>
     </div>
 
 <div class='toc'>
@@ -38,20 +38,38 @@
 <ul>
 <li><a href="#introduction">Introduction</a></li>
 <li><a href="#installation">Installation</a></li>
-<li><a href="#helloworldexample">Hello World Example</a></li>
+<li><a href="#helloworldexample">Hello World Example</a>
+<ul>
+<li><a href="#pythoncodeoutput">Python Code Output</a></li>
+<li><a href="#dcodeoutput">D Code Output</a></li>
+<li><a href="#ccodeouput">C Code Ouput</a></li></ul>
+
+</li>
 <li><a href="#fusionscriptinterpreter">Fusion Script Interpreter</a></li>
+<li><a href="#fusionlanguage">Fusion Language</a>
+<ul>
+<li><a href="#datatypes">Data Types</a></li>
+<li><a href="#operators">Operators</a></li>
+<li><a href="#controlflow">Control Flow</a></li></ul>
+
+</li>
+<li><a href="#datastructures">Data Structures</a></li>
+<li><a href="#strings">Strings</a></li>
+<li><a href="#classes">Classes</a></li>
 <li><a href="#otherprogramminglanguages">Other Programming Languages</a>
 <ul>
 <li><a href="#lua">Lua</a></li>
-<li><a href="#vlang">V-lang</a></li>
-<li><a href="#go">Go</a></li>
-<li><a href="#dart">Dart</a></li>
-<li><a href="#swigsimplifiedwrapperandinterfacegenerator">Swig - Simplified Wrapper and Interface Generator</a></li>
+<li><a href="#vlanguage">V language</a></li>
+<li><a href="#golanguage">Go language</a></li>
+<li><a href="#dartlanguage">Dart language</a></li></ul>
+
+</li>
+<li><a href="#swigsimplifiedwrapperandinterfacegenerator">Swig - Simplified Wrapper and Interface Generator</a>
+<ul>
 <li><a href="#swigandlua">Swig and Lua </a></li>
 <li><a href="#swigandtcl">Swig and Tcl</a></li></ul>
 
 </li>
-<li><a href="#datatypes">Data Types</a></li>
 <li><a href="#typeconversions">Type Conversions</a></li>
 <li><a href="#parsingintegers">Parsing Integers</a>
 <ul>
@@ -115,6 +133,8 @@ creation of simple command line applications, so here is our example and the exp
 
 <pre class='code'><code class='out'>Hello World!</code></pre>
 
+<p><a name="pythoncodeoutput"> </a></p><h3>Python Code Output</h3>
+
 <p>The fusion source code can be translated into the target programming language.
 Here an example for translating it into Python code and then executing it:</p>
 
@@ -133,6 +153,8 @@ class Main:
 
 if __name__ == '__main__':
     Main.main()</pre> 
+
+<p><a name="dcodeoutput"> </a></p><h3>D Code Output</h3>
 
 <p>To compile to other targets you just have to change the file extension. Here an example to create D code:</p>
 
@@ -157,6 +179,35 @@ class Main
 
 void main() =&gt; Main.main();</pre> 
 
+<p><a name="ccodeouput"> </a></p><h3>C Code Ouput</h3>
+
+<p>Let's finish this section if an example for generated and executed C output.
+We create, compile and execute the output  like so:</p>
+
+<pre class='code'><code class='code'>fut Main.fu -o out/main.c
+gcc -std=c99 out/main.c -o out/main-c
+./out/main-c</code></pre>
+
+<pre class='code'><code class='out'>Hello World!</code></pre>
+
+<p>The C generated code looks like this:</p>
+
+<pre class="c">// Generated automatically with "fut". Do not edit.
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include "main.h"
+
+int main(void)
+{
+    puts("Hello World!");
+}</pre> 
+
+<p>We can use the generate C code file and its header file later to support as
+well other programming languages like Go, V-lang or Dart which can directly
+use C libraries or other programming languages which are supported by the 
+<a href="https://www.swig.org">SWIG Simplified Wrapper and Interface Generator</a> tool,
+like R, Tcl, Lua, Octave, PHP, Perl etc using this C output. Examples will be given later.</p>
+
 <p><a name="fusionscriptinterpreter"> </a></p><h2>Fusion Script Interpreter</h2>
 
 <p>In this tutorial we will use Python to directly execute the generated code
@@ -165,7 +216,7 @@ Script which generates Python code and then, thereafter, executes the generated 
 
 <p>The Bash script looks like this:</p>
 
-<pre class='code'><code class='code'>#!/bin/sh
+<pre class='code'><code class='code'>#!/bin/bash
 ########################################################
 ##
 ## Copyright (C) 2026 Detlef Groth
@@ -179,24 +230,506 @@ if [ -z $1 ]; then
     echo &quot;Usage: $0 FU-FILE [ARGUMENTS ...]&quot;
 else
     BN=`basename $1 .fu`
-    fut $1 -o ${BN}.py 
-    shift
-    python3 ${BN}.py &quot;$@&quot;
+    v=`fut $1 -o ${BN}.py 2&gt;&amp;1`
+    e=`echo $v | grep ERROR`
+    if [[ &quot;$e&quot; == &quot;&quot; ]]; then 
+        shift
+        python3 ${BN}.py &quot;$@&quot;
+    else
+        echo &quot;An transpile error occured!&quot;
+        echo &quot;$v&quot;
+    fi
 fi</code></pre>
+
+<p><a name="fusionlanguage"> </a></p><h2>Fusion Language</h2>
+
+<p>Let's shortly review the fusion languages, so we will cover data types,
+operators, control flow constructs, data structures and classes and methods.</p>
+
+<p>Fusion is closely related to C-Sharp highlighting works quite fine, I am
+using the <a href="https://github.com/bjasspa/jasspa">MicroEmacs</a> text editor which
+has native Fusion support. For more details on the language consult the original <a href="https://github.com/fusionlanguage/fut/blob/master/doc/reference.md">reference</a>.</p>
+
+<p><a name="datatypes"> </a></p><h3>Data Types</h3>
+
+<p>The main basic data types in Fusion are boolean, int, float and double. For
+int types as well exists byte, short, ushort and unint, so we have:</p>
+
+<ul>
+<li>boolean - <em>bool</em> with the values <em>true</em> or <em>false</em> (note in C-shapr these are <em>True</em> and <em>False</em>)</li>
+<li>integers - coming as <em>byte</em>, <em>shorts</em>, <em>ushort</em>, <em>int</em>, <em>long</em> etc</li>
+<li>floats - coming as <em>float</em> and <em>double</em></li>
+<li>characters - written in single quotes are represented as integers pointing to the unicode character - so like: <code>int c = 'x'</code></li>
+<li>strings - come in different flavors, see later for a few examples
+</li></ul>
+
+<p>There are as well variations for these types which are always mapped to the
+language specific types which are at least providing the expected value
+ranges. Let's output a few of these types. Below you see how you
+can output variables as strings using string interpolations started by the <code>$</code> operator with embedded variable names. That does not work for
+boolean values, so we create a help method BoolToInt which converts the
+boolean value to an integer.</p>
+
+<pre class='code'><code class='code'>static class Main2 {
+    public static int BoolToInt (bool b) {
+        if (b) { return(1); }
+        return(0);
+    }
+    public static void Main (string[] args) {
+        int x = 3 ;
+        bool b = true;  // bools can't be printed
+        bool c = false;
+        int d = 'x'; // chars are ints unicode char 120 is x
+        string() e = &quot;hello&quot;;
+        byte y = 12; 
+        float f = 1.234;        
+        Console.WriteLine($&quot; x={x} b={Main2.BoolToInt(b)} c={Main2.BoolToInt(c)} d={d} e={e} y={y} f={f}&quot;);
+    }   
+}</code></pre>
+
+<pre class='code'><code class='out'>x=3 b=1 c=0 d=120 e=hello y=12 f=1.234</code></pre>
+
+<p>As we did not prefix this class declaration with the public keyword that class will have an underscore in Python.</p>
+
+<p>Here the output for the Python script :</p>
+
+<pre class="py"># Generated automatically with "fut". Do not edit.
+import sys
+
+class _Main2:
+
+    @staticmethod
+    def bool_to_int(b: bool) -&gt; int:
+        if b:
+            return 1
+        return 0
+
+    @staticmethod
+    def main(args: list[str]) -&gt; None:
+        x: int = 3
+        b: bool = True
+        c: bool = False
+        d: int = 120
+        e: str = "hello"
+        y: int = 12
+        f: float = 1.234
+        print(f" x={x} b={_Main2.bool_to_int(b)} c={_Main2.bool_to_int(c)} d={d} e={e} y={y} f={f}")
+
+if __name__ == '__main__':
+    _Main2.main(sys.argv[1:])</pre> 
+
+<p>The output of the D language is not affected by the public keyword for the class.</p>
+
+<p>Fusion does not support type conversions for instance from a string to an
+integer per default. But such a conversion can be implemented. For an example
+see below in the section <a href="#typeconversions">Type Conversions</a>.</p>
+
+<p><a name="operators"> </a></p><h3>Operators</h3>
+
+<p>Here we have just the usual ones for numeric types
+*, +, -, / and ^ for exponentiation and the usual comparison operators, bitwise operators etc.</p>
+
+<p>For boolean values we have <code>||</code> for OR, <code>&amp;&amp;</code> for AND and <code>!</code> for NOT.</p>
+
+<p><a name="controlflow"> </a></p><h3>Control Flow</h3>
+
+<p>Here we have examples for decision making constructs like if/else if/else and for and while loops.</p>
+
+<pre class='code'><code class='code'>public static class MainControl {
+    public static void Main (string[] args) {
+        int x = 3 ;
+        if (x &lt; 3) {
+            Console.WriteLine(&quot;X is small!&quot;);
+        } else if (x == 3) {
+            Console.WriteLine(&quot;X is 3!&quot;);
+        } else {
+            Console.WriteLine(&quot;X is large!&quot;);
+        }
+        while (x &lt; 10) {
+            x = x + 1;
+            Console.WriteLine($&quot;X is {x}!&quot;);
+        }
+        for (int i = 0; i &lt; 3; i++) {
+            x=x+1;
+        }
+        Console.WriteLine($&quot;Final value of X is {x}!&quot;);
+        
+    }   
+}</code></pre>
+
+<pre class='code'><code class='out'>X is 3!
+X is 4!
+X is 5!
+X is 6!
+X is 7!
+X is 8!
+X is 9!
+X is 10!
+Final value of X is 13!</code></pre>
+
+<p>There are as well switch statements, foreach and do-white loops etc. Again
+you should check the Fusion reference for example on this. Here we will just
+show how to loop over keys and values of a dictionary data structure:</p>
+
+<pre class='code'><code class='code'>public static class MainForeach {
+    public static void Main (string[] args) {
+        SortedDictionary&lt;string(), int&gt;() dict;
+        dict[&quot;foo&quot;] = 1;
+        dict[&quot;bar&quot;] = 2;
+        dict[&quot;baz&quot;] = 3;
+        foreach ((string k, int v) in dict) {
+            Console.WriteLine($&quot;{k} =&gt; {v}&quot;);
+        }
+        Console.WriteLine($&quot;Number of items in the dictionary is {dict.Count}!&quot;);
+    }   
+}</code></pre>
+
+<pre class='code'><code class='out'>bar =&gt; 2
+baz =&gt; 3
+foo =&gt; 1
+Number of items in the dictionary is 3!</code></pre>
+
+<p><a name="datastructures"> </a></p><h2>Data Structures</h2>
+
+<p>Beyond the basic scalar types Fusion offers the typical data structures like
+Lists which can have only a single type or Dictionary a key value structure.</p>
+
+<p>Further we have Queues, Stacks, HasSets, SortedSets. There are as well
+special cases of the Dictionary structure, the SortedDictionary where the
+keys are sorted or an OrderedDictionary where the keys are in insertion
+order. Dependent on the predominant use case, insertion or data retrieval, one or
+the other form of these data structures might be preferable. We here give examples for the important
+List as a nested list and a Dictionary collection.</p>
+
+<pre class='code'><code class='code'>public static class MainDictionary {
+    public static void Main (string[] args) {
+        // key is a string value is a float
+        // keys are here not sorted
+        Dictionary&lt;string(), float&gt;() aasize;
+        // Example for a 2x3 matrix 
+        List&lt;List&lt;byte&gt;()&gt;() M; // byte would be better but C++ fails
+        M.Add();
+        M[0].Add(0);
+        M[0].Add(1);
+        M[0].Add(0);
+        M.Add();
+        M[1].Add(0);
+        M[1].Add(1);
+        M[1].Add(1);        
+        aasize[&quot;Ala&quot;] = 71.1;
+        aasize[&quot;Gly&quot;] = 57.1;
+        aasize[&quot;Leu&quot;] = 113.2;
+        foreach ((string k, float v) in aasize) {
+            Console.WriteLine($&quot;Amino acid {k} has a weight of {v}&quot;);
+        }
+        for (int i = 0; i &lt; M.Count; i++) {
+            for (int j = 0 ; j &lt; M[i].Count; j++) {
+                int k = M[i][j];
+                Console.WriteLine($&quot; M[{i},{j}] = {M[i][j]}!&quot;);
+                
+            }
+        }
+        Console.WriteLine($&quot;Number of items in the aasize dictionary is {aasize.Count}!&quot;);
+        Console.WriteLine($&quot;Number of row in Matrix is {M.Count}!&quot;);
+    }   
+}</code></pre>
+
+<pre class='code'><code class='out'>Amino acid Ala has a weight of 71.1
+Amino acid Gly has a weight of 57.1
+Amino acid Leu has a weight of 113.2
+ M[0,0] = 0!
+ M[0,1] = 1!
+ M[0,2] = 0!
+ M[1,0] = 0!
+ M[1,1] = 1!
+ M[1,2] = 1!
+Number of items in the aasize dictionary is 3!
+Number of row in Matrix is 2!</code></pre>
+
+<p>Let's check if we can use this as well in the C++ and the C programming language:</p>
+
+<pre class='code'><code class='code'>fut code/MainDictionary.fu -o out/dict.c
+gcc out/dict.c  `pkg-config --cflags --libs glib-2.0` -o out/dict-c
+echo &quot;C code output&quot;
+./out/dict-c</code></pre>
+
+<pre class='code'><code class='out'>C code output
+Amino acid Gly has a weight of 57.1
+Amino acid Leu has a weight of 113.2
+Amino acid Ala has a weight of 71.1
+ M[0,0] = 0!
+ M[0,1] = 1!
+ M[0,2] = 0!
+ M[1,0] = 0!
+ M[1,1] = 1!
+ M[1,2] = 1!
+Number of items in the aasize dictionary is 3!
+Number of row in Matrix is 2!</code></pre>
+
+<div class="side-caution"><p><b>Caution:</b> 
+For this we need the actual Git version of the fut transpiler
+from the repository as
+the version from September 2025 contains a bug in the C output. Further we need
+the glib library for these data structures if we comppile the C code.
+</p></div>
+
+<p>Let's finish this section with an example for C++, lease note that we have to use the -std=c++20 flag for compilation.</p>
+
+<pre class='code'><code class='code'>fut code/MainDictionary.fu -o out/dict.cpp
+g++ -std=c++20 out/dict.cpp -o out/dict-cpp
+echo &quot;C++ code output&quot;
+./out/dict-cpp</code></pre>
+
+<pre class='code'><code class='out'>C++ code output
+Amino acid Leu has a weight of 113.2
+Amino acid Gly has a weight of 57.1
+Amino acid Ala has a weight of 71.1
+ M[0,0] = 0!
+ M[0,1] = 1!
+ M[0,2] = 0!
+ M[1,0] = 0!
+ M[1,1] = 1!
+ M[1,2] = 1!
+Number of items in the aasize dictionary is 3!
+Number of row in Matrix is 2!</code></pre>
+
+<p>The following table summarizes the available data structures of the Fusion
+programming language. They all does not allow type mixing within the same
+data structures except for the dictionaries where key and values can be of
+different types, however all keys must have the same type and all values must
+have the same type.</p>
+
+<table class="table">
+<thead>
+  <tr>
+    <th>structure</th>
+    <th>description</th>
+    <th>mMethods</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>T[n], T[m][n]</td>
+    <td>Array as fixed size collection</td>
+    <td>BinarySearch, Contains, Fill, Sort</td>
+  </tr>
+  <tr>
+    <td>List&lt;T&gt;</td>
+    <td>vector of elements</td>
+    <td>Add, Clear, Contains, Insert, RemoveAt, Sort, ...</td>
+  </tr>
+  <tr>
+    <td>Queue&lt;T&gt;</td>
+    <td>vector of elements, first-in, first-out</td>
+    <td>Clear, Enqueue, Dequeue, Peak</td>
+  </tr>
+  <tr>
+    <td>Stack&lt;T&gt;</td>
+    <td>vector of elements, last-in, first-out</td>
+    <td>Clear, Peak, Pop, Push</td>
+  </tr>
+  <tr>
+    <td>HashSet&lt;T&gt;</td>
+    <td>vector of unique elements</td>
+    <td>Add, Clear, Contains, Remove</td>
+  </tr>
+  <tr>
+    <td>SortedSet&lt;T&gt;</td>
+    <td>vector of sorted unique elements</td>
+    <td>see HashSet</td>
+  </tr>
+  <tr>
+    <td>Dictionary&lt;T,T&gt;</td>
+    <td>key-value data structure, key can be only number, string or enumeration</td>
+    <td>Add, Clear, ContainsKey</td>
+  </tr>
+  <tr>
+    <td>SortedDictionary&lt;T,T&gt;</td>
+    <td>key-value structure, but keys are in order</td>
+    <td>see Dictionary</td>
+  </tr>
+  <tr>
+    <td>OrderedDictionary&lt;T,T&gt;</td>
+    <td>key-value structure, keys stays in insertion order</td>
+    <td>see Dictionary</td>
+  </tr>
+</tbody>
+</table>
+
+
+<p><a name="strings"> </a></p><h2>Strings</h2>
+
+<p>String declarations come in three types:</p>
+
+<ul>
+<li>storage - written as <code>string()</code></li>
+<li>reference - written as <code>string</code></li>
+<li>nullable - written as <code>string?</code>
+</li></ul>
+
+<p>Here an example:</p>
+
+<pre class='code'><code class='code'>public static class StringSample {
+    public static void Main () {
+        string() hw1 = &quot;Hello World!&quot;;
+        string hw2 = &quot;Hello String!&quot;;
+        // only hw1 can be modified
+        hw1 = hw1+&quot; &quot;+ hw2;
+        Console.WriteLine(hw1);
+        Console.WriteLine(hw2);
+    }
+}</code></pre>
+
+<pre class='code'><code class='out'>Hello World! Hello String!
+Hello String!</code></pre>
+
+<p>If we try to modify hw2 we get an error!</p>
+
+<pre class='code'><code class='code'>public static class StringSample {
+    public static void Main () {
+        string() hw1 = &quot;Hello World!&quot;;
+        string hw2 = &quot;Hello String!&quot;;
+        // only hw1 can be modified
+        hw2 = hw1+&quot; &quot;+ hw2;
+        Console.WriteLine(hw1);
+        Console.WriteLine(hw2);
+    }
+}</code></pre>
+
+<pre class='code'><code class='out'>An transpile error occured!
+StringSample2.fu(6): ERROR: New string must be assigned to 'string()'</code></pre>
+
+<p><a name="classes"> </a></p><h2>Classes</h2>
+
+<p>As the reference covers that topic sufficiently we just provide a practical example
+class a matrix class which allows to initialize the matrix with the number of
+rows and columns and to set and get some values. Further we illustrate the retrieval of row and column values.</p>
+
+<pre class='code'><code class='code'>public class IntMatrix {
+    List&lt;List&lt;int&gt;()&gt;() M;
+    int nc = 0;
+    int nr = 0;
+    // constructors can't take arguments so we do a create function
+    public void Create! (int nrow, int ncol, int value=0) {
+        for (int i = 0; i &lt; nrow; i++) {
+            M.Add();
+            for (int j = 0; j &lt; ncol; j++) {
+                M[i].Add(value);
+            }
+        }
+        nc = ncol;
+        nr = nrow;
+    }
+    // exclamation mark as object is modified
+    public void Set!(int row,int col,int value) {
+        M[row][col]= value;
+    }
+    public int Get(int row,int col) {
+        return(M[row][col]);
+    }
+    public List&lt;int&gt; GetRow(int row) {
+        return(M[0]);
+    }
+    public List&lt;int&gt;() GetColumn(int col) {
+        List&lt;int&gt;() values;
+        for (int i = 0; i &lt; nr; i++) {
+            values.Add(M[i][col]);
+        }
+        return(values);
+    }
+    public int Nrow() =&gt; nr;
+    public int Ncol() =&gt; nc;
+    public static void Main (string[] args) {
+        IntMatrix() N;
+        N.Create(4,4,0);
+        N.Set(1,2,1);
+        N.Set(0,0,2);       
+        Console.WriteLine($&quot;Nrow={N.Nrow()} - ncol={N.Ncol()}&quot;);
+        for (int i = 0; i &lt; N.Nrow(); i++) {
+            for (int j = 0; j &lt; N.Ncol(); j++) {
+                Console.Write($&quot;{N.Get(i,j)}\t&quot;);
+            }
+            Console.WriteLine(&quot;&quot;);
+        }
+        Console.WriteLine(&quot;################################&quot;);
+        List&lt;int&gt; x = N.GetColumn(2);
+        for (int i = 0; i &lt; x.Count; i++) {
+            Console.Write($&quot;{x[i]}\t&quot;);
+        }
+        Console.WriteLine(&quot;&quot;);
+        
+    }
+}</code></pre>
+
+<pre class='code'><code class='out'>Nrow=4 - ncol=4
+2   0   0   0   
+0   0   1   0   
+0   0   0   0   
+0   0   0   0   
+################################
+0   1   0   0</code></pre>
+
+<p>Let's show a second class example a Stats class which can calculate the mean of a List of doubles.</p>
+
+<pre class='code'><code class='code'>/****************************************************************************
+ *
+ * Copyright (C) 2026 MicroEmacs User.
+ *
+ * All rights reserved.
+ *
+ * Synopsis:    
+ * Authors:     MicroEmacs User
+ *
+ ****************************************************************************/
+
+public static class Stats {
+    static double Mean (List&lt;double&gt; x) {
+        double sum = 0.0;
+        int n = 0;
+        for (int i = 0; i &lt; x.Count; i++) {
+            if (!Math.IsNaN(x[i])) {
+                sum = sum + x[i];
+                n = n + 1 ;
+            }
+            
+        }
+        return(sum/n);
+    }
+    public static void Main (string[] args) {
+        List&lt;double&gt;() x ;
+        x.Add(0.2);
+        x.Add(0.5);
+        x.Add(0.9);
+        double m = Stats.Mean(x);
+        Console.WriteLine($&quot;mean is {m}&quot;);
+    }
+}</code></pre>
+
+<pre class='code'><code class='out'>mean is 0.5333333333333333</code></pre>
 
 <p><a name="otherprogramminglanguages"> </a></p><h2>Other Programming Languages</h2>
 
+<p>The output generated by the Fusion tool can be as well used to support even
+more programming languages than the currently 9 target languages of <em>fut</em>. We
+can use the output of some of these target languages and then use other tools
+or for instance as well C binding support of many languages to use the generated code with even more than the mentioned direct target languages.</p>
+
+<p>So for instance for Typescript exists a transpiler to convert such code to
+Lua code, some languages like Go, V-lang or Dart allow direct use of C code
+or for many scripting languages like Python, R, Perl, Tcl, PHP, Ruby etc we
+can user <a href="https://www.swig.org">SWIG</a> to use that C code.</p>
+
+<p>Let's start with Lua.</p>
+
 <p><a name="lua"> </a></p><h3>Lua</h3>
 
-<p>The output generated by the Fusion tool can be as well used to support even
-more programming languages than the target languages of <em>fut</em>. For instance
-we can use a transpiler for Typescript code to generate not only code for
+<p>we can use a transpiler for Typescript code to generate not only code for
 different Javascript interpreters but as well create for instance Lua code
 from that Typescript output. We can as an example create Lua scripts from Typescript code by using the TypescriptToLua transpiler <a href="https://github.com/TypeScriptToLua/TypeScriptToLua">(tstl)</a>. So the workflow is than the following:</p>
 
 <p><img src="data:image/png;base64, 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" alt=" "/></p>
 
-<p>Let's create a simple library file, <em>Hello.fu</em> in a sub folder <em>assets</em>:_</p>
+<p>Let's create a simple library file, <em>Hello.fu</em> in a sub folder <em>assets</em>:</p>
 
 <pre>public static class Hello {
     public static string GetMessage () {
@@ -240,7 +773,7 @@ return ____exports</pre>
 <p>The file <em>lualib_bundle.lua</em> imported here is a 82kb file which supports the
 mapping from Typescript to Lua code.</p>
 
-<p><a name="vlang"> </a></p><h3>V-lang</h3>
+<p><a name="vlanguage"> </a></p><h3>V language</h3>
 
 <p>More important for using our Fusion code library is the C code output. As C
 code can be easily used by other programming languages we might as well use
@@ -280,7 +813,7 @@ programming it should be possible with more or less effort to use the
 generated code. There are existing as well other interface generators, for
 example Swig which we will present later.</p>
 
-<p><a name="go"> </a></p><h3>Go</h3>
+<p><a name="golanguage"> </a></p><h3>Go language</h3>
 
 <p>The <a href="">Go programming language</a> is the language after which the V languange
 was designed. It as well supports easy integration for C code. In the code
@@ -329,13 +862,12 @@ Usage: /home/dgroth/.cache/go-build/f6/f6a6612a536b8741727bdb2eb666dbe84e9f8c581
 <p>Optionally the variable <code>export CGO_ENABLED=1</code> must be set in your terminal
 on older versions of the Go compiler. The cgo approach has a few drawbacks,
 such as missing support for C++ and the limited support for more
-sophisticated data structure. Using Swig deals woth a few of these issues.
-For a review of both methods see this article of
-<a href="https://friendlyuser.github.io/posts/tech/go/how_to_call_c_cplusplus_from_go/">friendlyuser</a>. 
-For a swig based approach see the <a href="../samples/hello">samples/hello</a> project which contains a simple
- example to use swig for creating wrapper code.</p>
+sophisticated data structures. Using the Swig tool, were we will show later
+some examples, deals with a few of these issues. For a review of both methods
+see this article of <a href="https://friendlyuser.github.io/posts/tech/go/how_to_call_c_cplusplus_from_go/">friendlyuser</a>. For a swig based approach see the <a href="../samples/hello">samples/hello</a> project
+which contains a simple example to use swig for creating wrapper code.</p>
 
-<p><a name="dart"> </a></p><h3>Dart</h3>
+<p><a name="dartlanguage"> </a></p><h3>Dart language</h3>
 
 <p>In the Dart programming language we use the ffi package to call functions in
 compiled C libraries. So we can use the same file we used in for the V
@@ -391,7 +923,7 @@ Hello Message!</code></pre>
 transpiler should output clean C code which can be then used in even more programming
 languages.</p>
 
-<p><a name="swigsimplifiedwrapperandinterfacegenerator"> </a></p><h3>Swig - Simplified Wrapper and Interface Generator</h3>
+<p><a name="swigsimplifiedwrapperandinterfacegenerator"> </a></p><h2>Swig - Simplified Wrapper and Interface Generator</h2>
 
 <p>This manual creation of interfaces however is slightly cumbersome, so an
 automated process of creating an interface for the C library would offer a
@@ -485,60 +1017,6 @@ Hello Message!</code></pre>
 targets have a look at the examples in the
 <a href="https://github.com/mittelmark/fusion-tutorial/samples/hello">samples/hello</a>
 folder of the project.</p>
-
-<p><a name="datatypes"> </a></p><h2>Data Types</h2>
-
-<p>The main basic data types in Fusion are boolean, int, float and double. For
-int types as well exists byte, short, ushort and unint. Below you see how you
-can create strings with embedded variable names. That does not work for
-boolean values, so we create a help method BoolToInt which converts the
-boolean value to an integer.</p>
-
-<pre class='code'><code class='code'>static class Main2 {
-    public static int BoolToInt (bool b) {
-        if (b) { return(1); }
-        return(0);
-    }
-    public static void Main (string[] args) {
-        int x = 3 ;
-        bool b = true;  // bools can't be printed
-        bool c = false;
-        byte y = 12; 
-        float f = 1.234;        
-        Console.WriteLine($&quot; x={x} b={Main2.BoolToInt(b)} c={Main2.BoolToInt(c)} y={y} f={f}&quot;);
-    }   
-}</code></pre>
-
-<pre class='code'><code class='out'>x=3 b=1 c=0 y=12 f=1.234</code></pre>
-
-<p>As we did not prefix this class declaration with the public keyword that class will have an underscore in Python.</p>
-
-<p>Here the output for the Python script :</p>
-
-<pre class="py"># Generated automatically with "fut". Do not edit.
-import sys
-
-class _Main2:
-
-    @staticmethod
-    def bool_to_int(b: bool) -&gt; int:
-        if b:
-            return 1
-        return 0
-
-    @staticmethod
-    def main(args: list[str]) -&gt; None:
-        x: int = 3
-        b: bool = True
-        c: bool = False
-        y: int = 12
-        f: float = 1.234
-        print(f" x={x} b={_Main2.bool_to_int(b)} c={_Main2.bool_to_int(c)} y={y} f={f}")
-
-if __name__ == '__main__':
-    _Main2.main(sys.argv[1:])</pre> 
-
-<p>The output of the D language is not affected by the public keyword for the class.</p>
 
 <p><a name="typeconversions"> </a></p><h2>Type Conversions</h2>
 
@@ -1110,13 +1588,13 @@ s5=a1234.5678 i5=0</code></pre>
 <pre class='code'><code class='code'>ls -lth main?-*
 ./main5-d</code></pre>
 
-<pre class='code'><code class='out'>-rwxrwxr-x 1 dgroth dgroth 1,3M 30. Jan 19:55 main5-d
--rw-r--r-- 1 dgroth dgroth 448K 30. Jan 19:55 main5-d.o
--rwxrwxr-x 1 dgroth dgroth  17K 30. Jan 19:55 main5-cpp
--rwxrwxr-x 1 dgroth dgroth  32K 30. Jan 19:55 main4-cpp
--rwxrwxr-x 1 dgroth dgroth  16K 30. Jan 19:55 main4-c
--rwxrwxr-x 1 dgroth dgroth 1,3M 30. Jan 19:55 main4-d
--rw-r--r-- 1 dgroth dgroth 449K 30. Jan 19:55 main4-d.o
+<pre class='code'><code class='out'>-rwxrwxr-x 1 dgroth dgroth 1,3M 17. Feb 07:52 main5-d
+-rw-r--r-- 1 dgroth dgroth 448K 17. Feb 07:52 main5-d.o
+-rwxrwxr-x 1 dgroth dgroth  17K 17. Feb 07:52 main5-cpp
+-rwxrwxr-x 1 dgroth dgroth  32K 17. Feb 07:52 main4-cpp
+-rwxrwxr-x 1 dgroth dgroth  16K 17. Feb 07:52 main4-c
+-rwxrwxr-x 1 dgroth dgroth 1,3M 17. Feb 07:52 main4-d
+-rw-r--r-- 1 dgroth dgroth 449K 17. Feb 07:52 main4-d.o
 s1=12 i1=1
 s2=-23 i2=1
 s3=xyz i3=0
