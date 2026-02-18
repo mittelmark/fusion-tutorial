@@ -1,7 +1,7 @@
 ---
 title: Tutorial of the Fusion Programming Language (WIP)
 author: Detlef Groth, University of Potsdam
-date: 2026-02-18 06:07
+date: 2026-02-18 06:33
 ---
 
 `include tutorial.toc`
@@ -13,9 +13,9 @@ translates code in the Fusion programming language into code of the
 programming languages C, C++, C#, D, Java, JavaScript, Python, Swift, TypeScript and OpenCL.
 
 <center>
-![Diagram](https://kroki.io/graphviz/svg/eNptUMFOAyEQvfcrJvWiKbrqHS_bejBGjfbW9MAu0zIphRXY1o3pv8sC0R4kZCbMvPfmDZK2TnQK5vA9gXjSa6XFYPvAw9F2xJy1gdeLl-XifZ0wxkpc-TBo5BvSGiUbU2u1ddwLvbeGeSU65I39YkeSQfG7m9vMdcLsPHb8HqoKPIZYkNR7BmTibRX6DPubCSMSfRCNJq8gKIRLMgfy1Gi8ghZNQJc8JWZVodwiFH8JmCdntbhag5o_9p5-bbbkWo3nS-yGRve4LoKF-o9m2QE_e5IULZoWQWid3HjYOLsv3DMHcP1Q_nosMZjWs9l0TBcxzhk8iYPI0beOusDehqCiV_g40iYwWA4dlg68dmjq56iT9E5Z9Xx_bzXJ9SQ3JqcfG_ia7w==)
+![Diagram](https://kroki.io/graphviz/svg/eNptUMFOwzAMve8rrHEBLVDgHi7bOCAEiO027ZA23mrNS0qSblRo_07aRGwHoshW7Peen6Np61RTwwx-RhDP8Fqx6mwbZDjahoSzNsjp_G05_1wPGGM1rnzoGOWGmFGLPlWWrZNe8d4a4WvVoCzttziSDrV8uLtPXKfMzmMjH6EowGOIBU2tF0Am3qpGn2DnmdAj0QdVMvkaQo1wTeZAnkrGG6jQBHSDp4FZFKi3CNnfAEyTk1pcrUSWz62nP5sVuYrxcoldV3KL6yyYqf9o5h3wqyVN0aKpEBTz4MbDxtl95l44gNun_Nd9ScB4OpmM-3QV40zAizqoFBeVoyaIjy7U0SssjrQJApZdg7kD7w2a6WvUGfROSfVyf2-Z9HqUGqPTLwq4mq8=)
 
-[Edit this diagram](https://niolesk.top/#https://kroki.io/graphviz/svg/eNptUMFOAyEQvfcrJvWiKbrqHS_bejBGjfbW9MAu0zIphRXY1o3pv8sC0R4kZCbMvPfmDZK2TnQK5vA9gXjSa6XFYPvAw9F2xJy1gdeLl-XifZ0wxkpc-TBo5BvSGiUbU2u1ddwLvbeGeSU65I39YkeSQfG7m9vMdcLsPHb8HqoKPIZYkNR7BmTibRX6DPubCSMSfRCNJq8gKIRLMgfy1Gi8ghZNQJc8JWZVodwiFH8JmCdntbhag5o_9p5-bbbkWo3nS-yGRve4LoKF-o9m2QE_e5IULZoWQWid3HjYOLsv3DMHcP1Q_nosMZjWs9l0TBcxzhk8iYPI0beOusDehqCiV_g40iYwWA4dlg68dmjq56iT9E5Z9Xx_bzXJ9SQ3JqcfG_ia7w==)
+[Edit this diagram](https://kroki.io/graphviz/svg/eNptUMFOAyEQvfcrJvWiKbrqHS_bejBGjfbW9MAu0zIphRXY1o3pv8sC0R4kZCbMvPfmDZK2TnQK5vA9gXjSa6XFYPvAw9F2xJy1gdeLl-XifZ0wxkpc-TBo5BvSGiUbU2u1ddwLvbeGeSU65I39YkeSQfG7m9vMdcLsPHb8HqoKPIZYkNR7BmTibRX6DPubCSMSfRCNJq8gKIRLMgfy1Gi8ghZNQJc8JWZVodwiFH8JmCdntbhag5o_9p5-bbbkWo3nS-yGRve4LoKF-o9m2QE_e5IULZoWQWid3HjYOLsv3DMHcP1Q_nosMZjWs9l0TBcxzhk8iYPI0beOusDehqCiV_g40iYwWA4dlg68dmjq56iT9E5Z9Xx_bzXJ9SQ3JqcfG_ia7w==)
 </center>
 
 For background on the difference between compilers and transpilers, have a
@@ -444,10 +444,20 @@ languages.
 
 ## Swig - Simplified Wrapper and Interface Generator
 
-Interfacing with C manually is somewhat cumbersome, so let's consider some automation.
-For instance, the [Rust programming language](https://rust-lang.org/)
+Interfacing with C manually is somewhat cumbersome, so let's consider some
+automation. For instance, the [Rust programming language](https://rust-lang.org/)
 has a tool called [bindgen](https://github.com/rust-lang/rust-bindgen) to
-simplify this process. There also exists a tool called [Swig](https://swig.org) which automates this process for more than a dozen target languages. A few of these languages, like C#, D, Java or Python, are already directly supported by Fusion. It might be still interesting to get a fast implementation by using the C library from Swig than the Fusion Python output, as the C code tends to be much faster than the Python code directly transpiled by the _fut_ tool.
+simplify this process. There also exists a tool called
+[Swig](https://swig.org) which automates this process for more than a dozen
+target languages. A few of these languages, like C#, D, Java or Python, are
+already directly supported by Fusion. It might be still interesting to get a
+fast implementation by using the C library from Swig than the Fusion Python
+output, as the C code tends to be much faster than the Python code directly
+transpiled by the _fut_ tool. See the following diagram for a few languages
+which you can target with Fusion's C output files:
+
+
+![](https://kroki.io/graphviz/svg/eNptkE1PAjEQhu_8iknPdRGiiQmpF0Q9GCXIbcOh245sw9Bu2q64Gv67pUsIJEwm6Xy8z7RTbdZeNjU8wd8AkuWsJNm5Noq4c43h3rkoprP35WyxyppgflGwh8kdm-TcOo1liB2h-DJEqPnhUI6cF0HS1lkeatmgqNwP3xkdazEqbvtZqNcIRzg4MppvjSW0YtT3vbSbgI0Yw3AIAWMqaNMGDsYmVzWGLPvcmTXcPMJ0XGrjRSXVZnXR6LdLtlTE4a2VHBbJ26rj8KGi_EYOc_R0z-HFpfB1zoEVRcEytz_NSl9TIQl2iNlxLWW8IjxbmoVNV1GLbJWojKZ3HcEpuyrMquc2GGf7Pc4K5RXg4upMD_b_dKSOFg==)
 
 For illustrative purposes, let's create bindings for two scripting languages, Lua and Tcl for our little hello library shown above.
 

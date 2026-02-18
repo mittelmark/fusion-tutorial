@@ -70,6 +70,7 @@
 <li><a href="#swigandtcl">Swig and Tcl</a></li></ul>
 
 </li>
+<li><a href="#datatypes">Data Types</a></li>
 <li><a href="#typeconversions">Type Conversions</a></li>
 <li><a href="#parsingintegers">Parsing Integers</a>
 <ul>
@@ -93,9 +94,9 @@ translates code in the Fusion programming language into code of the
 programming languages C, C++, C#, D, Java, JavaScript, Python, Swift, TypeScript and OpenCL.</p>
 
 <p><center>
-<img src="https://kroki.io/graphviz/svg/eNptUMFOAyEQvfcrJvWiKbrqHS_bejBGjfbW9MAu0zIphRXY1o3pv8sC0R4kZCbMvPfmDZK2TnQK5vA9gXjSa6XFYPvAw9F2xJy1gdeLl-XifZ0wxkpc-TBo5BvSGiUbU2u1ddwLvbeGeSU65I39YkeSQfG7m9vMdcLsPHb8HqoKPIZYkNR7BmTibRX6DPubCSMSfRCNJq8gKIRLMgfy1Gi8ghZNQJc8JWZVodwiFH8JmCdntbhag5o_9p5-bbbkWo3nS-yGRve4LoKF-o9m2QE_e5IULZoWQWid3HjYOLsv3DMHcP1Q_nosMZjWs9l0TBcxzhk8iYPI0beOusDehqCiV_g40iYwWA4dlg68dmjq56iT9E5Z9Xx_bzXJ9SQ3JqcfG_ia7w==" alt="Diagram"/></p>
+<img src="https://kroki.io/graphviz/svg/eNptUMFOwzAMve8rrHEBLVDgHi7bOCAEiO027ZA23mrNS0qSblRo_07aRGwHoshW7Peen6Np61RTwwx-RhDP8Fqx6mwbZDjahoSzNsjp_G05_1wPGGM1rnzoGOWGmFGLPlWWrZNe8d4a4WvVoCzttziSDrV8uLtPXKfMzmMjH6EowGOIBU2tF0Am3qpGn2DnmdAj0QdVMvkaQo1wTeZAnkrGG6jQBHSDp4FZFKi3CNnfAEyTk1pcrUSWz62nP5sVuYrxcoldV3KL6yyYqf9o5h3wqyVN0aKpEBTz4MbDxtl95l44gNun_Nd9ScB4OpmM-3QV40zAizqoFBeVoyaIjy7U0SssjrQJApZdg7kD7w2a6WvUGfROSfVyf2-Z9HqUGqPTLwq4mq8=" alt="Diagram"/></p>
 
-<p><a href="https://niolesk.top/#https://kroki.io/graphviz/svg/eNptUMFOAyEQvfcrJvWiKbrqHS_bejBGjfbW9MAu0zIphRXY1o3pv8sC0R4kZCbMvPfmDZK2TnQK5vA9gXjSa6XFYPvAw9F2xJy1gdeLl-XifZ0wxkpc-TBo5BvSGiUbU2u1ddwLvbeGeSU65I39YkeSQfG7m9vMdcLsPHb8HqoKPIZYkNR7BmTibRX6DPubCSMSfRCNJq8gKIRLMgfy1Gi8ghZNQJc8JWZVodwiFH8JmCdntbhag5o_9p5-bbbkWo3nS-yGRve4LoKF-o9m2QE_e5IULZoWQWid3HjYOLsv3DMHcP1Q_nosMZjWs9l0TBcxzhk8iYPI0beOusDehqCiV_g40iYwWA4dlg68dmjq56iT9E5Z9Xx_bzXJ9SQ3JqcfG_ia7w==">Edit this diagram</a>
+<p><a href="https://kroki.io/graphviz/svg/eNptUMFOAyEQvfcrJvWiKbrqHS_bejBGjfbW9MAu0zIphRXY1o3pv8sC0R4kZCbMvPfmDZK2TnQK5vA9gXjSa6XFYPvAw9F2xJy1gdeLl-XifZ0wxkpc-TBo5BvSGiUbU2u1ddwLvbeGeSU65I39YkeSQfG7m9vMdcLsPHb8HqoKPIZYkNR7BmTibRX6DPubCSMSfRCNJq8gKIRLMgfy1Gi8ghZNQJc8JWZVodwiFH8JmCdntbhag5o_9p5-bbbkWo3nS-yGRve4LoKF-o9m2QE_e5IULZoWQWid3HjYOLsv3DMHcP1Q_nosMZjWs9l0TBcxzhk8iYPI0beOusDehqCiV_g40iYwWA4dlg68dmjq56iT9E5Z9Xx_bzXJ9SQ3JqcfG_ia7w==">Edit this diagram</a>
 </center></p>
 
 <p>For background on the difference between compilers and transpilers, have a
@@ -913,10 +914,19 @@ languages.</p>
 
 <p><a name="swigsimplifiedwrapperandinterfacegenerator"> </a></p><h2>Swig - Simplified Wrapper and Interface Generator</h2>
 
-<p>Interfacing with C manually is somewhat cumbersome, so let's consider some automation.
-For instance, the <a href="https://rust-lang.org/">Rust programming language</a>
+<p>Interfacing with C manually is somewhat cumbersome, so let's consider some
+automation. For instance, the <a href="https://rust-lang.org/">Rust programming language</a>
 has a tool called <a href="https://github.com/rust-lang/rust-bindgen">bindgen</a> to
-simplify this process. There also exists a tool called <a href="https://swig.org">Swig</a> which automates this process for more than a dozen target languages. A few of these languages, like C#, D, Java or Python, are already directly supported by Fusion. It might be still interesting to get a fast implementation by using the C library from Swig than the Fusion Python output, as the C code tends to be much faster than the Python code directly transpiled by the <em>fut</em> tool.</p>
+simplify this process. There also exists a tool called
+<a href="https://swig.org">Swig</a> which automates this process for more than a dozen
+target languages. A few of these languages, like C#, D, Java or Python, are
+already directly supported by Fusion. It might be still interesting to get a
+fast implementation by using the C library from Swig than the Fusion Python
+output, as the C code tends to be much faster than the Python code directly
+transpiled by the <em>fut</em> tool. See the following diagram for a few languages
+which you can target with Fusion's C output files:</p>
+
+<p><img src="https://kroki.io/graphviz/svg/eNptkE1PAjEQhu_8iknPdRGiiQmpF0Q9GCXIbcOh245sw9Bu2q64Gv67pUsIJEwm6Xy8z7RTbdZeNjU8wd8AkuWsJNm5Noq4c43h3rkoprP35WyxyppgflGwh8kdm-TcOo1liB2h-DJEqPnhUI6cF0HS1lkeatmgqNwP3xkdazEqbvtZqNcIRzg4MppvjSW0YtT3vbSbgI0Yw3AIAWMqaNMGDsYmVzWGLPvcmTXcPMJ0XGrjRSXVZnXR6LdLtlTE4a2VHBbJ26rj8KGi_EYOc_R0z-HFpfB1zoEVRcEytz_NSl9TIQl2iNlxLWW8IjxbmoVNV1GLbJWojKZ3HcEpuyrMquc2GGf7Pc4K5RXg4upMD_b_dKSOFg=="></img></p>
 
 <p>For illustrative purposes, let's create bindings for two scripting languages, Lua and Tcl for our little hello library shown above.</p>
 
@@ -1595,13 +1605,13 @@ s5=a1234.5678 i5=0</code></pre>
 <pre class='code'><code class='code'>ls -lth main?-*
 ./main5-d</code></pre>
 
-<pre class='code'><code class='out'>-rwxrwxr-x 1 dgroth dgroth 1,3M 18. Feb 06:07 main5-d
--rw-r--r-- 1 dgroth dgroth 448K 18. Feb 06:07 main5-d.o
--rwxrwxr-x 1 dgroth dgroth  17K 18. Feb 06:07 main5-cpp
--rwxrwxr-x 1 dgroth dgroth  17K 18. Feb 06:07 main4-cpp
--rwxrwxr-x 1 dgroth dgroth  16K 18. Feb 06:07 main4-c
--rwxrwxr-x 1 dgroth dgroth 1,3M 18. Feb 06:07 main4-d
--rw-r--r-- 1 dgroth dgroth 447K 18. Feb 06:07 main4-d.o
+<pre class='code'><code class='out'>-rwxrwxr-x 1 dgroth dgroth 1,3M 18. Feb 06:33 main5-d
+-rw-r--r-- 1 dgroth dgroth 448K 18. Feb 06:33 main5-d.o
+-rwxrwxr-x 1 dgroth dgroth  17K 18. Feb 06:33 main5-cpp
+-rwxrwxr-x 1 dgroth dgroth  17K 18. Feb 06:33 main4-cpp
+-rwxrwxr-x 1 dgroth dgroth  16K 18. Feb 06:33 main4-c
+-rwxrwxr-x 1 dgroth dgroth 1,3M 18. Feb 06:33 main4-d
+-rw-r--r-- 1 dgroth dgroth 447K 18. Feb 06:33 main4-d.o
 s1=12 i1=1
 s2=-23 i2=1
 s3=xyz i3=0
