@@ -11,7 +11,9 @@ scripting languages like Tcl, R or others using the
 __This site:__
 
 - [Fusion Tutorial (WIP)](http://htmlpreview.github.io/?https://github.com/mittelmark/fusion-tutorial/blob/master/tutorial/tutorial.html)
-- [GetMessage Example 1](https://github.com/mittelmark/fusion-tutorial/blob/master/samples/hello)
+- [GetMessage Example 1](https://github.com/mittelmark/fusion-tutorial/blob/master/samples/hello) - hello world example for the nine programming languages and as well for using Go, Lua, Octave, Tcl, and V with Fusion
+- [GetMessage Example 2](https://github.com/mittelmark/fusion-tutorial/blob/master/samples/hello2) - hello world example with Main function as well for the 9 languages and examples using the code with Tcl via [Swig](https://swig.org)
+- [Fibonacci Example](https://github.com/mittelmark/fusion-tutorial/blob/master/samples/fib) - function for Fibonacci numbers as well use examples for Go, Lua, Octave and Tcl
 
 __External:__
 
