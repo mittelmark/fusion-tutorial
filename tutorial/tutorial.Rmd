@@ -1,7 +1,7 @@
 ---
 title: Tutorial of the Fusion Programming Language (WIP)
 author: Detlef Groth, University of Potsdam
-date: 2026-02-18 06:33
+date: 2026-03-07 13:04
 ---
 
 `include tutorial.toc`
@@ -292,7 +292,8 @@ rows and columns and to set and get some values. Further we illustrate the retri
 ```{.shell label=Matrix cmd="fuscript %i > %b.txt" chunk.ext=fu ext=txt}
 #INCLUDE "assets/Matrix.fu"
 ```
-Let's show a second class example a Stats class which can calculate the mean of a List of doubles.
+
+Let's show a second class example a Stats class which can calculate the mean of a List of doubles and as well deals with missing values using the _Math.NaN_ constant and the _Math.IsNaN(double)_ function.
 
 ```{.shell label=Stats cmd="fuscript %i > %b.txt" chunk.ext=fu ext=txt}
 #INCLUDE "assets/Stats.fu"

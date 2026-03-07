@@ -28,7 +28,7 @@
     <div class="document-header">
 <h1 class="title">Tutorial of the Fusion Programming Language (WIP)</h1>
 <h2 class="author">Detlef Groth, University of Potsdam</h2>
-<h2 class="date">2026-02-18</h2>
+<h2 class="date">2026-03-07</h2>
     </div>
 
 <div class='toc'>
@@ -670,7 +670,7 @@ rows and columns and to set and get some values. Further we illustrate the retri
 ################################
 0   1   0   0</code></pre>
 
-<p>Let's show a second class example a Stats class which can calculate the mean of a List of doubles.</p>
+<p>Let's show a second class example a Stats class which can calculate the mean of a List of doubles and as well deals with missing values using the <em>Math.NaN</em> constant and the <em>Math.IsNaN(double)</em> function.</p>
 
 <pre class='code'><code class='code'>public static class Stats {
     static double Mean (List&lt;double&gt; x) {
@@ -685,17 +685,46 @@ rows and columns and to set and get some values. Further we illustrate the retri
         }
         return(sum/n);
     }
+    static List&lt;bool&gt;() IsNa (List&lt;double&gt; x) {
+        List&lt;bool&gt;() b;
+        for (int i = 0; i &lt; x.Count; i++) {
+            if (Math.IsNaN(x[i])) {
+                b.Add(true);
+            } else {
+                b.Add(false);
+            }
+        }
+        return(b);
+    }
+    static List&lt;int&gt;() Which (List&lt;bool&gt; b) {
+        List&lt;int&gt;() w ;
+        for (int i = 0; i &lt; b.Count; i++) {
+            if (b[i] == true) {
+                w.Add(i);
+            }
+        }
+        return(w);
+    }
     public static void Main (string[] args) {
         List&lt;double&gt;() x ;
         x.Add(0.2);
         x.Add(0.5);
         x.Add(0.9);
+        x.Add(Math.NaN);
+        x.Add(2.2);
+        x.Add(Math.NaN);
         double m = Stats.Mean(x);
         Console.WriteLine($&quot;mean is {m}&quot;);
+        List&lt;int&gt;() nas = Stats.Which(Stats.IsNa(x));
+        for (int i = 0; i &lt; nas.Count; i++) {
+            Console.WriteLine($&quot;On position {nas[i]} the numeric value is NA!&quot;);
+        }
     }
 }</code></pre>
 
-<pre class='code'><code class='out'>mean is 0.5333333333333333</code></pre>
+<pre class='code'><code class='out'>mean is 0.9500000000000001
+On position 3 the numeric value is NA!
+On position 5 the numeric value is NA!</code></pre>
 
 <p><a name="otherprogramminglanguages"> </a></p><h2>Other Programming Languages</h2>
 
@@ -1605,13 +1634,13 @@ s5=a1234.5678 i5=0</code></pre>
 <pre class='code'><code class='code'>ls -lth main?-*
 ./main5-d</code></pre>
 
-<pre class='code'><code class='out'>-rwxrwxr-x 1 dgroth dgroth 1,3M 18. Feb 06:33 main5-d
--rw-r--r-- 1 dgroth dgroth 448K 18. Feb 06:33 main5-d.o
--rwxrwxr-x 1 dgroth dgroth  17K 18. Feb 06:33 main5-cpp
--rwxrwxr-x 1 dgroth dgroth  17K 18. Feb 06:33 main4-cpp
--rwxrwxr-x 1 dgroth dgroth  16K 18. Feb 06:33 main4-c
--rwxrwxr-x 1 dgroth dgroth 1,3M 18. Feb 06:33 main4-d
--rw-r--r-- 1 dgroth dgroth 447K 18. Feb 06:33 main4-d.o
+<pre class='code'><code class='out'>-rwxrwxr-x 1 dgroth dgroth 1,3M  7. Mär 13:07 main5-d
+-rw-r--r-- 1 dgroth dgroth 448K  7. Mär 13:07 main5-d.o
+-rwxrwxr-x 1 dgroth dgroth  17K  7. Mär 13:07 main5-cpp
+-rwxrwxr-x 1 dgroth dgroth  17K  7. Mär 13:07 main4-cpp
+-rwxrwxr-x 1 dgroth dgroth  16K  7. Mär 13:07 main4-c
+-rwxrwxr-x 1 dgroth dgroth 1,3M  7. Mär 13:07 main4-d
+-rw-r--r-- 1 dgroth dgroth 447K  7. Mär 13:07 main4-d.o
 s1=12 i1=1
 s2=-23 i2=1
 s3=xyz i3=0
