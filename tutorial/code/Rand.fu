@@ -1,0 +1,34 @@
+public class Rand {
+	long RandomState;
+	public void Seed! (long x) {
+		RandomState = x;
+	}
+	static long LowBits(int n)
+	{
+		long one = 1;
+		return (one << n) - 1;
+	}
+
+	public float NextRandom!()
+	{
+		// https://en.wikipedia.org/wiki/Xorshift#xorshift.2A
+		long state = RandomState;
+		state ^= state >> 12 & LowBits(52);
+		state ^= (state & LowBits(39)) << 25;
+		state ^= state >> 27 & LowBits(37);
+		RandomState = state;
+		float f = (state * 0x2545f4914f6cdd1d >> 40) & LowBits(24);
+		return f / 16777216;
+	}
+	public static void Main () {
+		Rand() rnd;
+		rnd.Seed(12);
+		for (int i = 0; i < 6; i++) {
+			float r = rnd.NextRandom();
+			int j = Math.Floor(r*10); // Numbers from 0..9
+			Console.WriteLine($"r={r} i={j}");
+		}
+	}
+}
+
+

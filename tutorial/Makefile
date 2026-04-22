@@ -19,7 +19,7 @@ ARGS=
 tasks:  ## list all tasks
 	@grep -Eo '^[a-z0-9]+:.+' $(CURRENT_MAKEFILE) | sed -E 's/:\s+##/\t- /g'
 
-tutorial:
+tutorial: ## compile the tutorial
 	[ -f Main.fu ] && fut Main.fu -o out/main.d && dmd out/main.d -of:out/main-d
 	tmdoc tutorial.Rmd - --toc true | mndoc - tutorial.html --css tmdoc.css
 

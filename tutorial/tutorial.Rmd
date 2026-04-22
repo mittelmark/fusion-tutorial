@@ -1,7 +1,7 @@
 ---
 title: Tutorial of the Fusion Programming Language (WIP)
 author: Detlef Groth, University of Potsdam
-date: 2026-03-07 13:04
+date: 2026-04-22 05:21
 ---
 
 `include tutorial.toc`
@@ -838,6 +838,52 @@ Just to prove it, I execute that on the command line:
 ls -lth main?-*
 ./main5-d
 ```
+
+## Random Numbers
+
+There are many possible ways of creating  random  numbers, this Wikipedia page
+lists  a few of them
+[https://en.wikipedia.org/wiki/List_of_random_number_generators](https://en.wikipedia.org/wiki/List_of_random_number_generators).
+
+Fusion has no support for the creation of random  numbers in the core. But you
+can implement one of the many algorithms available. Here an example for a random number creator class which is based on an example given by the maintainer of the fut transpiler Piotr Fusik in the a discussion thread on Github [thread link](https://github.com/fusionlanguage/fut/discussions/226):
+
+```{.shell label=Rand5 cmd="fut %i -o rand.d&&dmd rand.d -of=rand-d&&./rand-d > %b.txt" chunk.ext=fu ext=txt,echo=TRUE}
+#INCLUDE "code/Rand.fu"
+```
+
+This is an implementation of the [xorshift](https://en.wikipedia.org/wiki/Xorshift#xorshift.2A) algorithm.
+The code will  always  produce the same set of random  numbers as the seed is
+hardcoded  within  the Main  block of the  fusion  file. If you use the method
+_NextRandom_  within you own programming  language you can intialize it with the
+seed of either an other number or using for instance the time functions to get
+the seconds  since the  beginning of the Unix epoche, since January 1st, 1970.
+Every run of your program should then produce different random numbers. 
+
+In Python you would for instance write:
+
+```
+#!/usr/bin/env python3
+import rand
+import time
+import math
+rnd = rand.Rand()
+rnd.seed(round(time.time()))
+for i in range(10):
+     r: float = rnd.next_random()
+     i: int = math.floor(r * 10)
+     print(f"r={r} i={i}")
+```
+
+Please note that the random  number  generator is  considered  to be used only
+within  other  Fusion code from your  project. It allows you to create  random
+numbers within your Fusion library. If programming within your own Python code
+you would very likely fall back to the random number creation  provided by the
+random module or if using other languages by their facilities to create random
+numbers.
+
+
+
 
 ## Documenting Code
 

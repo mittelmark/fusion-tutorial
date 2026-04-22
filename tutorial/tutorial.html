@@ -28,7 +28,7 @@
     <div class="document-header">
 <h1 class="title">Tutorial of the Fusion Programming Language (WIP)</h1>
 <h2 class="author">Detlef Groth, University of Potsdam</h2>
-<h2 class="date">2026-03-07</h2>
+<h2 class="date">2026-04-22</h2>
     </div>
 
 <div class='toc'>
@@ -82,6 +82,7 @@
 </li>
 <li><a href="#nativelanguagecode">Native Language Code</a></li>
 <li><a href="#checkinginput">Checking Input</a></li>
+<li><a href="#randomnumbers">Random Numbers</a></li>
 <li><a href="#documentingcode">Documenting Code</a>
 </li></ul>
 
@@ -1634,18 +1635,95 @@ s5=a1234.5678 i5=0</code></pre>
 <pre class='code'><code class='code'>ls -lth main?-*
 ./main5-d</code></pre>
 
-<pre class='code'><code class='out'>-rwxrwxr-x 1 dgroth dgroth 1,3M  7. Mär 13:07 main5-d
--rw-r--r-- 1 dgroth dgroth 448K  7. Mär 13:07 main5-d.o
--rwxrwxr-x 1 dgroth dgroth  17K  7. Mär 13:07 main5-cpp
--rwxrwxr-x 1 dgroth dgroth  17K  7. Mär 13:07 main4-cpp
--rwxrwxr-x 1 dgroth dgroth  16K  7. Mär 13:07 main4-c
--rwxrwxr-x 1 dgroth dgroth 1,3M  7. Mär 13:07 main4-d
--rw-r--r-- 1 dgroth dgroth 447K  7. Mär 13:07 main4-d.o
+<pre class='code'><code class='out'>-rwxrwxr-x 1 dgroth dgroth 1,3M 22. Apr 05:21 main5-d
+-rw-r--r-- 1 dgroth dgroth 448K 22. Apr 05:21 main5-d.o
+-rwxrwxr-x 1 dgroth dgroth  17K 22. Apr 05:21 main5-cpp
+-rwxrwxr-x 1 dgroth dgroth  17K 22. Apr 05:21 main4-cpp
+-rwxrwxr-x 1 dgroth dgroth  16K 22. Apr 05:21 main4-c
+-rwxrwxr-x 1 dgroth dgroth 1,3M 22. Apr 05:21 main4-d
+-rw-r--r-- 1 dgroth dgroth 447K 22. Apr 05:21 main4-d.o
 s1=12 i1=1
 s2=-23 i2=1
 s3=xyz i3=0
 s4=1234.5678 i4=1
 s5=a1234.5678 i5=0</code></pre>
+
+<p><a name="randomnumbers"> </a></p><h2>Random Numbers</h2>
+
+<p>There are many possible ways of creating  random  numbers, this Wikipedia page
+lists  a few of them
+<a href="https://en.wikipedia.org/wiki/List_of_random_number_generators">https://en.wikipedia.org/wiki/List<em>of</em>random<em>number</em>generators</a>.</p>
+
+<p>Fusion has no support for the creation of random  numbers in the core. But you
+can implement one of the many algorithms available. Here an example for a random number creator class which is based on an example given by the maintainer of the fut transpiler Piotr Fusik in the a discussion thread on Github <a href="https://github.com/fusionlanguage/fut/discussions/226">thread link</a>:</p>
+
+<pre class='code'><code class='code'>public class Rand {
+    long RandomState;
+    public void Seed! (long x) {
+        RandomState = x;
+    }
+    static long LowBits(int n)
+    {
+        long one = 1;
+        return (one &lt;&lt; n) - 1;
+    }
+
+    public float NextRandom!()
+    {
+        // https://en.wikipedia.org/wiki/Xorshift#xorshift.2A
+        long state = RandomState;
+        state ^= state &gt;&gt; 12 &amp; LowBits(52);
+        state ^= (state &amp; LowBits(39)) &lt;&lt; 25;
+        state ^= state &gt;&gt; 27 &amp; LowBits(37);
+        RandomState = state;
+        float f = (state * 0x2545f4914f6cdd1d &gt;&gt; 40) &amp; LowBits(24);
+        return f / 16777216;
+    }
+    public static void Main () {
+        Rand() rnd;
+        rnd.Seed(12);
+        for (int i = 0; i &lt; 6; i++) {
+            float r = rnd.NextRandom();
+            int j = Math.Floor(r*10); // Numbers from 0..9
+            Console.WriteLine($&quot;r={r} i={j}&quot;);
+        }
+    }
+}</code></pre>
+
+<pre class='code'><code class='out'>r=0.806817 i=8
+r=0.084734 i=0
+r=0.823122 i=8
+r=0.079753 i=0
+r=0.275106 i=2
+r=0.21391 i=2</code></pre>
+
+<p>This is an implementation of the <a href="https://en.wikipedia.org/wiki/Xorshift#xorshift.2A">xorshift</a> algorithm.
+The code will  always  produce the same set of random  numbers as the seed is
+hardcoded  within  the Main  block of the  fusion  file. If you use the method
+<em>NextRandom</em>  within you own programming  language you can intialize it with the
+seed of either an other number or using for instance the time functions to get
+the seconds  since the  beginning of the Unix epoche, since January 1st, 1970.
+Every run of your program should then produce different random numbers.</p>
+
+<p>In Python you would for instance write:</p>
+
+<pre class='code'><code>#!/usr/bin/env python3
+import rand
+import time
+import math
+rnd = rand.Rand()
+rnd.seed(round(time.time()))
+for i in range(10):
+     r: float = rnd.next_random()
+     i: int = math.floor(r * 10)
+     print(f&quot;r={r} i={i}&quot;)</code></pre>
+
+<p>Please note that the random  number  generator is  considered  to be used only
+within  other  Fusion code from your  project. It allows you to create  random
+numbers within your Fusion library. If programming within your own Python code
+you would very likely fall back to the random number creation  provided by the
+random module or if using other languages by their facilities to create random
+numbers.</p>
 
 <p><a name="documentingcode"> </a></p><h2>Documenting Code</h2>
 
