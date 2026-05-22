@@ -1,0 +1,26 @@
+public static class Test3 {
+	public static List<int>() GetValues (int x) {
+		List<int>() y ;
+		for (int i = 0; i < x; i++) {
+			y.Add(i);
+		}
+		return(y);
+		
+	}
+	public static int Main (string[] args)
+	{
+		List<int>() x; // can not be reassigned later in js,ts, java
+		// x = GetValue(5); would fail for a few languages
+		// as Java, JavaScript and TypeScript are here final or const
+		x.Add(1);  // works
+		List<int> y = GetValues(5);
+		List<int>() z =  null; // can be reassigned later
+		z = GetValues(10);
+		Console.WriteLine($"List x has {x.Count} elements!");
+		Console.WriteLine($"List y has {y.Count} elements!");
+		Console.WriteLine($"List z has {z.Count} elements!");		
+		return(0);
+	}
+}
+	
+	

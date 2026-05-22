@@ -28,7 +28,7 @@
     <div class="document-header">
 <h1 class="title">Tutorial of the Fusion Programming Language (WIP)</h1>
 <h2 class="author">Detlef Groth, University of Potsdam</h2>
-<h2 class="date">2026-04-22</h2>
+<h2 class="date">2026-05-22</h2>
     </div>
 
 <div class='toc'>
@@ -153,7 +153,7 @@ class Main:
     def main() -&gt; None:
         print("Hello World!")
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     Main.main()</pre> 
 
 <p><a name="dcodeoutput"> </a></p><h3>D Code Output</h3>
@@ -175,7 +175,7 @@ class Main
 
     static void main()
     {
-        writeln("Hello World!");
+        stdout.writeln("Hello World!");
     }
 }
 
@@ -317,7 +317,7 @@ class _Main2:
         f: float = 1.234
         print(f" x={x} b={_Main2.bool_to_int(b)} c={_Main2.bool_to_int(c)} d={d} e={e} y={y} f={f}")
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     _Main2.main(sys.argv[1:])</pre> 
 
 <p>The output of the D language is not affected by the public keyword for the class.</p>
@@ -558,6 +558,54 @@ have the same type.</p>
 </tbody>
 </table>
 
+
+<div class="side-caution"><p><b>Caution:</b> 
+It is not possible to reasign a with parenthesis declared list to new entries if that list variable is not initialized with null. 
+</p></div>
+
+<p>In order to declare a List variable and then later assign  directly a value to
+it you must initialize the variable with null.</p>
+
+<pre class='code'><code class='code'>public static class Test3 {
+    public static List&lt;int&gt;() GetValues (int x) {
+        List&lt;int&gt;() y ;
+        for (int i = 0; i &lt; x; i++) {
+            y.Add(i);
+        }
+        return(y);
+        
+    }
+    public static int Main (string[] args)
+    {
+        List&lt;int&gt;() x; // can not be reassigned later in js,ts, java
+        // x = GetValue(5); would fail for a few languages
+        // as Java, JavaScript and TypeScript are here final or const
+        x.Add(1);  // works
+        List&lt;int&gt; y = GetValues(5);
+        List&lt;int&gt;() z =  null; // can be reassigned later
+        z = GetValues(10);
+        Console.WriteLine($&quot;List x has {x.Count} elements!&quot;);
+        Console.WriteLine($&quot;List y has {y.Count} elements!&quot;);
+        Console.WriteLine($&quot;List z has {z.Count} elements!&quot;);       
+        return(0);
+    }
+}</code></pre>
+
+<pre class='code'><code class='out'>List x has 1 elements!
+List y has 5 elements!
+List z has 10 elements!</code></pre>
+
+<p>Let's check if we can use this as well in the C++ and the C programming language:</p>
+
+<pre class='code'><code class='code'>fut code/MainList.fu -o out/mainlist.c
+gcc out/mainlist.c  `pkg-config --cflags --libs glib-2.0` -o out/list-c
+echo &quot;C code output&quot;
+./out/list-c</code></pre>
+
+<pre class='code'><code class='out'>C code output
+List x has 1 elements!
+List y has 5 elements!
+List z has 10 elements!</code></pre>
 
 <p><a name="strings"> </a></p><h2>Strings</h2>
 
@@ -1090,7 +1138,7 @@ class _Main2:
         f: float = 1.234
         print(f" x={x} b={_Main2.bool_to_int(b)} c={_Main2.bool_to_int(c)} y={y} f={f}")
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     _Main2.main(sys.argv[1:])</pre> 
 
 <p>The output of the D language is not affected by the <code>public</code> keyword for the class.</p>
@@ -1232,7 +1280,7 @@ class Main4:
         print(f"s4={s4} i4={i4}")
         print(f"s5={s5} i5={i5}")
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     Main4.main(sys.argv[1:])</pre>
 
 <p><a name="doutput"> </a></p><h3>D Output</h3>
@@ -1292,11 +1340,11 @@ class Main4
         int i4 = Main4.parseInt(s4);
         string s5 = "a1234.5678";
         int i5 = Main4.parseInt(s5, -100);
-        writefln("s1=%s i1=%d", s1, i1);
-        writefln("s2=%s i2=%d", s2, i2);
-        writefln("s3=%s i3=%d", s3, i3);
-        writefln("s4=%s i4=%d", s4, i4);
-        writefln("s5=%s i5=%d", s5, i5);
+        stdout.writefln("s1=%s i1=%d", s1, i1);
+        stdout.writefln("s2=%s i2=%d", s2, i2);
+        stdout.writefln("s3=%s i3=%d", s3, i3);
+        stdout.writefln("s4=%s i4=%d", s4, i4);
+        stdout.writefln("s5=%s i5=%d", s5, i5);
     }
 }
 
@@ -1528,7 +1576,7 @@ class _Main2:
         z = _StringUtils.parse_int("12345")
         print(f" x={x} f={f} z={z}")
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     _Main2.main(sys.argv[1:])</pre>
 
 <div class="side-caution"><p><b>Caution:</b> 
@@ -1635,13 +1683,13 @@ s5=a1234.5678 i5=0</code></pre>
 <pre class='code'><code class='code'>ls -lth main?-*
 ./main5-d</code></pre>
 
-<pre class='code'><code class='out'>-rwxrwxr-x 1 dgroth dgroth 1,3M 22. Apr 05:21 main5-d
--rw-r--r-- 1 dgroth dgroth 448K 22. Apr 05:21 main5-d.o
--rwxrwxr-x 1 dgroth dgroth  17K 22. Apr 05:21 main5-cpp
--rwxrwxr-x 1 dgroth dgroth  17K 22. Apr 05:21 main4-cpp
--rwxrwxr-x 1 dgroth dgroth  16K 22. Apr 05:21 main4-c
--rwxrwxr-x 1 dgroth dgroth 1,3M 22. Apr 05:21 main4-d
--rw-r--r-- 1 dgroth dgroth 447K 22. Apr 05:21 main4-d.o
+<pre class='code'><code class='out'>-rwxrwxr-x 1 dgroth dgroth 1,3M 22. Mai 19:13 main5-d
+-rw-r--r-- 1 dgroth dgroth 447K 22. Mai 19:13 main5-d.o
+-rwxrwxr-x 1 dgroth dgroth  17K 22. Mai 19:13 main5-cpp
+-rwxrwxr-x 1 dgroth dgroth  17K 22. Mai 19:13 main4-cpp
+-rwxrwxr-x 1 dgroth dgroth  16K 22. Mai 19:13 main4-c
+-rwxrwxr-x 1 dgroth dgroth 1,3M 22. Mai 19:13 main4-d
+-rw-r--r-- 1 dgroth dgroth 447K 22. Mai 19:13 main4-d.o
 s1=12 i1=1
 s2=-23 i2=1
 s3=xyz i3=0
