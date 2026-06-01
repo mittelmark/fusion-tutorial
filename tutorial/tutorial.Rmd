@@ -1,7 +1,7 @@
 ---
 title: Tutorial of the Fusion Programming Language (WIP)
 author: Detlef Groth, University of Potsdam
-date: 2026-05-22 19:11
+date: 2026-06-01 19:09
 ---
 
 `include tutorial.toc`
@@ -268,13 +268,16 @@ have the same type.
 > It is not possible to reasign a with parenthesis declared list to new entries if that list variable is not initialized with null. 
 
 In order to declare a List variable and then later assign  directly a value to
-it you must initialize the variable with null.
+it you must initialize the variable with null. Othwewise  languages like Java,
+JavaScript  or  Typescript  will complain as they  intialize the variable with
+`final/const`. Here the Python output:
 
 ```{.shell label=MainListPy cmd="fuscript %i > %b.txt" chunk.ext=fu ext=txt}
 #INCLUDE "code/MainList.fu"
 ```
 
-Let's check if we can use this as well in the C++ and the C programming language:
+Let's  check  if we can  use  this  as  well in the C  programming
+language:
 
 
 ```{.shell label=MainListC cmd="bash %i > %b.txt" chunk.ext=sh ext=txt}
@@ -283,6 +286,16 @@ gcc out/mainlist.c  `pkg-config --cflags --libs glib-2.0` -o out/list-c
 echo "C code output"
 ./out/list-c
 ```
+
+And now using the node JavaScript interpreter:
+
+```{.shell label=MainListTS cmd="bash %i > %b.txt" chunk.ext=sh ext=txt}
+fut code/MainList.fu -o out/mainlist.ts
+tsc code/mainlist.ts # compile to JavaScript
+echo "node JavaScript code output"
+node out/mainlist.js
+```
+
 
 
 ## Strings

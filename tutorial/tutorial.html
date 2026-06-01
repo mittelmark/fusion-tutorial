@@ -28,7 +28,7 @@
     <div class="document-header">
 <h1 class="title">Tutorial of the Fusion Programming Language (WIP)</h1>
 <h2 class="author">Detlef Groth, University of Potsdam</h2>
-<h2 class="date">2026-05-22</h2>
+<h2 class="date">2026-06-01</h2>
     </div>
 
 <div class='toc'>
@@ -564,7 +564,9 @@ It is not possible to reasign a with parenthesis declared list to new entries if
 </p></div>
 
 <p>In order to declare a List variable and then later assign  directly a value to
-it you must initialize the variable with null.</p>
+it you must initialize the variable with null. Othwewise  languages like Java,
+JavaScript  or  Typescript  will complain as they  intialize the variable with
+<code>final/const</code>. Here the Python output:</p>
 
 <pre class='code'><code class='code'>public static class Test3 {
     public static List&lt;int&gt;() GetValues (int x) {
@@ -595,7 +597,8 @@ it you must initialize the variable with null.</p>
 List y has 5 elements!
 List z has 10 elements!</code></pre>
 
-<p>Let's check if we can use this as well in the C++ and the C programming language:</p>
+<p>Let's  check  if we can  use  this  as  well in the C  programming
+language:</p>
 
 <pre class='code'><code class='code'>fut code/MainList.fu -o out/mainlist.c
 gcc out/mainlist.c  `pkg-config --cflags --libs glib-2.0` -o out/list-c
@@ -603,6 +606,18 @@ echo &quot;C code output&quot;
 ./out/list-c</code></pre>
 
 <pre class='code'><code class='out'>C code output
+List x has 1 elements!
+List y has 5 elements!
+List z has 10 elements!</code></pre>
+
+<p>And now using the node JavaScript interpreter:</p>
+
+<pre class='code'><code class='code'>fut code/MainList.fu -o out/mainlist.ts
+tsc code/mainlist.ts # compile to JavaScript
+echo &quot;node JavaScript code output&quot;
+node out/mainlist.js</code></pre>
+
+<pre class='code'><code class='out'>node JavaScript code output
 List x has 1 elements!
 List y has 5 elements!
 List z has 10 elements!</code></pre>
@@ -1683,13 +1698,13 @@ s5=a1234.5678 i5=0</code></pre>
 <pre class='code'><code class='code'>ls -lth main?-*
 ./main5-d</code></pre>
 
-<pre class='code'><code class='out'>-rwxrwxr-x 1 dgroth dgroth 1,3M 22. Mai 19:13 main5-d
--rw-r--r-- 1 dgroth dgroth 447K 22. Mai 19:13 main5-d.o
--rwxrwxr-x 1 dgroth dgroth  17K 22. Mai 19:13 main5-cpp
--rwxrwxr-x 1 dgroth dgroth  17K 22. Mai 19:13 main4-cpp
--rwxrwxr-x 1 dgroth dgroth  16K 22. Mai 19:13 main4-c
--rwxrwxr-x 1 dgroth dgroth 1,3M 22. Mai 19:13 main4-d
--rw-r--r-- 1 dgroth dgroth 447K 22. Mai 19:13 main4-d.o
+<pre class='code'><code class='out'>-rwxrwxr-x 1 dgroth dgroth 1,3M  1. Jun 19:09 main5-d
+-rw-r--r-- 1 dgroth dgroth 447K  1. Jun 19:09 main5-d.o
+-rwxrwxr-x 1 dgroth dgroth  17K  1. Jun 19:09 main5-cpp
+-rwxrwxr-x 1 dgroth dgroth  17K  1. Jun 19:09 main4-cpp
+-rwxrwxr-x 1 dgroth dgroth  16K  1. Jun 19:09 main4-c
+-rwxrwxr-x 1 dgroth dgroth 1,3M  1. Jun 19:09 main4-d
+-rw-r--r-- 1 dgroth dgroth 447K  1. Jun 19:09 main4-d.o
 s1=12 i1=1
 s2=-23 i2=1
 s3=xyz i3=0
